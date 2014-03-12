@@ -10,77 +10,87 @@ import datetime
 
 from rdflib import Graph, URIRef, Literal, Namespace, RDF, RDFS
 
-PROV = Namespace('http://www.w3.org/ns/prov#')
-PROVOMATIC = Namespace('http://provomatic.org/resource/')
-SKOS = Namespace('http://www.w3.org/2004/02/skos/core#')
 
-g = Graph()
+class ProvBuilder(object):
+    PROV = Namespace('http://www.w3.org/ns/prov#')
+    PROVOMATIC = Namespace('http://provomatic.org/resource/')
+    SKOS = Namespace('http://www.w3.org/2004/02/skos/core#')
 
-g.bind('prov',PROV)
-g.bind('provomatic',PROVOMATIC)
-g.bind('skos',SKOS)
+    
 
-def add_activity(name, digest, description, inputs, outputs):
-    """Adds an activity to the graph. Inputs should be a dictionary of inputs & values, outputs a list or tuple of just values"""
-    plan_uri = PROVOMATIC[digest]
+
+    def __init__(self):
+        self.g = Graph()
+        
+        self.g.bind('prov',self.PROV)
+        self.g.bind('provomatic',self.PROVOMATIC)
+        self.g.bind('skos',self.SKOS)
+        
+
+    def add_activity(self, name, digest, description, inputs, outputs):
+        """Adds an activity to the graph. Inputs should be a dictionary of inputs & values, outputs a list or tuple of just values"""
+        plan_uri = self.PROVOMATIC[digest]
     
-    g.add((plan_uri, RDF.type, RDFS['Class']))
-    g.add((plan_uri, RDF.type, PROVOMATIC['Method']))
-    g.add((plan_uri, RDFS.label, Literal(name)))
+        self.g.add((plan_uri, RDF.type, self.RDFS['Class']))
+        self.g.add((plan_uri, RDF.type, self.PROVOMATIC['Method']))
+        self.g.add((plan_uri, RDFS.label, Literal(name)))
     
-    activity_uri = PROVOMATIC[digest + "/" + now()]
+        activity_uri = self.PROVOMATIC[digest + "/" + now()]
     
-    g.add((activity_uri,RDF.type,PROV['Activity']))
-    g.add((activity_uri,RDFS.label,Literal(name)))
-    g.add((activity_uri,RDF.type,plan_uri))
+        self.g.add((activity_uri,RDF.type,self.PROV['Activity']))
+        self.g.add((activity_uri,RDFS.label,Literal(name)))
+        self.g.add((activity_uri,RDF.type,plan_uri))
     
-    for iname, value in inputs.items():
-        value, vdigest = get_value(value)
+        for iname, value in inputs.items():
+            value, vdigest = self.get_value(value)
             
-        input_uri = add_entity(iname, vdigest, value)
+            input_uri = self.add_entity(iname, vdigest, value)
         
-        g.add((activity_uri, PROV['used'], input_uri))
+            self.g.add((activity_uri, self.PROV['used'], input_uri))
         
-    if isinstance(outputs, tuple) :
-        count = 0
-        for value in outputs:
-            count += 1
+        if isinstance(outputs, tuple) :
+            count = 0
+            for value in outputs:
+                count += 1
             
-            value, vdigest = get_value(value)
+                value, vdigest = self.get_value(value)
         
-            output_uri = add_entity("{} output {}".format(name,count),vdigest,value)
+                output_uri = add_entity("{} output {}".format(name,count),vdigest,value)
             
-            g.add((output_uri, PROV['wasGeneratedBy'], activity_uri))
-    else :
-        value, vdigest = get_value(outputs)
+                self.g.add((output_uri, self.PROV['wasGeneratedBy'], activity_uri))
+        else :
+            value, vdigest = self.get_value(outputs)
         
-        output_uri = add_entity("{} output".format(name), vdigest, value)
+            output_uri = self.add_entity("{} output".format(name), vdigest, value)
         
-        g.add((output_uri, PROV['wasGeneratedBy'], activity_uri))
+            self.g.add((output_uri, self.PROV['wasGeneratedBy'], activity_uri))
         
-    return activity_uri
+        return activity_uri
 
-def add_entity(name, digest, description):
-    entity_uri = PROVOMATIC[digest]
+    def add_entity(self, name, digest, description):
+        entity_uri = self.PROVOMATIC[digest]
     
-    g.add((entity_uri,RDF.type,PROV['Entity']))
-    g.add((entity_uri,RDFS.label,Literal(name)))
-    g.add((entity_uri,SKOS['note'],Literal(description)))
+        self.g.add((entity_uri,RDF.type,self.PROV['Entity']))
+        self.g.add((entity_uri,RDFS.label,Literal(name)))
+        self.g.add((entity_uri,SKOS['note'],Literal(description)))
     
-    return entity_uri
+        return entity_uri
     
-def get_value(io):
-    """We'll just use the __unicode__ representation as source for the hash digest"""
-    value = unicode(io)
-    vdigest = hashlib.md5(unicode(value)).hexdigest()
+    def get_value(self, io):
+        """We'll just use the __unicode__ representation as source for the hash digest"""
+        value = unicode(io)
+        vdigest = hashlib.md5(unicode(value)).hexdigest()
 
-    if len(value) > 50:
-        value = value[:24] + u"..." + value[-25:]
+        if len(value) > 50:
+            value = value[:24] + u"..." + value[-25:]
     
-    return value, vdigest
+        return value, vdigest
 
-def now():
-    return datetime.datetime.now().isoformat()
+    def get_graph(self):
+        return self.g
+
+    def now(self):
+        return datetime.datetime.now().isoformat()
 
 
 PROV_WRAPPER_AST_CALL = "Name('prov', Load())"
@@ -97,7 +107,12 @@ def prov(f):
         
         outputs = f(*args, **kwargs)
         
-        add_activity(f.__name__, prov_wrapper.digest, prov_wrapper.source, inputs, outputs)
+        pb = ProvBuilder()
+        
+        pb.add_activity(f.__name__, prov_wrapper.digest, prov_wrapper.source, inputs, outputs)
+        
+        prov_wrapper.prov = pb.get_graph()
+        prov_wrapper.prov_ttl = pb.get_graph.serialize(format='turtle')
         
         print "Done"
         return outputs
@@ -192,6 +207,11 @@ class FunctionWrapper(NodeTransformer):
     def visit_Name(self, node):
         self.generic_visit(node)
         self.nw.register_usage(node.id)
+        return node
+        
+    def visit_Call(self, node):
+        self.generic_visit(node)
+        print ast.dump(node,annotate_fields=False)
         return node
 
 
