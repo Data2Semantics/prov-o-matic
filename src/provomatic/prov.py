@@ -68,11 +68,11 @@ class Trace(object):
                 self.g.parse(trailFile, format='n3')
                 self.buildProvenanceTrail()
             except :
-                print "Trailfile does not exist yet..."
+                self.log.warning("Trailfile does not exist yet...")
         
 
         
-        self.log.debug("Initialised")
+        self.log.info("Initialised")
         
         return
     
@@ -260,7 +260,7 @@ class Trace(object):
     def mintExpression(self, p):
         
         # If the parameter is a URI, just use it, but add a timestamp
-        if p.startsWith('http://') :
+        if p.startswith('http://') :
             pExpressionURI = URIRef("{0}_{1}".format(p, datetime.now().isoformat()))
         # Else mint a new URI within our own namespace
         else :
