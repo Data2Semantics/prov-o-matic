@@ -95,7 +95,10 @@ class NotebookWatcher(object):
                         outputs[k] = v.source
                     # Otherwise (this shouldn't be the case, but anyway) we'll use its source directly.
                     elif callable(v) :
-                        outputs[k] = inspect.getsource(v)
+                        try :
+                            outputs[k] = inspect.getsource(v)
+                        except:
+                            outputs[k] = v
                     # Finally, this is probably not were we'll end up anyway... we'll do nothing 
                     else :
                         pass
@@ -131,3 +134,4 @@ def load_ipython_extension(ip):
     ip.events.register('pre_execute', nw.pre_execute)
     ip.events.register('post_execute', nw.post_execute)
     ip.ast_transformers.append(cv)
+
