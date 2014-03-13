@@ -63,3 +63,20 @@ class CodeVisitor(NodeTransformer):
         self.generic_visit(node)
         # print dump(node,annotate_fields=False)
         return node
+        
+        
+# class CodeVisitor2(NodeTransformer):
+#     def visit_Module(self, node):
+#         print dump(node)
+#         
+#         self.functions = []
+#         self.generic_visit(node)
+#         
+#         for f in self.functions :
+#             print ast.dump(f)
+#         
+#         
+#     def visit_Call(self, node):
+#         self.functions.append(node)
+# 
+#         return node
