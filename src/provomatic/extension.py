@@ -2,6 +2,7 @@
 from IPython.core.history import HistoryAccessor
 from IPython.core.ultratb import VerboseTB
 
+
 import inspect
 import hashlib
 import collections
@@ -129,6 +130,7 @@ class NotebookWatcher(object):
 
 
 def load_ipython_extension(ip):
+    ip.push('prov')
     nw = NotebookWatcher(ip)
     cv = CodeVisitor(nw)
     ip.events.register('pre_execute', nw.pre_execute)
