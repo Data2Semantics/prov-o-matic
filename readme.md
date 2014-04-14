@@ -20,7 +20,7 @@ This is all still quite experimental. You're probably safest off if you set ever
 
 ### Usage
 
-Load the extension in the usual way (provided that `provomatic.extension` is in your python path):
+Load the IPython extension in the usual way (provided that `provomatic.extension` is in your python path), by typing the following in your IPython Notebook:
 
 ```%load_ext provomatic.extension```
 
