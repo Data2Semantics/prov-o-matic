@@ -29,3 +29,7 @@ The visualization connection expects a HTTP server to be running on port 8000 wi
 Provenance tracking is automatic once you load the extension.
 
 You can visualize using [PROV-O-Viz](http://provoviz.org) by calling `view_prov()`
+
+### Credits
+
+This work is supported by the Dutch national programme COMMIT/ under the Data2Semantics project. See <http://www.data2semantics.org> and <http://www.commit-nl.nl>
