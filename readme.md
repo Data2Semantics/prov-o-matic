@@ -34,3 +34,7 @@ You can visualize using [PROV-O-Viz](http://provoviz.org) by calling `view_prov(
 ### Credits
 
 This work is supported by the Dutch national programme COMMIT/ under the Data2Semantics project. See <http://www.data2semantics.org> and <http://www.commit-nl.nl>
+
+### License
+
+See LICENCE.txt
