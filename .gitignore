@@ -1,0 +1,12 @@
+
+*.html
+
+*.pyc
+
+.project
+
+.pydevproject
+
+*.ipynb
+
+*.owl
