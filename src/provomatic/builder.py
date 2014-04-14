@@ -16,12 +16,18 @@ class ProvBuilder(object):
     PROV = Namespace('http://www.w3.org/ns/prov#')
     PROVOMATIC = Namespace('http://provomatic.org/resource/')
     SKOS = Namespace('http://www.w3.org/2004/02/skos/core#')
+    DCT = Namespace('http://purl.org/dc/terms/')
 
 
-    def add_activity(self, name, description, inputs, outputs, dependencies={}, expand_output_dict=False):
+    def add_activity(self, name, description, inputs, outputs, dependencies={}, expand_output_dict=False, source=None):
         """Adds an activity to the graph. Inputs should be a dictionary of inputs & values, outputs a list or tuple of just values"""
         
-        description, digest = self.get_value(description)
+        if not source:
+            source = description
+            
+        source, digest = self.get_value(source)
+        
+        description = unicode(description)
         
         # Determine the plan and activity URI based on a digest of the source code of the function.
         plan_uri = self.PROVOMATIC[digest]
@@ -34,17 +40,18 @@ class ProvBuilder(object):
         self.g.bind('prov',self.PROV)
         self.g.bind('provomatic',self.PROVOMATIC)
         self.g.bind('skos',self.SKOS)
-        
+        self.g.bind('dcterms',self.DCT)
         
         self.g.add((plan_uri, RDF.type, self.PROV['Plan']))
-        self.g.add((plan_uri, RDFS.label, Literal("{} Plan".format(name))))
-        self.g.add((plan_uri,self.SKOS.note,Literal(description)))
+        self.g.add((plan_uri, RDFS.label, Literal(name)))
+        self.g.add((plan_uri, self.DCT.description, Literal(description)))
+        self.g.add((plan_uri,self.SKOS.note,Literal(source)))
         
     
         self.g.add((activity_uri,RDF.type,self.PROV['Activity']))
-        self.g.add((activity_uri,RDFS.label,Literal(name)))
+        self.g.add((activity_uri,RDFS.label,Literal("{} (run)".format(name))))
         self.g.add((activity_uri,self.PROV['used'],plan_uri))
-        self.g.add((activity_uri,self.SKOS.note,Literal(description)))
+        self.g.add((activity_uri,self.DCT.description,Literal(description)))
     
         # For each input, create a 'used' relation
         for iname, value in inputs.items():
@@ -86,7 +93,11 @@ class ProvBuilder(object):
         for dname, value in dependencies.items():
             value, vdigest = self.get_value(value)
             
-            dependency_uri = self.add_entity(dname, vdigest, value)
+            dependency_uri = self.PROVOMATIC[vdigest]
+            
+            self.g.add((dependency_uri,RDF.type,self.PROV['Activity']))
+            self.g.add((dependency_uri,RDFS.label,Literal(dname)))
+            self.g.add((dependency_uri,self.SKOS.note,Literal(value)))
             
             self.g.add((activity_uri, self.PROV['wasInformedBy'], dependency_uri))
         

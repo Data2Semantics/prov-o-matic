@@ -1,14 +1,15 @@
 
 from IPython.core.history import HistoryAccessor
 from IPython.core.ultratb import VerboseTB
-
+import numpy
 
 import inspect
 import hashlib
 import collections
 
-from wrapper import prov, CodeVisitor
+from wrapper import prov, CodeVisitor, replace
 from builder import ProvBuilder, get_dataset
+from viewer import view_prov
 
 from rdflib import Graph
 
@@ -50,33 +51,45 @@ class NotebookWatcher(object):
         # If the node is a *global* variable, add it to the inputs
         # If the node is a *function* name, add it to the dependencies
         for node in self.used:    
+            # print "Checking wether " + node + " is a variable or a function"
             try :
-                evaluated_node = eval(node)
-            
+                evaluated_node = self.shell.ev(node)
+                # print "> Could evaluate " + node 
                 if node in self.environment and not callable(evaluated_node) :
-                    # print "Used global variable {}".format(node)
+                    # print ">> " + node + " is in environment and not callable"
+                    # # print "Used global variable {}".format(node)
                     # Set the input of the node to the value that it had prior to executing the code (if available)
                     if node in self.environment:
-                        #print "Global variable existed before, adding to inputs"
+                        ## print "Global variable existed before, adding to inputs"
                         inputs[node] = self.environment[node]
                     # Otherwise, we do nothing, since the variable may have been used, but was first introduced in the code.
                     else :
-                        #print "Global variable was introduced here, ignoring"
+                        # # print "Global variable was introduced here, ignoring"
                         pass
                
                 elif callable(evaluated_node):
-                    #print "Used function {}".format(node)
-                    dependencies[node] = inspect.getsource(evaluated_node)
+                    # print ">> Used function {}".format(node)
+                    try :
+                        dependencies[node] = inspect.getsource(evaluated_node)
+                    except Exception as e:
+                        # print e
+                        dependencies[node] = unicode(evaluated_node)
             except :
-                #print "Used local {} variable or function".format(node)
-                #print "Value not accessible"
+                ## print "Used local {} variable or function".format(node)
+                # print "> Could not evaluate " + node
                 if node in self.environment :
+                    # print ">> Node is in environment"
                     evaluated_node = self.environment[node]
                     
                     if not callable(evaluated_node) :
+                        # print ">>> Node is a variable"
                         inputs[node] = evaluated_node
                     else :
+                        # print ">>> Node is a function"
                         dependencies[node] = inspect.getsource(evaluated_node)
+                else :
+                    pass
+                    # print ">> Node was introduced here"
                 
         
         for k,v in self.shell.user_ns.items():
@@ -85,8 +98,10 @@ class NotebookWatcher(object):
                 pass
             # For all other variables, see whether they were changed, and add them to the outputs
             else :
-                if (k in self.environment and v != self.environment[k]) or (not k in self.environment):
-                    # print "{} changed or was added".format(k)
+                
+                    
+                if (k in self.environment and not numpy.array_equal(v,self.environment[k])) or (not k in self.environment):
+                    # # print "{} changed or was added".format(k)
                     
                     # If the object is not a function, we'll use the value as output value.
                     if not callable(v):
@@ -106,6 +121,7 @@ class NotebookWatcher(object):
                     
                     self.environment[k] = v
         
+        # print dependencies.keys()
         pb.add_activity(name, description, inputs, outputs, dependencies, True)
         
 
@@ -131,6 +147,8 @@ class NotebookWatcher(object):
 
 def load_ipython_extension(ip):
     ip.push('prov')
+    ip.push('view_prov')
+    ip.push('replace')
     nw = NotebookWatcher(ip)
     cv = CodeVisitor(nw)
     ip.events.register('pre_execute', nw.pre_execute)
