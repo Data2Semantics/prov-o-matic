@@ -1,5 +1,6 @@
 # PROV-O-Matic
 ### Python Provenance Tracer
+** Author: ** Rinke Hoekstra, VU University Amsterdam, <rinke.hoekstra@vu.nl>
 
 Provenance is key in improving the transparency of scientific data publishing. 
 
