@@ -348,5 +348,5 @@ if __name__ == '__main__':
         command_call = list(splitter)
         t.execute(command_call, inputs=trace_inputs, outputs=trace_outputs, replace=option.hidden)
     
-    f = open(option.destination, "w")
-    t.serialize(file=f)
+    #f = open(option.destination, "w")
+    t.serialize(trailFile=option.destination)
