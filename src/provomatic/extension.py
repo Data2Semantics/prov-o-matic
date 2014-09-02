@@ -7,6 +7,10 @@ import inspect
 import hashlib
 import collections
 
+import SimpleHTTPServer
+import SocketServer
+import threading
+
 from wrapper import prov, CodeVisitor, replace
 from builder import ProvBuilder, get_dataset
 from viewer import view_prov, set_provoviz_url
@@ -143,6 +147,10 @@ class NotebookWatcher(object):
         self.used.add(node)
 
         
+PORT = 8000
+
+
+
 
 
 def load_ipython_extension(ip):
@@ -150,9 +158,22 @@ def load_ipython_extension(ip):
     ip.push('view_prov')
     ip.push('set_provoviz_url')
     ip.push('replace')
+    
+    Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
+
+    httpd = SocketServer.TCPServer(("", PORT), Handler)
+
+    httpd_thread = threading.Thread(target=httpd.serve_forever)
+    httpd_thread.setDaemon(True)
+    httpd_thread.start()
+    
+    print "HTTP Server running at http://localhost:{}".format(PORT)
+    
     nw = NotebookWatcher(ip)
     cv = CodeVisitor(nw)
     ip.events.register('pre_execute', nw.pre_execute)
     ip.events.register('post_execute', nw.post_execute)
     ip.ast_transformers.append(cv)
+    
+    
 
