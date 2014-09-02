@@ -34,13 +34,24 @@ def replace(f, *args, **kwargs):
     """Provenance-enabled replacement for arbitrary functions"""
     # print '---\nREPLACE: function name "{}"\n---'.format(f.__name__)
     
+    ## If we're dealing with a 'ufunc' (i.e. numpy universal function)
     if isinstance(f,np.ufunc):
         # print "ufunc", f, args, kwargs
         inputs = {'x{}'.format(n) : args[n-1] for n in range(1,f.nin+1) }
         # print inputs
         source = f.__doc__
+    ## If we're dealing with a 'classobj' (i.e. an expression that instantiates a object of a class, or something... whatever.)
+    elif inspect.isclass(f):
+        print "func", f, args, kwargs
+        
+        inputs = inspect.getcallargs(f.__init__, f, *args, **kwargs)
+        # print inputs
+        source = inspect.getsource(f)
+        
+    ## If we're dealing with any other function
     else :
         # print "func", f, args, kwargs
+        
         inputs = inspect.getcallargs(f, *args, **kwargs)
         # print inputs
         source = inspect.getsource(f)
