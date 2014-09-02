@@ -14,22 +14,23 @@ PROV-O-Matic provides three things:
 
 * RDFLib >= v4.2-dev
 * IPython >= 2.0.0-dev
-* A local PROV-O-Viz running on port 5000
-* A simple HTTPServer running from the same directory the root of the PROV-O-Matic source tree.
+* An internet connection (for connecting to http://provoviz.org/service), or a locally running PROV-O-Viz service.
 
 This is all still quite experimental. You're probably safest off if you set everything up in a separate virtualenv, running PROV-O-Matic directly from the source distribution.
 
 ### Usage
 
+Start an IPython notebook from inside the `src` directory of the PROV-O-Matic source distribution.
+
 Load the IPython extension in the usual way (provided that `provomatic.extension` is in your python path), by typing the following in your IPython Notebook:
 
 ```%load_ext provomatic.extension```
 
-The visualization connection expects a HTTP server to be running on port 8000 with the current working directory as document root.
-
 Provenance tracking is automatic once you load the extension.
 
 You can visualize using [PROV-O-Viz](http://provoviz.org) by calling `view_prov()`
+
+If you want to connect to a locally running PROV-O-Viz service, you can set its URL using `set_provoviz_url()`. 
 
 ### Credits
 
