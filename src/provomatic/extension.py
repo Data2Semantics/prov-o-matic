@@ -9,7 +9,7 @@ import collections
 
 from wrapper import prov, CodeVisitor, replace
 from builder import ProvBuilder, get_dataset
-from viewer import view_prov
+from viewer import view_prov, set_provoviz_url
 
 from rdflib import Graph
 
@@ -148,6 +148,7 @@ class NotebookWatcher(object):
 def load_ipython_extension(ip):
     ip.push('prov')
     ip.push('view_prov')
+    ip.push('set_provoviz_url')
     ip.push('replace')
     nw = NotebookWatcher(ip)
     cv = CodeVisitor(nw)

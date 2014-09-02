@@ -7,8 +7,11 @@ import requests
 import os 
 
 #PROVOVIZ_SERVICE = "http://semweb.cs.vu.nl/provoviz/service"
-PROVOVIZ_SERVICE = "http://localhost:5000/service"
+PROVOVIZ_SERVICE = "http://provoviz.org/service"
 
+def set_provoviz_url(url='http://localhost:5000/service'):
+    PROVOVIZ_SERVICE = url
+    return "PROV-O-Viz service URL now set to '{}'".format(url)
 
 def view_prov():
     graph = Graph()
