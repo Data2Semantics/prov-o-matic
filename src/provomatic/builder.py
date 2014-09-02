@@ -1,6 +1,6 @@
 import datetime
 import hashlib
-
+import chardet
 from rdflib import Graph, Dataset, URIRef, Literal, Namespace, RDF, RDFS
 
 
@@ -114,8 +114,22 @@ class ProvBuilder(object):
     
     def get_value(self, io):
         """We'll just use the __unicode__ representation as source for the hash digest"""
-        value = unicode(io)
-        vdigest = hashlib.md5(unicode(value)).hexdigest()
+        
+        
+        try :
+            value = unicode(io)
+        except :
+            print "Type: ", type(io)
+            print "IO cannot be decoded"
+            encoding = chardet.detect(io)['encoding']
+            if encoding == None :
+                print "No encoding"
+                value = io.encode('string-escape').decode('utf-8')
+            else :
+                print "Encoding: {}".format(encoding)
+                value = io.decode(encoding)
+            
+        vdigest = hashlib.md5(value).hexdigest()
 
         if len(value) > 200:
             value = value[:99] + u"..." + value[-100:]
