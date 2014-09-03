@@ -11,6 +11,26 @@ _ds = Dataset()
 
 def get_dataset():
     return _ds
+    
+def get_graph():
+    graph = Graph()
+    
+    for s,p,o,_ in get_dataset().quads(None) :
+        graph.add((s,p,o))
+    
+    return graph
+    
+def save_prov(trail_filename='provenance-trail.ttl'):
+    graph = get_graph()
+    
+    try :
+        graph.serialize(open(trail_filename,'w'),format='turtle')
+        print "File saved to {}".format(trail_filename)
+    except:
+        print "Problem writing to {}".format(trail_filename)
+    
+    return
+    
 
 class ProvBuilder(object):
     PROV = Namespace('http://www.w3.org/ns/prov#')
