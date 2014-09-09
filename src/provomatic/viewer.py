@@ -6,14 +6,13 @@ import hashlib
 import requests
 import os 
 
-#PROVOVIZ_SERVICE = "http://semweb.cs.vu.nl/provoviz/service"
-PROVOVIZ_SERVICE = "http://provoviz.org/service"
+#_PROVOVIZ_SERVICE = "http://semweb.cs.vu.nl/provoviz/service"
+#_PROVOVIZ_SERVICE = "http://provoviz.org/service"
+_PROVOVIZ_SERVICE = "http://localhost:5000/service"
 
 def set_provoviz_url(url='http://localhost:5000/service'):
-    PROVOVIZ_SERVICE = url
-    return "PROV-O-Viz service URL now set to '{}'".format(PROVOVIZ_SERVICE)
-    
-    return PROVOVIZ_SERVICE
+    _PROVOVIZ_SERVICE = url
+    return "PROV-O-Viz service URL now set to '{}'".format(_PROVOVIZ_SERVICE)
 
 def view_prov():
     graph = get_graph()
@@ -25,8 +24,8 @@ def view_prov():
     graph_uri = "http://provomatic.org/export/{}".format(digest)
     
     payload = {'graph_uri': graph_uri, 'data': graph_ttl}
-    print "Posting to {}".format(PROVOVIZ_SERVICE)
-    response = requests.post(PROVOVIZ_SERVICE, data=payload)
+    print "Posting to {}".format(_PROVOVIZ_SERVICE)
+    response = requests.post(_PROVOVIZ_SERVICE, data=payload)
     
     html_filename = '{}_provoviz.html'.format(digest)
     html_file = open(html_filename,'w')
