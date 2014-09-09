@@ -12,7 +12,7 @@ import SocketServer
 import threading
 
 from wrapper import prov, CodeVisitor, replace
-from builder import ProvBuilder, get_dataset
+from builder import ProvBuilder, get_dataset, save_prov
 from viewer import view_prov, set_provoviz_url
 
 from rdflib import Graph
@@ -156,6 +156,7 @@ PORT = 8000
 def load_ipython_extension(ip):
     ip.push('prov')
     ip.push('view_prov')
+    ip.push('save_prov')
     ip.push('set_provoviz_url')
     ip.push('replace')
     

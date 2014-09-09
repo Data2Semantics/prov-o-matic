@@ -11,6 +11,17 @@ _ds = Dataset()
 
 def get_dataset():
     return _ds
+    
+def save_prov(filename='provenance.ttl'):
+    ds = get_dataset()
+    
+    graph = Graph()
+    
+    for s,p,o,_ in get_dataset().quads(None) :
+        graph.add((s,p,o))
+    
+    graph.serialize(open(filename,'w'), format='turtle')
+    print "Provenance graph saved to {}".format(filename)
 
 class ProvBuilder(object):
     PROV = Namespace('http://www.w3.org/ns/prov#')
