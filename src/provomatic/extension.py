@@ -15,6 +15,8 @@ from wrapper import prov, CodeVisitor, replace
 from builder import ProvBuilder, get_dataset, save_prov
 from viewer import view_prov, set_provoviz_url
 
+from ducktape import Ducktape
+
 from rdflib import Graph
 
 
@@ -155,9 +157,9 @@ PORT = 8000
 
 def load_ipython_extension(ip):
     ip.push('prov')
+    ip.push('set_provoviz_url')
     ip.push('view_prov')
     ip.push('save_prov')
-    ip.push('set_provoviz_url')
     ip.push('replace')
     
     Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
@@ -170,8 +172,13 @@ def load_ipython_extension(ip):
     
     print "HTTP Server running at http://localhost:{}".format(PORT)
     
+    ducktape = Ducktape(ip)
+    load_ducktape = ducktape.load
+    ip.push('load_ducktape')
+    
     nw = NotebookWatcher(ip)
     cv = CodeVisitor(nw)
+    
     ip.events.register('pre_execute', nw.pre_execute)
     ip.events.register('post_execute', nw.post_execute)
     ip.ast_transformers.append(cv)
