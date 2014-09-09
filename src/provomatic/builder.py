@@ -32,6 +32,22 @@ def save_prov(trail_filename='provenance-trail.ttl'):
         print "Problem writing to {}".format(trail_filename)
     
     return
+    
+def add_prov(uri, prov):
+    """
+        prov should be a Turtle serialization of an RDF PROV-O graph
+        uri is a unique id of the graph
+        
+        """
+    ds = get_dataset()
+    
+    graph = ds.graph(URIRef(uri))
+    graph.parse(data=prov,format='turtle')
+    
+    print "Loaded provenance graph with id {}".format(uri)
+    return
+    
+    
 
 class ProvBuilder(object):
     PROV = Namespace('http://www.w3.org/ns/prov#')
@@ -50,10 +66,12 @@ class ProvBuilder(object):
         
         description = unicode(description)
         
+        timestamp = self.now()
         # Determine the plan and activity URI based on a digest of the source code of the function.
         plan_uri = self.PROVOMATIC[digest]
-        activity_uri = self.PROVOMATIC[digest + "/" + self.now()]
+        activity_uri = self.PROVOMATIC[digest + "/" + timestamp]
         
+        print "Adding activity with URI {}".format(activity_uri)
         # Initialise a graph with the same identifier as the activity uri
         self.g = _ds.graph(identifier=activity_uri)
         
@@ -70,7 +88,7 @@ class ProvBuilder(object):
         
     
         self.g.add((activity_uri,RDF.type,self.PROV['Activity']))
-        self.g.add((activity_uri,RDFS.label,Literal("{} (run)".format(name))))
+        self.g.add((activity_uri,RDFS.label,Literal("{} ({})".format(name, timestamp))))
         self.g.add((activity_uri,self.PROV['used'],plan_uri))
         self.g.add((activity_uri,self.DCT.description,Literal(description)))
     
@@ -117,7 +135,7 @@ class ProvBuilder(object):
             dependency_uri = self.PROVOMATIC[vdigest]
             
             self.g.add((dependency_uri,RDF.type,self.PROV['Activity']))
-            self.g.add((dependency_uri,RDFS.label,Literal(dname)))
+            # self.g.add((dependency_uri,RDFS.label,Literal(dname)))
             self.g.add((dependency_uri,self.SKOS.note,Literal(value)))
             
             self.g.add((activity_uri, self.PROV['wasInformedBy'], dependency_uri))
@@ -126,6 +144,8 @@ class ProvBuilder(object):
 
     def add_entity(self, name, digest, description):
         entity_uri = self.PROVOMATIC[digest]
+    
+        print "Adding Entity with URI {}".format(entity_uri)
     
         self.g.add((entity_uri,RDF.type,self.PROV['Entity']))
         self.g.add((entity_uri,RDFS.label,Literal(name)))
