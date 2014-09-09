@@ -1,4 +1,4 @@
-from builder import get_dataset
+from builder import get_graph
 from rdflib import Graph
 
 from IPython.display import HTML
@@ -11,13 +11,12 @@ PROVOVIZ_SERVICE = "http://provoviz.org/service"
 
 def set_provoviz_url(url='http://localhost:5000/service'):
     PROVOVIZ_SERVICE = url
-    return "PROV-O-Viz service URL now set to '{}'".format(url)
+    return "PROV-O-Viz service URL now set to '{}'".format(PROVOVIZ_SERVICE)
+    
+    return PROVOVIZ_SERVICE
 
 def view_prov():
-    graph = Graph()
-    
-    for s,p,o,_ in get_dataset().quads(None) :
-        graph.add((s,p,o))
+    graph = get_graph()
     
     graph_ttl = graph.serialize(format='turtle')
     
@@ -26,6 +25,7 @@ def view_prov():
     graph_uri = "http://provomatic.org/export/{}".format(digest)
     
     payload = {'graph_uri': graph_uri, 'data': graph_ttl}
+    print "Posting to {}".format(PROVOVIZ_SERVICE)
     response = requests.post(PROVOVIZ_SERVICE, data=payload)
     
     html_filename = '{}_provoviz.html'.format(digest)

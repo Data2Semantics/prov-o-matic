@@ -1,0 +1,5 @@
+{
+    "datasets_data" : [["Module", "Dataset", "Value"], ["RDFDataSet", "filename", "http://files.figshare.com/1118822/aifb_fixed_complete.n3"]],
+    "libraries_data" : [["GroupID", "ArtifactID", "Version"], ["data2semantics", "mustard", "0.0.1-SNAPSHOT"], ["data2semantics", "ducktape", "0.0.1-SNAPSHOT"]], 
+    "modules_data" : [["Module", "Instances"], ["RDFDataSet", "1"], ["Experiment", "100"], ["RDFIntersectionSubTreeKernel", "4"], ["LibSVMParms", "1"], ["RDFIntersectionPartialSubTreeKernel", "4"], ["RDFWLSubTreeKernel", "12"], ["AffiliationDataSet", "1"]],
+}
