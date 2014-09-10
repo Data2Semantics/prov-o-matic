@@ -164,13 +164,16 @@ def load_ipython_extension(ip):
     
     Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
 
-    httpd = SocketServer.TCPServer(("", PORT), Handler)
+    try :
+        httpd = SocketServer.TCPServer(("", PORT), Handler)
 
-    httpd_thread = threading.Thread(target=httpd.serve_forever)
-    httpd_thread.setDaemon(True)
-    httpd_thread.start()
+        httpd_thread = threading.Thread(target=httpd.serve_forever)
+        httpd_thread.setDaemon(True)
+        httpd_thread.start()
     
-    print "HTTP Server running at http://localhost:{}".format(PORT)
+        print "HTTP Server running at http://localhost:{}".format(PORT)
+    except :
+        print "HTTP Server failed to start (is it already running?)"
     
     ducktape = Ducktape(ip)
     load_ducktape = ducktape.load
