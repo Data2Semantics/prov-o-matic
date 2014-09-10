@@ -81,7 +81,9 @@ class ProvBuilder(object):
         self.g.bind('skos',self.SKOS)
         self.g.bind('dcterms',self.DCT)
         
+        # TODO: The PLAN part should be a qualified association
         self.g.add((plan_uri, RDF.type, self.PROV['Plan']))
+        self.g.add((plan_uri, RDF.type, self.PROV['Entity']))
         self.g.add((plan_uri, RDFS.label, Literal(name)))
         self.g.add((plan_uri, self.DCT.description, Literal(description)))
         self.g.add((plan_uri,self.SKOS.note,Literal(source)))
@@ -129,16 +131,18 @@ class ProvBuilder(object):
             self.g.add((activity_uri, self.PROV['generated'], output_uri))
             
         # For each dependency, create a 'wasInformedBy' relation
-        for dname, value in dependencies.items():
-            value, vdigest = self.get_value(value)
-            
-            dependency_uri = self.PROVOMATIC[vdigest]
-            
-            self.g.add((dependency_uri,RDF.type,self.PROV['Activity']))
-            # self.g.add((dependency_uri,RDFS.label,Literal(dname)))
-            self.g.add((dependency_uri,self.SKOS.note,Literal(value)))
-            
-            self.g.add((activity_uri, self.PROV['wasInformedBy'], dependency_uri))
+        
+        # TODO: SKIPPING THIS FOR NOW
+        # for dname, value in dependencies.items():
+        #     value, vdigest = self.get_value(value)
+        #
+        #     dependency_uri = self.PROVOMATIC[vdigest]
+        #
+        #     self.g.add((dependency_uri,RDF.type,self.PROV['Activity']))
+        #     # self.g.add((dependency_uri,RDFS.label,Literal(dname)))
+        #     self.g.add((dependency_uri,self.SKOS.note,Literal(value)))
+        #
+        #     self.g.add((activity_uri, self.PROV['wasInformedBy'], dependency_uri))
         
         return activity_uri
 
