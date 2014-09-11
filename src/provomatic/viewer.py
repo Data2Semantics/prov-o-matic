@@ -48,6 +48,10 @@ class Viewer(object):
         except :
             print "HTTP Server failed to start (is it already running?)"
             
+        if not os.path.exists('www'):
+            print "Created 'www' directory for storing generated HTML files"
+            os.makedirs('www')
+            
 
     def set_provoviz_url(self, provoviz_service_url='http://localhost:5000/service'):
         """Sets the URL to which the provenance trace should be posted to obtain the visualization"""
@@ -69,7 +73,7 @@ class Viewer(object):
         print "Posting to {}".format(self._PROVOVIZ_SERVICE)
         response = requests.post(self._PROVOVIZ_SERVICE, data=payload)
     
-        html_filename = '{}_provoviz.html'.format(digest)
+        html_filename = 'www/{}_provoviz.html'.format(digest)
         html_file = open(html_filename,'w')
         html_file.write(response.text)
         html_file.close()
