@@ -1,6 +1,6 @@
 from watcher import NotebookWatcher, CodeVisitor
 from wrapper import prov, replace
-from builder import ProvBuilder, get_dataset, save_prov
+from builder import get_dataset, save_prov
 from viewer import Viewer
 
 from ducktape import Ducktape
