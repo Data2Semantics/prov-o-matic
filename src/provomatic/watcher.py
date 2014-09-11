@@ -49,78 +49,91 @@ class NotebookWatcher(object):
         # If the node is a *global* variable, add it to the inputs
         # If the node is a *function* name, add it to the dependencies
         for node in self.used:    
-            # print "Checking wether " + node + " is a variable or a function"
+            print "Checking wether " + node + " is a variable or a function"
             try :
                 evaluated_node = self.shell.ev(node)
-                # print "> Could evaluate " + node 
+                print "> Could evaluate {}".format(node) 
                 if node in self.environment and not callable(evaluated_node) :
-                    # print ">> " + node + " is in environment and not callable"
+                    print ">> {} is in environment and not callable (it is a variable)".format(node)
                     # # print "Used global variable {}".format(node)
                     # Set the input of the node to the value that it had prior to executing the code (if available)
                     if node in self.environment:
-                        ## print "Global variable existed before, adding to inputs"
+                        print "Global variable existed before, adding to inputs"
                         inputs[node] = self.environment[node]
                     # Otherwise, we do nothing, since the variable may have been used, but was first introduced in the code.
                     else :
-                        # # print "Global variable was introduced here, ignoring"
+                        print "Global variable was introduced here, not doing anything"
                         pass
                
                 elif callable(evaluated_node):
-                    # print ">> Used function {}".format(node)
+                    print ">> {} is a function, adding to dependencies.".format(node)
                     try :
                         dependencies[node] = inspect.getsource(evaluated_node)
                     except Exception as e:
                         # print e
                         dependencies[node] = unicode(evaluated_node)
+                else :
+                    print ">> {} is not callable, and not in environment... it was a variable that was newly introduced here?".format(node)
             except :
                 ## print "Used local {} variable or function".format(node)
-                # print "> Could not evaluate " + node
+                print "> Could not evaluate " + node
                 if node in self.environment :
-                    # print ">> Node is in environment"
+                    print ">> Node is in environment, we'll use its evaluated value from the environment"
                     evaluated_node = self.environment[node]
                     
                     if not callable(evaluated_node) :
-                        # print ">>> Node is a variable"
+                        print ">>> {} is a variable".format(node)
                         inputs[node] = evaluated_node
                     else :
-                        # print ">>> Node is a function"
+                        print ">>> {} is a function".format(node)
                         dependencies[node] = inspect.getsource(evaluated_node)
                 else :
+                    print ">> {} was introduced here, not doing anything"
                     pass
-                    # print ">> Node was introduced here"
                 
-        
+        # We'll loop through all known entities in the user namespace.
         for k,v in self.shell.user_ns.items():
             # Ignore any standard IPython/Python variables in the user namespace
             if k.startswith('_') or k in ['In','Out','exit','quit','get_ipython'] :
                 pass
+                
             # For all other variables, see whether they were changed, and add them to the outputs
             else :
-                
+                ## This compares the value of the variable with the value it had previously, or
+                ## checks that the variable did not exist previously.  
+                if (k in self.environment and not numpy.array_equal(v,self.environment[k])) or (k in self.environment and v != self.environment[k]) or (not k in self.environment):
                     
-                if (k in self.environment and not numpy.array_equal(v,self.environment[k])) or (not k in self.environment):
-                    # # print "{} changed or was added".format(k)
+                    
+                    print "{} changed or was added".format(k)
+                    if k in self.environment and v == self.environment[k]:
+                        print "PROBLEM HERE!"
+                        print "PROOF: '{}' == '{}'".format(v, self.environment[k])
                     
                     # If the object is not a function, we'll use the value as output value.
-                    if not callable(v):
+                    elif not callable(v):
+                        print "{} is not a function, adding to outputs as value".format(k)
                         outputs[k] = v
                     # If it is a PROV wrapped function, we'll retrieve its source and use it as output value.
                     elif callable(v) and hasattr(v,'source') :
+                        print "{} is a PROV wrapped function, its source is an output value".format(k)
                         outputs[k] = v.source
                     # Otherwise (this shouldn't be the case, but anyway) we'll use its source directly.
                     elif callable(v) :
+                        print "{} is callable, but not wrapped... we'll try to retrieve its source and add it as an output".format(k)
                         try :
                             outputs[k] = inspect.getsource(v)
                         except:
+                            print "could not get source of {}, just taking its value as an output".format(k)
                             outputs[k] = v
                     # Finally, this is probably not were we'll end up anyway... we'll do nothing 
                     else :
+                        print "Unexpected!"
                         pass
                     
                     self.environment[k] = v
         
         # print dependencies.keys()
-        pb.add_activity(name, description, inputs, outputs, dependencies, True)
+        pb.add_activity(name, description, inputs, outputs, dependencies, expand_output_dict=True)
         
 
 
@@ -155,6 +168,90 @@ class CodeVisitor(NodeTransformer):
         self.functions = set()
 
 
+
+    def visit_Name(self, node):
+        self.generic_visit(node)
+        # print dump(node)
+        self.nw.register_usage(node.id)
+        return node
+    
+
+    
+    def visit_Attribute(self, node):
+        self.generic_visit(node)
+        
+        if isinstance(node.value,Name):
+            # print node.value.id, node.attr
+            self.nw.register_usage(node.value.id + '.' + node.attr)
+            
+        return node
+
+    def visit_Call(self, node):
+        self.generic_visit(node)
+        fix_missing_locations(node)
+        #self.nw.register_usage(node)
+
+        # print "===\nCall\nOld: ", dump(node)
+        
+        if isinstance(node.func,Name) :
+            func_id = node.func.id
+        elif isinstance(node.func,Attribute) and isinstance(node.func.value,Call):
+            func_id = node.func.value.func.id
+        elif isinstance(node.func,Attribute) and isinstance(node.func.value,Name):
+            func_id = node.func.value.id
+        else :
+            # print "Unknown function type"
+            # print "==="
+            return node
+        
+        if func_id == 'replace':
+            print "Skipping {}, already replaced".format(dump(node.func))
+            # print "==="
+            return node
+            
+        # print "Not skipping"
+        
+        try :
+            new_args = [node.func]
+            new_args.extend(node.args)
+            # print "New Args:", [dump(a) for a in new_args]
+            new_call = Call(Name('replace',Load()),new_args,node.keywords,node.starargs,node.kwargs)
+            copy_location(new_call,node)
+            fix_missing_locations(new_call)
+            
+            # print "New: ", dump(new_call)
+            
+        except Exception as e:
+            # print "Whoops!"
+            # print e
+            return node
+            
+        # print "==="
+        return new_call
+
+    def visit_Module(self, node):
+        self.generic_visit(node)
+        fix_missing_locations(node)
+        return node
+       
+    # def visit_Module(self,node):
+    #     self.functions=set()
+    #     # print dump(node)
+    #     self.generic_visit(node)
+    #     
+    #     body = node.body
+    #     for f in self.functions:
+    #         if f == 'prov' or 'view_prov':
+    #             # print "Already wrapped or in exclusion list"
+    #         else :
+    #             # print "Inserting prov wrapper"
+    #             body.insert(0,parse("{} = prov({})".format(f,f)))
+    #     
+    #     fix_missing_locations(node)
+    #     return node
+    
+    
+    
     # ====
     # No longer used as we dynamically wrap *any* function call, regardless of whether it is imported or defined.
     # TODO: Rewrite this to a function creation activity (now that would be cool)
@@ -179,13 +276,10 @@ class CodeVisitor(NodeTransformer):
     #     except Exception as e:
     #         # print e
     #     return node
-        
-    def visit_Name(self, node):
-        self.generic_visit(node)
-        # print dump(node)
-        self.nw.register_usage(node.id)
-        return node
     
+    
+    
+                
     # def visit_Assign(self, node):
     #     
     #     if isinstance(node.value,Call):
@@ -243,83 +337,7 @@ class CodeVisitor(NodeTransformer):
     #         # print "==="
     #         self.generic_visit(node)
     #         fix_missing_locations(node)
-    #         return node
-    
-    def visit_Attribute(self, node):
-        self.generic_visit(node)
-        
-        if isinstance(node.value,Name):
-            # print node.value.id, node.attr
-            self.nw.register_usage(node.value.id + '.' + node.attr)
-            
-        return node
-
-    def visit_Call(self, node):
-        self.generic_visit(node)
-        fix_missing_locations(node)
-        #self.nw.register_usage(node)
-
-        # print "===\nCall\nOld: ", dump(node)
-        
-        if isinstance(node.func,Name) :
-            func_id = node.func.id
-        elif isinstance(node.func,Attribute) and isinstance(node.func.value,Call):
-            func_id = node.func.value.func.id
-        elif isinstance(node.func,Attribute) and isinstance(node.func.value,Name):
-            func_id = node.func.value.id
-        else :
-            # print "Unknown function type"
-            # print "==="
-            return node
-        
-        if func_id == 'replace':
-            # print "Skipping {}, already replaced".format(dump(node.func))
-            # print "==="
-            return node
-
-            
-        # print "Not skipping"
-        
-        try :
-            new_args = [node.func]
-            new_args.extend(node.args)
-            # print "New Args:", [dump(a) for a in new_args]
-            new_call = Call(Name('replace',Load()),new_args,node.keywords,node.starargs,node.kwargs)
-            copy_location(new_call,node)
-            fix_missing_locations(new_call)
-            
-            # print "New: ", dump(new_call)
-            
-        except Exception as e:
-            # print "Whoops!"
-            # print e
-            return node
-            
-        # print "==="
-        return new_call
-
-    def visit_Module(self, node):
-        self.generic_visit(node)
-        fix_missing_locations(node)
-        return node
-        
-    # def visit_Module(self,node):
-    #     self.functions=set()
-    #     # print dump(node)
-    #     self.generic_visit(node)
-    #     
-    #     body = node.body
-    #     for f in self.functions:
-    #         if f == 'prov' or 'view_prov':
-    #             # print "Already wrapped or in exclusion list"
-    #         else :
-    #             # print "Inserting prov wrapper"
-    #             body.insert(0,parse("{} = prov({})".format(f,f)))
-    #     
-    #     fix_missing_locations(node)
-    #     return node
-            
-        
+    #         return node        
 
     
         

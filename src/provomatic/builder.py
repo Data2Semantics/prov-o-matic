@@ -96,7 +96,7 @@ class ProvBuilder(object):
         plan_uri = self.PROVOMATIC['id-'+digest]
         activity_uri = self.PROVOMATIC['id-'+digest + "/" + timestamp]
         
-        print "Adding activity with URI {}".format(activity_uri)
+        # print "Adding activity with name '{}'".format(name)
         # Initialise a graph with the same identifier as the activity uri
         self.g = _ds.graph(identifier=activity_uri)
         
@@ -113,9 +113,11 @@ class ProvBuilder(object):
         self.g.add((plan_uri, self.DCT.description, Literal(description)))
         self.g.add((plan_uri,self.SKOS.note,Literal(source)))
         
-    
+        
+        # print "Relating Activity '{} ({})' to Plan '{}'".format(name, timestamp, name)
         self.g.add((activity_uri,RDF.type,self.PROV['Activity']))
         self.g.add((activity_uri,RDFS.label,Literal("{} ({})".format(name, timestamp))))
+        
         self.g.add((activity_uri,self.PROV['used'],plan_uri))
         self.g.add((activity_uri,self.DCT.description,Literal(description)))
     
@@ -125,6 +127,7 @@ class ProvBuilder(object):
             
             input_uri = self.add_entity(iname, vdigest, value)
         
+            # print "Relating Activity '{} ({})' to input Entity '{}'".format(name, timestamp, input_uri)
             self.g.add((activity_uri, self.PROV['used'], input_uri))
         
         # For each output, create a 'generated' relation
@@ -138,6 +141,7 @@ class ProvBuilder(object):
         
                 output_uri = self.add_entity("{} output {}".format(name,count),vdigest,value)
             
+                # print "Relating Activity '{} ({})' to output Entity '{}'".format(name, timestamp, output_uri)
                 self.g.add((activity_uri, self.PROV['generated'], output_uri))
         # Only expand dictionaries when explicitly told to do so
         elif expand_output_dict and isinstance(outputs,dict):
@@ -146,6 +150,7 @@ class ProvBuilder(object):
                 
                 output_uri = self.add_entity(oname, vdigest, value)
                 
+                # print "Relating Activity '{}' to output Entity '{}'".format(name, output_uri)
                 self.g.add((activity_uri, self.PROV['generated'], output_uri))
         # Otherwise we'll take the value at 'face value'
         else :
@@ -153,6 +158,7 @@ class ProvBuilder(object):
         
             output_uri = self.add_entity("{} output".format(name), vdigest, value)
         
+            # print "Relating Activity '{} ({})' to output Entity '{}'".format(name, timestamp, output_uri)
             self.g.add((activity_uri, self.PROV['generated'], output_uri))
             
         # For each dependency, create a 'wasInformedBy' relation
@@ -174,7 +180,7 @@ class ProvBuilder(object):
     def add_entity(self, name, digest, description):
         entity_uri = self.PROVOMATIC['id-'+digest]
     
-        print "Adding Entity with URI {}".format(entity_uri)
+        # print "Adding Entity with label '{}' ({})".format(name,entity_uri)
     
         self.g.add((entity_uri,RDF.type,self.PROV['Entity']))
         self.g.add((entity_uri,RDFS.label,Literal(name)))
