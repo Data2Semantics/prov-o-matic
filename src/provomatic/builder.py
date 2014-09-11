@@ -14,7 +14,18 @@ def get_dataset():
     
 
 def get_graph():
+    PROV = Namespace('http://www.w3.org/ns/prov#')
+    PROVOMATIC = Namespace('http://provomatic.org/resource/')
+    SKOS = Namespace('http://www.w3.org/2004/02/skos/core#')
+    DCT = Namespace('http://purl.org/dc/terms/')
+    
     graph = Graph()
+    
+    # Bind namespaces to prefixes
+    graph.bind('prov',PROV)
+    graph.bind('provomatic',PROVOMATIC)
+    graph.bind('skos',SKOS)
+    graph.bind('dcterms',DCT)
     
     for s,p,o,_ in get_dataset().quads(None) :
         graph.add((s,p,o))
@@ -39,10 +50,17 @@ def add_prov(uri, prov):
         uri is a unique id of the graph
         
         """
+    PROV = Namespace('http://www.w3.org/ns/prov#')
+    PROVOMATIC = Namespace('http://provomatic.org/resource/')
+    SKOS = Namespace('http://www.w3.org/2004/02/skos/core#')
+    DCT = Namespace('http://purl.org/dc/terms/')
+        
     ds = get_dataset()
     
     graph = ds.graph(URIRef(uri))
     graph.parse(data=prov,format='turtle')
+    
+    
     
     print "Loaded provenance graph with id {}".format(uri)
     return
@@ -55,7 +73,14 @@ class ProvBuilder(object):
     SKOS = Namespace('http://www.w3.org/2004/02/skos/core#')
     DCT = Namespace('http://purl.org/dc/terms/')
 
-
+    def __init__(self):
+        # Bind namespaces to prefixes
+        _ds.bind('prov',self.PROV)
+        _ds.bind('provomatic',self.PROVOMATIC)
+        _ds.bind('skos',self.SKOS)
+        _ds.bind('dcterms',self.DCT)
+        
+        
     def add_activity(self, name, description, inputs, outputs, dependencies={}, expand_output_dict=False, source=None):
         """Adds an activity to the graph. Inputs should be a dictionary of inputs & values, outputs a list or tuple of just values"""
         
@@ -68,8 +93,8 @@ class ProvBuilder(object):
         
         timestamp = self.now()
         # Determine the plan and activity URI based on a digest of the source code of the function.
-        plan_uri = self.PROVOMATIC[digest]
-        activity_uri = self.PROVOMATIC[digest + "/" + timestamp]
+        plan_uri = self.PROVOMATIC['id-'+digest]
+        activity_uri = self.PROVOMATIC['id-'+digest + "/" + timestamp]
         
         print "Adding activity with URI {}".format(activity_uri)
         # Initialise a graph with the same identifier as the activity uri
@@ -147,7 +172,7 @@ class ProvBuilder(object):
         return activity_uri
 
     def add_entity(self, name, digest, description):
-        entity_uri = self.PROVOMATIC[digest]
+        entity_uri = self.PROVOMATIC['id-'+digest]
     
         print "Adding Entity with URI {}".format(entity_uri)
     
