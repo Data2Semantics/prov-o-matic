@@ -8,6 +8,9 @@ import collections
 
 from ast import *
 
+from builder import ProvBuilder
+
+
 class NotebookWatcher(object):
     """The NotebookWatcher listens to execution events in the IPython Notebook, and generates the relevant provenance based on an analysis of the code being executed."""
     environment = {}
