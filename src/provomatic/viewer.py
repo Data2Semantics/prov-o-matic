@@ -6,35 +6,76 @@ import hashlib
 import requests
 import os 
 
-#_PROVOVIZ_SERVICE = "http://semweb.cs.vu.nl/provoviz/service"
-#_PROVOVIZ_SERVICE = "http://provoviz.org/service"
-_PROVOVIZ_SERVICE = "http://localhost:5000/service"
+import SimpleHTTPServer
+import SocketServer
+import threading
 
-def set_provoviz_url(url='http://localhost:5000/service'):
-    _PROVOVIZ_SERVICE = url
-    return "PROV-O-Viz service URL now set to '{}'".format(_PROVOVIZ_SERVICE)
 
-def view_prov():
-    graph = get_graph()
+class Viewer(object):
+    """Adapter for the PROV-O-Viz service"""
     
-    graph_ttl = graph.serialize(format='turtle')
+    #_PROVOVIZ_SERVICE = "http://semweb.cs.vu.nl/provoviz/service"
+    #_PROVOVIZ_SERVICE = "http://provoviz.org/service"
+    _PROVOVIZ_SERVICE = "http://localhost:5000/service"
+
+    _PORT = 8000
+
+    def __init__(self, provoviz_service_url=_PROVOVIZ_SERVICE, http_port=_PORT):
+        self._PORT = http_port
+        
+        self.set_provoviz_url(provoviz_service_url)
+        
+        self.start_http_server()
+        
+        
+        
+    def start_http_server(self):
+        """Starts a simple HTTP server in a separate thread.\n
+        
+        The PROV-O-Viz service returns a self-contained HTML file, which is then served from this HTTP\n
+        server to the IPython notebook via an IFrame.
+        """
+        Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
+
+        try :
+            httpd = SocketServer.TCPServer(("", self._PORT), Handler)
+
+            httpd_thread = threading.Thread(target=httpd.serve_forever)
+            httpd_thread.setDaemon(True)
+            httpd_thread.start()
+            
+            print "HTTP Server running at http://localhost:{}".format(self._PORT)
+        except :
+            print "HTTP Server failed to start (is it already running?)"
+            
+
+    def set_provoviz_url(self, provoviz_service_url='http://localhost:5000/service'):
+        """Sets the URL to which the provenance trace should be posted to obtain the visualization"""
+        
+        self._PROVOVIZ_SERVICE = provoviz_service_url
+        return "PROV-O-Viz service URL now set to '{}'".format(self._PROVOVIZ_SERVICE)
+
+    def view_prov(self):
+        """Posts the provenance graph to the PROV-O-Viz service URL, and returns an HTML object with an IFrame to the HTML page returned"""
+        graph = get_graph()
     
-    digest = hashlib.md5(graph_ttl).hexdigest()
+        graph_ttl = graph.serialize(format='turtle')
     
-    graph_uri = "http://provomatic.org/export/{}".format(digest)
+        digest = hashlib.md5(graph_ttl).hexdigest()
     
-    payload = {'graph_uri': graph_uri, 'data': graph_ttl}
-    print "Posting to {}".format(_PROVOVIZ_SERVICE)
-    response = requests.post(_PROVOVIZ_SERVICE, data=payload)
+        graph_uri = "http://provomatic.org/export/{}".format(digest)
     
-    html_filename = '{}_provoviz.html'.format(digest)
-    html_file = open(html_filename,'w')
-    html_file.write(response.text)
-    html_file.close()
+        payload = {'graph_uri': graph_uri, 'data': graph_ttl}
+        print "Posting to {}".format(self._PROVOVIZ_SERVICE)
+        response = requests.post(self._PROVOVIZ_SERVICE, data=payload)
     
-    iframe = "<iframe width='100%' height='450px' src='http://localhost:8000/{}'></iframe>".format(html_filename)
+        html_filename = '{}_provoviz.html'.format(digest)
+        html_file = open(html_filename,'w')
+        html_file.write(response.text)
+        html_file.close()
     
+        iframe = "<iframe width='100%' height='450px' src='http://localhost:8000/{}'></iframe>".format(html_filename)
     
-    return HTML(iframe)
+        return HTML(iframe)
     
     
