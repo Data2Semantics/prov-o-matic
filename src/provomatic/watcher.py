@@ -88,49 +88,58 @@ class NotebookWatcher(object):
                         print ">>> {} is a function".format(node)
                         dependencies[node] = inspect.getsource(evaluated_node)
                 else :
-                    print ">> {} was introduced here, not doing anything"
+                    print ">> {} was introduced here, not doing anything".format(node)
                     pass
                 
         # We'll loop through all known entities in the user namespace.
         for k,v in self.shell.user_ns.items():
             # Ignore any standard IPython/Python variables in the user namespace
-            if k.startswith('_') or k in ['In','Out','exit','quit','get_ipython'] :
+            # if k.startswith('_') or k in ['In','Out','exit','quit','get_ipython'] :
+            #     print "'{}' skipped, because it is in ['In','Out','exit','quit','get_ipython'] or starts with '_'".format(k)
+            #     pass
+            
+            # TEMPORARY: Test what happens if we don't exclude 'Out'
+            if k.startswith('_') or k in ['In','exit','quit','get_ipython'] :
+                print "'{}' skipped, because it is in ['In','exit','quit','get_ipython'] or starts with '_'".format(k)
                 pass
                 
             # For all other variables, see whether they were changed, and add them to the outputs
-            else :
-                ## This compares the value of the variable with the value it had previously, or
-                ## checks that the variable did not exist previously.  
-                if (k in self.environment and not numpy.array_equal(v,self.environment[k])) or (k in self.environment and v != self.environment[k]) or (not k in self.environment):
-                    
-                    
-                    print "{} changed or was added".format(k)
-                    if k in self.environment and v == self.environment[k]:
-                        print "PROBLEM HERE!"
-                        print "PROOF: '{}' == '{}'".format(v, self.environment[k])
-                    
-                    # If the object is not a function, we'll use the value as output value.
-                    elif not callable(v):
-                        print "{} is not a function, adding to outputs as value".format(k)
+            ## This compares the value of the variable with the value it had previously, or
+            ## checks that the variable did not exist previously.  
+            
+            elif (k in self.environment and not (numpy.array_equal(v,self.environment[k]) or v == self.environment[k])) or (not k in self.environment) or k == 'Out':
+                
+                
+                print "{} changed or was added".format(k)
+                # OLD: This performed the check now included in the elif statement. Removed because of the addition of "k = 'Out'" (we're capturing everythin posted to Out)
+                # if k in self.environment and v == self.environment[k]:
+                #     print "Problem with {}".format(k)
+                
+                # If the object is not a function, we'll use the value as output value.
+                if not callable(v):
+                    print "{} is not a function, adding to outputs as value".format(k)
+                    outputs[k] = v
+                # If it is a PROV wrapped function, we'll retrieve its source and use it as output value.
+                elif callable(v) and hasattr(v,'source') :
+                    print "{} is a PROV wrapped function, its source is an output value".format(k)
+                    outputs[k] = v.source
+                # Otherwise (this shouldn't be the case, but anyway) we'll use its source directly.
+                elif callable(v) :
+                    print "{} is callable, but not wrapped... we'll try to retrieve its source and add it as an output".format(k)
+                    try :
+                        outputs[k] = inspect.getsource(v)
+                    except:
+                        print "could not get source of {}, just taking its value as an output".format(k)
                         outputs[k] = v
-                    # If it is a PROV wrapped function, we'll retrieve its source and use it as output value.
-                    elif callable(v) and hasattr(v,'source') :
-                        print "{} is a PROV wrapped function, its source is an output value".format(k)
-                        outputs[k] = v.source
-                    # Otherwise (this shouldn't be the case, but anyway) we'll use its source directly.
-                    elif callable(v) :
-                        print "{} is callable, but not wrapped... we'll try to retrieve its source and add it as an output".format(k)
-                        try :
-                            outputs[k] = inspect.getsource(v)
-                        except:
-                            print "could not get source of {}, just taking its value as an output".format(k)
-                            outputs[k] = v
-                    # Finally, this is probably not were we'll end up anyway... we'll do nothing 
-                    else :
-                        print "Unexpected!"
-                        pass
-                    
-                    self.environment[k] = v
+                # Finally, this is probably not were we'll end up anyway... we'll do nothing 
+                else :
+                    print "Unexpected!"
+                    pass
+                
+                print "Just visited {}".format(k)
+                self.environment[k] = v
+            else :
+                print "'{}' skipped because it did not change.".format(k)
         
         # print dependencies.keys()
         pb.add_activity(name, description, inputs, outputs, dependencies, expand_output_dict=True)
