@@ -14,6 +14,10 @@ from builder import ProvBuilder
 class NotebookWatcher(object):
     """The NotebookWatcher listens to execution events in the IPython Notebook, and generates the relevant provenance based on an analysis of the code being executed."""
     environment = {}
+    
+    # The variable ticker keeps the latest version of the value of a variable, to make sure that no cycles occur in the provenance graph.
+    variable_ticker = {}
+    
     used = set()
     
     
@@ -23,6 +27,11 @@ class NotebookWatcher(object):
         # The HistoryAccessor allows us to... eh, access the history of the Python interpreter.
         self.hist = HistoryAccessor()
         self.last_x = None
+        
+    def tick(self, variable):
+        # We increment the re-use of the variable by 1
+        variable_ticker[variable] = variable_ticker.setdefault(variable,0) + 1 
+        return variable_ticker[variable]
 
     def pre_execute(self):
         """Before the code is executed, we reset the list of variables/functions etc. 'used' (as we don't know them yet)."""
