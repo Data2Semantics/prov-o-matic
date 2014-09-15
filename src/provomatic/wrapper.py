@@ -43,6 +43,11 @@ def replace(f, *args, **kwargs):
         inputs = {'x{}'.format(n) : args[n-1] for n in range(1,f.nin+1) }
         # print inputs
         source = f.__doc__
+    ## If we're deling with a 'wrapper_descriptor' (i.e. a wrapper around a C-function)
+    elif isinstance(f,types.TypeType):
+        print "type", f, args, kwargs
+        inputs = {'x{}'.format(n) : args[n-1] for n in range(1,len(args)+1) }
+        source = f.__name__
     ## If we're dealing with a 'classobj' (i.e. an expression that instantiates a object of a class, or something... whatever.)
     elif inspect.isclass(f):
         print "func", f, args, kwargs
