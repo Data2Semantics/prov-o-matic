@@ -73,6 +73,9 @@ class ProvBuilder(object):
     SKOS = Namespace('http://www.w3.org/2004/02/skos/core#')
     DCT = Namespace('http://purl.org/dc/terms/')
 
+    # The variable ticker keeps the latest version of the value of a variable, to make sure that no cycles occur in the provenance graph.
+    variable_ticker = {}
+
     def __init__(self):
         # Bind namespaces to prefixes
         _ds.bind('prov',self.PROV)
@@ -81,8 +84,23 @@ class ProvBuilder(object):
         _ds.bind('dcterms',self.DCT)
         
         
-    def add_activity(self, name, description, inputs, outputs, dependencies={}, expand_output_dict=False, source=None):
-        """Adds an activity to the graph. Inputs should be a dictionary of inputs & values, outputs a list or tuple of just values"""
+    def tick(self, variable):
+        # We increment the re-use of the variable by 1
+        self.variable_ticker[variable] = self.variable_ticker.setdefault(variable,0) + 1 
+        return self.variable_ticker[variable]
+        
+    def get_tick(self, variable):
+        if variable in self.variable_ticker:
+            return self.variable_ticker[variable]
+        else :
+            return self.tick(variable)
+        
+    def add_activity(self, name, description, inputs, outputs, dependencies={}, output_names=None, expand_output_dict=False, source=None):
+        """Adds an activity to the graph. Inputs should be a dictionary of inputs & values, outputs a list or tuple of just values
+        
+           If expand_output_dict is set, the keys of the dictionary are used to generate individual outputs, otherwise the output dictionary is a single output.
+           
+        """
         
         if not source:
             source = description
@@ -134,15 +152,25 @@ class ProvBuilder(object):
         # Always expand tuples, to capture the variables separately.
         if isinstance(outputs, tuple) :
             count = 0
+            print "names: ", output_names
             for value in outputs:
-                count += 1
-            
+                
                 value, vdigest = self.get_value(value)
-        
-                output_uri = self.add_entity("{} output {}".format(name,count),vdigest,value)
+                
+                # If we know the output names (captured e.g. by 'replace'), we can also use them to generate nice names
+                # Otherwise we create a nameless output
+                print count
+                if output_names :
+                    print "Generating entity for {}".format(output_names[count])
+                    self.tick(output_names[count])
+                    output_uri = self.add_entity(output_names[count],vdigest,value)
+                else :
+                    output_uri = self.add_entity("{} output {}".format(name,count),vdigest,value)
             
                 # print "Relating Activity '{} ({})' to output Entity '{}'".format(name, timestamp, output_uri)
                 self.g.add((activity_uri, self.PROV['generated'], output_uri))
+                
+                count += 1
         # Only expand dictionaries when explicitly told to do so
         elif expand_output_dict and isinstance(outputs,dict):
             for oname, value in outputs.items() :
@@ -155,8 +183,16 @@ class ProvBuilder(object):
         # Otherwise we'll take the value at 'face value'
         else :
             value, vdigest = self.get_value(outputs)
-        
-            output_uri = self.add_entity("{} output".format(name), vdigest, value)
+            
+            # If we know the output name (captured e.g. by 'replace'), we can also use them to generate nice names
+            # Otherwise we create a nameless output
+            if output_names :
+                print "Generating entity for {}".format(output_names[0])
+                self.tick(output_names[0])
+                output_uri = self.add_entity(output_names[0],vdigest,value)
+            else :
+                output_uri = self.add_entity("{} output".format(name), vdigest, value)
+            
         
             # print "Relating Activity '{} ({})' to output Entity '{}'".format(name, timestamp, output_uri)
             self.g.add((activity_uri, self.PROV['generated'], output_uri))
@@ -177,8 +213,13 @@ class ProvBuilder(object):
         
         return activity_uri
 
+
+
     def add_entity(self, name, digest, description):
-        entity_uri = self.PROVOMATIC['id-'+digest]
+        
+        tick = self.get_tick(name)
+        
+        entity_uri = self.PROVOMATIC['{}/{}/{}'.format(name.replace(' ','_').replace('%','_'),tick,digest)]
     
         # print "Adding Entity with label '{}' ({})".format(name,entity_uri)
     

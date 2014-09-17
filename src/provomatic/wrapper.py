@@ -31,10 +31,11 @@ def prov(f):
     prov_wrapper.source = inspect.getsource(f)
     return prov_wrapper
     
-def replace(f, *args, **kwargs):
+def replace(f, output_names, *args, **kwargs):
     """Provenance-enabled replacement for arbitrary functions"""
-    print '---\nREPLACE: function name "{}"\n---'.format(f.__name__)
+    # print '---\nREPLACE: function name "{}"\n---'.format(f.__name__)
     
+    print "Captured output names: ", output_names
 
     
     ## If we're dealing with a 'ufunc' (i.e. numpy universal function)
@@ -45,23 +46,23 @@ def replace(f, *args, **kwargs):
         source = f.__doc__
     ## If we're deling with a 'wrapper_descriptor' (i.e. a wrapper around a C-function)
     elif isinstance(f,types.TypeType):
-        print "type", f, args, kwargs
+        # print "type", f, args, kwargs
         inputs = {'x{}'.format(n) : args[n-1] for n in range(1,len(args)+1) }
         source = f.__name__
     ## If we're dealing with a 'classobj' (i.e. an expression that instantiates a object of a class, or something... whatever.)
     elif inspect.isclass(f):
-        print "func", f, args, kwargs
+        # print "func", f, args, kwargs
         
         inputs = inspect.getcallargs(f.__init__, f, *args, **kwargs)
         # print inputs
         source = inspect.getsource(f)
     ## If we're dealing with a builtin function
     elif isinstance(f,types.BuiltinFunctionType):
-        print "bultin_function_or_method", f, args, kwargs
+        # print "bultin_function_or_method", f, args, kwargs
         inputs = {}
         source = f.__name__
     elif f.__name__ == 'get_ipython':
-        print "get_ipython() takes no input: otherwise we'll end up with a cycle"
+        # print "get_ipython() takes no input: otherwise we'll end up with a cycle"
         inputs = {}
         source = inspect.getsource(f)
         
@@ -77,7 +78,7 @@ def replace(f, *args, **kwargs):
     
     pb = ProvBuilder()
     
-    pb.add_activity(f.__name__, source, inputs, outputs)
+    pb.add_activity(f.__name__, source, inputs, outputs, output_names=output_names)
     
     replace.prov = pb.get_graph()
     
