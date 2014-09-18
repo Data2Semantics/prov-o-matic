@@ -186,6 +186,11 @@ class CodeVisitor(NodeTransformer):
 
     
     def __init__(self, notebookwatcher):
+        l = List()
+        l.elts = []
+        l.ctx = Load()
+        self.targets = l
+        
         self.nw = notebookwatcher
         self.functions = set()
 
@@ -208,6 +213,19 @@ class CodeVisitor(NodeTransformer):
             
         return node
 
+
+    def get_func_id(self, node):
+        if isinstance(node.func,Name) :
+            func_id = node.func.id
+        elif isinstance(node.func,Attribute) and isinstance(node.func.value,Call):
+            func_id = node.func.value.func.id
+        elif isinstance(node.func,Attribute) and isinstance(node.func.value,Name):
+            func_id = node.func.value.id
+        else :
+            return None
+        
+        return func_id
+
     def visit_Call(self, node):
         self.generic_visit(node)
         fix_missing_locations(node)
@@ -216,13 +234,9 @@ class CodeVisitor(NodeTransformer):
         # print "> call"
         # print dump(node)
         
-        if isinstance(node.func,Name) :
-            func_id = node.func.id
-        elif isinstance(node.func,Attribute) and isinstance(node.func.value,Call):
-            func_id = node.func.value.func.id
-        elif isinstance(node.func,Attribute) and isinstance(node.func.value,Name):
-            func_id = node.func.value.id
-        else :
+        func_id = self.get_func_id(node)
+        
+        if not func_id:
             # print "Unknown function type"
             # print "==="
             return node
@@ -240,8 +254,15 @@ class CodeVisitor(NodeTransformer):
             new_args = [node.func]
             
             if self.targets:
+                
                 # print 'targets', dump(self.targets)
+                ## Use the targets
                 new_args.append(self.targets)
+                ## And reset them, to avoid propagation of target variable names to nested function calls.
+                l = List()
+                l.elts = []
+                l.ctx = Load()
+                self.targets = l
             else :
                 # print "no targets"
                 l = Lists()
@@ -260,7 +281,8 @@ class CodeVisitor(NodeTransformer):
             
         except Exception as e:
             print "Whoops!"
-            # print e
+            print dump(node)
+            print e
             return node
             
         # print "==="
@@ -348,11 +370,11 @@ class CodeVisitor(NodeTransformer):
                         for t in t.elts:
                             if isinstance(t, Name):
                                 targets.append(t.id)
-                            
-                self.function = node.value.func.id
                 
                 # Need to build a list that looks like the below to store the targets
                 # List(elts=[Str(s='a'), Str(s='b')], ctx=Load())
+                
+                print "Found the following target variables",targets
                 
                 l = List()
                 l.elts = []
@@ -365,6 +387,7 @@ class CodeVisitor(NodeTransformer):
                 # print dump(l)
                 self.targets = l
             except Exception as e:
+                print dump(node)
                 print e
         
         self.generic_visit(node)
