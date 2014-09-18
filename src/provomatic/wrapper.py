@@ -35,6 +35,7 @@ def replace(f, output_names, *args, **kwargs):
     """Provenance-enabled replacement for arbitrary functions"""
     # print '---\nREPLACE: function name "{}"\n---'.format(f.__name__)
     
+    print "Function: ", f.__name__
     print "Captured output names: ", output_names
 
     
