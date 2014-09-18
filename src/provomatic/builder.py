@@ -95,7 +95,7 @@ class ProvBuilder(object):
         else :
             return self.tick(variable)
         
-    def add_activity(self, name, description, inputs, outputs, dependencies={}, output_names=None, expand_output_dict=False, source=None):
+    def add_activity(self, name, description, inputs, outputs, dependencies={}, output_names=[], expand_output_dict=False, source=None):
         """Adds an activity to the graph. Inputs should be a dictionary of inputs & values, outputs a list or tuple of just values
         
            If expand_output_dict is set, the keys of the dictionary are used to generate individual outputs, otherwise the output dictionary is a single output.
@@ -150,9 +150,10 @@ class ProvBuilder(object):
         
         # For each output, create a 'generated' relation
         # Always expand tuples, to capture the variables separately.
-        if isinstance(outputs, tuple) :
+        if isinstance(outputs, tuple) and len(outputs) == len(output_names):
             count = 0
             print "names: ", output_names
+            print "outputs: ", outputs
             for value in outputs:
                 
                 value, vdigest = self.get_value(value)
@@ -160,7 +161,7 @@ class ProvBuilder(object):
                 # If we know the output names (captured e.g. by 'replace'), we can also use them to generate nice names
                 # Otherwise we create a nameless output
                 print count
-                if output_names :
+                if output_names != [] :
                     print "Generating entity for {}".format(output_names[count])
                     self.tick(output_names[count])
                     output_uri = self.add_entity(output_names[count],vdigest,value)
@@ -186,7 +187,7 @@ class ProvBuilder(object):
             
             # If we know the output name (captured e.g. by 'replace'), we can also use them to generate nice names
             # Otherwise we create a nameless output
-            if output_names :
+            if output_names != []:
                 print "Generating entity for {}".format(output_names[0])
                 self.tick(output_names[0])
                 output_uri = self.add_entity(output_names[0],vdigest,value)
@@ -246,7 +247,8 @@ class ProvBuilder(object):
                 print "Encoding: {}".format(encoding)
                 value = io.decode(encoding)
             
-        vdigest = hashlib.md5(value).hexdigest()
+        
+        vdigest = hashlib.md5(value.encode('utf-8')).hexdigest()
 
         if len(value) > 200:
             value = value[:99] + u"..." + value[-100:]
