@@ -33,46 +33,44 @@ def prov(f):
     
 def replace(f, output_names, *args, **kwargs):
     """Provenance-enabled replacement for arbitrary functions"""
-    # print '---\nREPLACE: function name "{}"\n---'.format(f.__name__)
     
-    print "Function: ", f.__name__
-    print "Captured output names: ", output_names
-
+    # Inputs is a dictionary of argument names and values
+    # Outputs is whatever the wrapped function returns
+    # Source is the source code of the function, or its docstring.
+    
     
     ## If we're dealing with a 'ufunc' (i.e. numpy universal function)
     if isinstance(f,np.ufunc):
-        # print "ufunc", f, args, kwargs
-        inputs = {'x{}'.format(n) : args[n-1] for n in range(1,f.nin+1) }
-        # print inputs
+        inputs = {'x{}'.format(n) : args[n-1] for n in range(1,f.nin+1) if (args[n-1] != None)}
         source = f.__doc__
-    ## If we're deling with a 'wrapper_descriptor' (i.e. a wrapper around a C-function)
+        
+    ## If we're dealing with a 'wrapper_descriptor' (i.e. a wrapper around a C-function) we cannot retrieve the argument names
     elif isinstance(f,types.TypeType):
-        # print "type", f, args, kwargs
-        inputs = {'x{}'.format(n) : args[n-1] for n in range(1,len(args)+1) }
-        source = f.__name__
+        inputs = {'x{}'.format(n) : args[n-1] for n in range(1,len(args)+1) if (args[n-1] != None)}
+        source = f.__doc__
+        
     ## If we're dealing with a 'classobj' (i.e. an expression that instantiates a object of a class, or something... whatever.)
     elif inspect.isclass(f):
-        # print "func", f, args, kwargs
-        
         inputs = inspect.getcallargs(f.__init__, f, *args, **kwargs)
-        # print inputs
+        # Only use those inputs that have a value
+        inputs = {k:v for k,v in inputs.items() if (v != None)}
         source = inspect.getsource(f)
+        
     ## If we're dealing with a builtin function
     elif isinstance(f,types.BuiltinFunctionType):
-        # print "bultin_function_or_method", f, args, kwargs
         inputs = {}
         source = f.__name__
+        
+    # If we're dealing with the 'get_ipython' function, we need to take some extra care, otherwise we introduce a cycle in the provenance graph.
     elif f.__name__ == 'get_ipython':
-        # print "get_ipython() takes no input: otherwise we'll end up with a cycle"
         inputs = {}
         source = inspect.getsource(f)
         
-    ## If we're dealing with any other function
+    ## If we're dealing with any other function, we just get all args and kwargs as inputs as a dictionary.
     else :
-        # print "func", f, args, kwargs
-        
         inputs = inspect.getcallargs(f, *args, **kwargs)
-        # print inputs
+        # Only use those inputs that have a value
+        inputs = {k:v for k,v in inputs.items() if (v != None)}
         source = inspect.getsource(f)
     
     outputs = f(*args, **kwargs)
