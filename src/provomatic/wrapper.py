@@ -44,19 +44,19 @@ def replace(f, output_names, *args, **kwargs):
     
     ## If we're dealing with a 'ufunc' (i.e. numpy universal function)
     if isinstance(f,np.ufunc):
-        inputs = {'x{}'.format(n) : args[n-1] for n in range(1,f.nin+1) if (args[n-1] != None)}
+        inputs = {'x{}'.format(n) : args[n-1] for n in range(1,f.nin+1)}
         source = f.__doc__
         
     ## If we're dealing with a 'wrapper_descriptor' (i.e. a wrapper around a C-function) we cannot retrieve the argument names
     elif isinstance(f,types.TypeType):
-        inputs = {'x{}'.format(n) : args[n-1] for n in range(1,len(args)+1) if (args[n-1] != None)}
+        inputs = {'x{}'.format(n) : args[n-1] for n in range(1,len(args)+1)}
         source = f.__doc__
         
     ## If we're dealing with a 'classobj' (i.e. an expression that instantiates a object of a class, or something... whatever.)
     elif inspect.isclass(f):
         inputs = inspect.getcallargs(f.__init__, f, *args, **kwargs)
         # Only use those inputs that have a value
-        inputs = {k:v for k,v in inputs.items() if (v != None)}
+        inputs = {k:v for k,v in inputs.items()}
         source = inspect.getsource(f)
         
     ## If we're dealing with a builtin function
@@ -73,7 +73,7 @@ def replace(f, output_names, *args, **kwargs):
     else :
         inputs = inspect.getcallargs(f, *args, **kwargs)
         # Only use those inputs that have a value
-        inputs = {k:v for k,v in inputs.items() if (v != None)}
+        inputs = {k:v for k,v in inputs.items()}
         source = inspect.getsource(f)
     
     outputs = f(*args, **kwargs)
