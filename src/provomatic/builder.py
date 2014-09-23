@@ -92,6 +92,23 @@ class ProvBuilder(object):
         self.variable_ticker[variable] = self.variable_ticker.setdefault(variable,0) + 1 
         return self.variable_ticker[variable]
         
+    def tick_and_add_entity(self, variable, digest, description):
+        # We increment the re-use of the variable by 1, and create a dependency
+        if variable in self.variable_ticker:
+            old_entity_uri = self.add_entity(variable, digest, description)
+            
+            self.tick(variable)
+            
+            entity_uri = self.add_entity(variable, digest, description)
+            
+            self.g.add((entity_uri,self.PROV['wasDerivedFrom'],old_entity_uri))
+        else :
+            self.tick(variable)
+            entity_uri = self.add_entity(variable, digest, description)
+            
+             
+        return entity_uri
+        
     def get_tick(self, variable):
         if variable in self.variable_ticker:
             return self.variable_ticker[variable]
