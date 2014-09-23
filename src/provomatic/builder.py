@@ -77,6 +77,7 @@ class ProvBuilder(object):
     DCT = Namespace('http://purl.org/dc/terms/')
 
     # The variable ticker keeps the latest version of the value of a variable, to make sure that no cycles occur in the provenance graph.
+    # This is a class variable, that persists across all instances of the ProvBuilder class.
     variable_ticker = {}
 
     def __init__(self):
@@ -182,9 +183,8 @@ class ProvBuilder(object):
                 # Otherwise we create a nameless output
                 print count
                 if output_names != [] :
-                    print "Generating entity for {}".format(output_names[count])
-                    self.tick(output_names[count])
-                    output_uri = self.add_entity(output_names[count],vdigest,value)
+                    # print "Generating entity for {}".format(output_names[count])
+                    output_uri = self.tick_and_add_entity(output_names[count],vdigest,value)
                 else :
                     output_uri = self.add_entity("{} output {}".format(name,count),vdigest,value)
             
@@ -197,7 +197,7 @@ class ProvBuilder(object):
             for oname, value in outputs.items() :
                 value, vdigest = self.get_value(value)
                 
-                output_uri = self.add_entity(oname, vdigest, value)
+                output_uri = self.tick_and_add_entity(oname, vdigest, value)
                 
                 # print "Relating Activity '{}' to output Entity '{}'".format(name, output_uri)
                 self.g.add((activity_uri, self.PROV['generated'], output_uri))
@@ -208,9 +208,8 @@ class ProvBuilder(object):
             # If we know the output name (captured e.g. by 'replace'), we can also use them to generate nice names
             # Otherwise we create a nameless output
             if output_names != []:
-                print "Generating entity for {}".format(output_names[0])
-                self.tick(output_names[0])
-                output_uri = self.add_entity(output_names[0],vdigest,value)
+                # print "Generating entity for {}".format(output_names[0])
+                output_uri = self.tick_and_add_entity(output_names[0],vdigest,value)
             else :
                 output_uri = self.add_entity("{} output".format(name), vdigest, value)
             
