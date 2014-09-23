@@ -9,6 +9,9 @@ from rdflib import Graph, Dataset, URIRef, Literal, Namespace, RDF, RDFS
 _ds = Dataset()
 
 
+def clear_dataset():
+    _ds = Dataset()
+
 def get_dataset():
     return _ds
     
