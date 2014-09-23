@@ -73,13 +73,16 @@ class Viewer(object):
         print "Posting to {}".format(self._PROVOVIZ_SERVICE)
         response = requests.post(self._PROVOVIZ_SERVICE, data=payload)
     
-        html_filename = 'www/{}_provoviz.html'.format(digest)
-        html_file = open(html_filename,'w')
-        html_file.write(response.text)
-        html_file.close()
+        if response.status_code == 200 :
+            html_filename = 'www/{}_provoviz.html'.format(digest)
+            html_file = open(html_filename,'w')
+            html_file.write(response.text)
+            html_file.close()
     
-        iframe = "<iframe width='100%' height='450px' src='http://localhost:8000/{}'></iframe>".format(html_filename)
+            html = """<iframe width='100%' height='450px' src='http://localhost:8000/{}'></iframe>""".format(html_filename)
+        else :
+            html = """<p><strong>Error</strong> communicating with PROV-O-Viz service at {}, response status {}.<p>""".format(self._PROVOVIZ_SERVICE,response.status_code)
     
-        return HTML(iframe)
+        return HTML(html)
     
     
