@@ -4,6 +4,10 @@ import requests
 
 from builder import add_prov
 
+import logging
+
+log = logging.getLogger('provomatic.ducktape')
+log.setLevel(logging.DEBUG)
 
 class Ducktape(object):
     
@@ -19,7 +23,7 @@ class Ducktape(object):
         tables = json.loads(r.content)
         
         for name,data in tables.items():
-            print "Loading {}".format(name)
+            log.debug("Loading {}".format(name))
             self._ip.push({name: data})
             self.__dict__[name] = data
             

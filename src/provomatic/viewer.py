@@ -10,6 +10,11 @@ import SimpleHTTPServer
 import SocketServer
 import threading
 
+import logging
+
+log = logging.getLogger('provomatic.viewer')
+log.setLevel(logging.DEBUG)
+
 
 class Viewer(object):
     """Adapter for the PROV-O-Viz service"""
@@ -49,7 +54,7 @@ class Viewer(object):
             print "HTTP Server failed to start (is it already running?)"
             
         if not os.path.exists('www'):
-            print "Created 'www' directory for storing generated HTML files"
+            log.debug("Created 'www' directory for storing generated HTML files")
             os.makedirs('www')
             
 
@@ -70,7 +75,7 @@ class Viewer(object):
         graph_uri = "http://provomatic.org/export/{}".format(digest)
     
         payload = {'graph_uri': graph_uri, 'data': graph_ttl}
-        print "Posting to {}".format(self._PROVOVIZ_SERVICE)
+        log.debug("Posting to {}".format(self._PROVOVIZ_SERVICE))
         response = requests.post(self._PROVOVIZ_SERVICE, data=payload)
     
         if response.status_code == 200 :

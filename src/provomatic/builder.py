@@ -3,7 +3,10 @@ import hashlib
 import chardet
 from rdflib import Graph, Dataset, URIRef, Literal, Namespace, RDF, RDFS
 
+import logging
 
+log = logging.getLogger('provomatic.builder')
+log.setLevel(logging.DEBUG)
     
 # Global variable holding the dataset that accumulates all provenance graphs
 _ds = Dataset()
@@ -41,9 +44,9 @@ def save_prov(trail_filename='provenance-trail.ttl'):
     
     try :
         graph.serialize(open(trail_filename,'w'),format='turtle')
-        print "File saved to {}".format(trail_filename)
+        log.debug("File saved to {}".format(trail_filename))
     except:
-        print "Problem writing to {}".format(trail_filename)
+        log.debug("Problem writing to {}".format(trail_filename))
     
     return
     
@@ -65,7 +68,7 @@ def add_prov(uri, prov):
     
     
     
-    print "Loaded provenance graph with id {}".format(uri)
+    log.debug("Loaded provenance graph with id {}".format(uri))
     return
     
     
@@ -102,7 +105,8 @@ class ProvBuilder(object):
             
             entity_uri = self.add_entity(variable, digest, description)
             
-            self.g.add((entity_uri,self.PROV['wasDerivedFrom'],old_entity_uri))
+            log.debug("Not adding prov:wasDerivedFrom as context is missing")
+            # self.g.add((entity_uri,self.PROV['wasDerivedFrom'],old_entity_uri))
         else :
             self.tick(variable)
             entity_uri = self.add_entity(variable, digest, description)
@@ -130,12 +134,16 @@ class ProvBuilder(object):
         
         description = unicode(description)
         
-        timestamp = self.now()
+        ts = self.now()
+        
+        formatted_timestamp = ts.strftime('%H:%M:%S')
+        timestamp = ts.isoformat()
+        
         # Determine the plan and activity URI based on a digest of the source code of the function.
         plan_uri = self.PROVOMATIC['id-'+digest]
         activity_uri = self.PROVOMATIC['id-'+digest + "/" + timestamp]
         
-        # print "Adding activity with name '{}'".format(name)
+        # log.debug("Adding activity with name '{}'".format(name))
         # Initialise a graph with the same identifier as the activity uri
         self.g = _ds.graph(identifier=activity_uri)
         
@@ -153,9 +161,10 @@ class ProvBuilder(object):
         self.g.add((plan_uri,self.SKOS.note,Literal(source)))
         
         
-        # print "Relating Activity '{} ({})' to Plan '{}'".format(name, timestamp, name)
+        
+        # log.debug("Relating Activity '{} ({})' to Plan '{}'".format(name, timestamp, name))
         self.g.add((activity_uri,RDF.type,self.PROV['Activity']))
-        self.g.add((activity_uri,RDFS.label,Literal("{} ({})".format(name, timestamp))))
+        self.g.add((activity_uri,RDFS.label,Literal("{} ({})".format(name, formatted_timestamp))))
         
         self.g.add((activity_uri,self.PROV['used'],plan_uri))
         self.g.add((activity_uri,self.DCT.description,Literal(description)))
@@ -166,15 +175,15 @@ class ProvBuilder(object):
             
             input_uri = self.add_entity(iname, vdigest, value)
         
-            # print "Relating Activity '{} ({})' to input Entity '{}'".format(name, timestamp, input_uri)
+            # log.debug("Relating Activity '{} ({})' to input Entity '{}'".format(name, timestamp, input_uri))
             self.g.add((activity_uri, self.PROV['used'], input_uri))
         
         # For each output, create a 'generated' relation
         # Always expand tuples, to capture the variables separately.
         if isinstance(outputs, tuple) and len(outputs) == len(output_names):
             count = 0
-            print "names: ", output_names
-            print "outputs: ", outputs
+            log.debug("names: ", output_names)
+            log.debug("outputs: ", outputs)
             for value in outputs:
                 
                 value, vdigest = self.get_value(value)
@@ -183,12 +192,12 @@ class ProvBuilder(object):
                 # Otherwise we create a nameless output
                 print count
                 if output_names != [] :
-                    # print "Generating entity for {}".format(output_names[count])
+                    # log.debug("Generating entity for {}".format(output_names[count]))
                     output_uri = self.tick_and_add_entity(output_names[count],vdigest,value)
                 else :
                     output_uri = self.add_entity("{} output {}".format(name,count),vdigest,value)
             
-                # print "Relating Activity '{} ({})' to output Entity '{}'".format(name, timestamp, output_uri)
+                # log.debug("Relating Activity '{} ({})' to output Entity '{}'".format(name, timestamp, output_uri))
                 self.g.add((activity_uri, self.PROV['generated'], output_uri))
                 
                 count += 1
@@ -199,7 +208,7 @@ class ProvBuilder(object):
                 
                 output_uri = self.tick_and_add_entity(oname, vdigest, value)
                 
-                # print "Relating Activity '{}' to output Entity '{}'".format(name, output_uri)
+                # log.debug("Relating Activity '{}' to output Entity '{}'".format(name, output_uri))
                 self.g.add((activity_uri, self.PROV['generated'], output_uri))
         # Otherwise we'll take the value at 'face value'
         else :
@@ -208,13 +217,13 @@ class ProvBuilder(object):
             # If we know the output name (captured e.g. by 'replace'), we can also use them to generate nice names
             # Otherwise we create a nameless output
             if output_names != []:
-                # print "Generating entity for {}".format(output_names[0])
+                # log.debug("Generating entity for {}".format(output_names[0]))
                 output_uri = self.tick_and_add_entity(output_names[0],vdigest,value)
             else :
                 output_uri = self.add_entity("{} output".format(name), vdigest, value)
             
         
-            # print "Relating Activity '{} ({})' to output Entity '{}'".format(name, timestamp, output_uri)
+            # log.debug("Relating Activity '{} ({})' to output Entity '{}'".format(name, timestamp, output_uri))
             self.g.add((activity_uri, self.PROV['generated'], output_uri))
             
         # For each dependency, create a 'wasInformedBy' relation
@@ -236,12 +245,12 @@ class ProvBuilder(object):
 
 
     def add_entity(self, name, digest, description):
-        
         tick = self.get_tick(name)
+        log.debug("{}\t{}".format(name, tick))
         
         entity_uri = self.PROVOMATIC['{}/{}/{}'.format(name.replace(' ','_').replace('%','_'),tick,digest)]
     
-        # print "Adding Entity with label '{}' ({})".format(name,entity_uri)
+        # log.debug("Adding Entity with label '{}' ({})".format(name,entity_uri))
     
         self.g.add((entity_uri,RDF.type,self.PROV['Entity']))
         self.g.add((entity_uri,RDFS.label,Literal(name)))
@@ -256,14 +265,14 @@ class ProvBuilder(object):
         try :
             value = unicode(io)
         except :
-            print "Type: ", type(io)
-            print "IO cannot be decoded"
+            log.warning("Type: ", type(io))
+            log.warning("IO cannot be decoded")
             encoding = chardet.detect(io)['encoding']
             if encoding == None :
-                print "No encoding"
+                log.debug("No encoding")
                 value = io.encode('string-escape').decode('utf-8')
             else :
-                print "Encoding: {}".format(encoding)
+                log.debug("Encoding: {}".format(encoding))
                 value = io.decode(encoding)
             
         
@@ -278,4 +287,4 @@ class ProvBuilder(object):
         return self.g
         
     def now(self):
-        return datetime.datetime.now().isoformat()
+        return datetime.datetime.now()

@@ -5,7 +5,10 @@ from viewer import Viewer
 
 from ducktape import Ducktape
 
+import logging
 
+log = logging.getLogger('provomatic.extension')
+log.setLevel(logging.DEBUG)
 
 
 

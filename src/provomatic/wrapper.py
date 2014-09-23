@@ -5,7 +5,10 @@ import types
 
 from builder import ProvBuilder
 
+import logging
 
+log = logging.getLogger('provomatic.wrapper')
+log.setLevel(logging.DEBUG)
 
 
 
@@ -13,7 +16,7 @@ def prov(f):
     """Decorator that generates a wrapper function"""
     def prov_wrapper(*args, **kwargs):
         """Provenance wrapper for arbitrary functions"""
-        # print '---\nWRAPPER: function name "{}"\n---'.format(f.__name__)
+        # log.debug('---\nWRAPPER: function name "{}"\n---'.format(f.__name__))
         
         inputs = inspect.getcallargs(f, *args, **kwargs)
         
