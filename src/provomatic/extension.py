@@ -8,13 +8,10 @@ from ducktape import Ducktape
 import logging
 
 log = logging.getLogger('provomatic.extension')
-log.setLevel(logging.DEBUG)
+log.setLevel(logging.WARNING)
 
 
 
-
-
-        
 
 
 
@@ -23,6 +20,7 @@ log.setLevel(logging.DEBUG)
 
 
 def load_ipython_extension(ip):
+    log.debug("Loading PROV-O-Matic extension")
     # Push the prov and replace wrapper functions
     ip.push('prov')
     ip.push('replace')
@@ -37,9 +35,11 @@ def load_ipython_extension(ip):
     viewer = Viewer()
     set_provoviz_url = viewer.set_provoviz_url
     view_prov = viewer.view_prov
+    view_local_prov = viewer.view_local_prov
     # Push the functions to the IPython Notebook
     ip.push('set_provoviz_url')
     ip.push('view_prov')
+    ip.push('view_local_prov')
     
     ## Initialize the Ducktape loader
     ducktape = Ducktape(ip)
@@ -53,6 +53,7 @@ def load_ipython_extension(ip):
     ip.events.register('pre_execute', nw.pre_execute)
     ip.events.register('post_execute', nw.post_execute)
     ip.ast_transformers.append(cv)
+    
     
     
 
