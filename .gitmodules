@@ -1,0 +1,3 @@
+[submodule "provoviz"]
+	path = lib/provoviz
+	url = https://github.com/Data2Semantics/provoviz.git
