@@ -1,5 +1,5 @@
-from builder import get_graph
-from rdflib import Graph
+from builder import get_graph, get_dataset
+from rdflib import Graph, ConjunctiveGraph
 
 from IPython.display import HTML
 import hashlib
@@ -9,8 +9,11 @@ import os
 import SimpleHTTPServer
 import SocketServer
 import threading
-
+import json
 import logging
+
+from provoviz.views import generate_graphs
+from jinja2 import Environment, PackageLoader
 
 log = logging.getLogger('provomatic.viewer')
 log.setLevel(logging.DEBUG)
@@ -27,9 +30,7 @@ class Viewer(object):
 
     def __init__(self, provoviz_service_url=_PROVOVIZ_SERVICE, http_port=_PORT):
         self._PORT = http_port
-        
         self.set_provoviz_url(provoviz_service_url)
-        
         self.start_http_server()
         
         
@@ -64,6 +65,23 @@ class Viewer(object):
         self._PROVOVIZ_SERVICE = provoviz_service_url
         return "PROV-O-Viz service URL now set to '{}'".format(self._PROVOVIZ_SERVICE)
 
+    def view_local_prov(self):
+        env = Environment(loader=PackageLoader('provomatic','templates'))
+        template = env.get_template('activities_service_response_local.html')
+        
+        dataset = get_dataset()
+        data_hash = dataset.md5_term_hash()
+        
+        response = generate_graphs(ConjunctiveGraph(dataset.store))
+        
+        json_response = json.dumps(response)
+        
+        visualization_html = template.render(response=json_response, data_hash=data_hash)
+        
+        html = self.generate_iframe(visualization_html, data_hash)
+        
+        return HTML(html)
+
     def view_prov(self):
         """Posts the provenance graph to the PROV-O-Viz service URL, and returns an HTML object with an IFrame to the HTML page returned"""
         graph = get_graph()
@@ -79,15 +97,19 @@ class Viewer(object):
         response = requests.post(self._PROVOVIZ_SERVICE, data=payload)
     
         if response.status_code == 200 :
-            html_filename = 'www/{}_provoviz.html'.format(digest)
-            html_file = open(html_filename,'w')
-            html_file.write(response.text)
-            html_file.close()
-    
-            html = """<iframe width='100%' height='450px' src='http://localhost:8000/{}'></iframe>""".format(html_filename)
+            html = self.generate_iframe(response.text, digest)
         else :
             html = """<p><strong>Error</strong> communicating with PROV-O-Viz service at {}, response status {}.<p>""".format(self._PROVOVIZ_SERVICE,response.status_code)
     
+    
         return HTML(html)
     
-    
+    def generate_iframe(self, visualization_html, digest):
+        html_filename = 'www/{}_provoviz.html'.format(digest)
+        html_file = open(html_filename,'w')
+        html_file.write(visualization_html)
+        html_file.close()
+
+        html = """<iframe width='100%' height='450px' src='http://localhost:8000/{}'></iframe>""".format(html_filename)
+        
+        return html
