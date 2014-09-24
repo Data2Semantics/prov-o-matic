@@ -5,7 +5,7 @@ import numpy
 import inspect
 import hashlib
 import collections
-
+from copy import deepcopy
 from ast import *
 
 from builder import ProvBuilder
@@ -13,7 +13,7 @@ from builder import ProvBuilder
 import logging
 
 log = logging.getLogger('provomatic.watcher')
-log.setLevel(logging.DEBUG)
+log.setLevel(logging.WARNING)
 
 class NotebookWatcher(object):
     """The NotebookWatcher listens to execution events in the IPython Notebook, and generates the relevant provenance based on an analysis of the code being executed."""
@@ -29,7 +29,7 @@ class NotebookWatcher(object):
         # The HistoryAccessor allows us to... eh, access the history of the Python interpreter.
         self.hist = HistoryAccessor()
         self.last_x = None
-        
+        self.pre_ticker = {}
 
         
         
@@ -38,6 +38,9 @@ class NotebookWatcher(object):
         """Before the code is executed, we reset the list of variables/functions etc. 'used' (as we don't know them yet)."""
         # Reset the used list
         self.used = set()
+        
+        pb = ProvBuilder()
+        self.pre_ticker = deepcopy(pb.get_ticker())
 
 
     def post_execute(self):
@@ -118,7 +121,7 @@ class NotebookWatcher(object):
             ## This compares the value of the variable with the value it had previously, or
             ## checks that the variable did not exist previously.  
             
-            elif (k in self.environment and not (numpy.array_equal(v,self.environment[k]) or v == self.environment[k])) or (not k in self.environment) or k == 'Out':
+            elif (k in self.environment and not ((numpy.array_equal(v,self.environment[k]) or v == self.environment[k]) and self.pre_ticker.setdefault(k,0) == pb.get_tick(k))) or (not k in self.environment) or k == 'Out':
                 
                 
                 # log.debug("{} changed or was added".format(k))
@@ -130,7 +133,12 @@ class NotebookWatcher(object):
                 if not callable(v):
                     # log.debug("{} is not a function, adding to outputs as value".format(k))
                     if k == 'Out':
+                        if len(v) == 0:
+                            log.debug("Output value is empty: skipping...")
+                            continue
+                            
                         kname = 'Out [{}]'.format(position)
+                        log.debug("{}: {}".format(kname,v))
                     else :
                         kname = k
                     outputs[kname] = v
@@ -158,11 +166,11 @@ class NotebookWatcher(object):
                 # log.debug("Just visited {}".format(k))
                 self.environment[k] = v
             else :
-                # log.debug("'{}' skipped because it did not change.".format(k))
+                log.debug("'{}' skipped because it did not change (ticks: {} and {}).".format(k,self.pre_ticker[k],pb.get_tick(k)))
                 pass
         
         # print dependencies.keys()
-        pb.add_activity(name, description, inputs, outputs, dependencies, expand_output_dict=True)
+        pb.add_activity(name, description, inputs, outputs, dependencies, input_names=inputs.keys(), output_names=outputs.keys(), expand_output_dict=True, pre_ticker=self.pre_ticker)
         
 
 
@@ -194,10 +202,15 @@ class CodeVisitor(NodeTransformer):
 
     
     def __init__(self, notebookwatcher):
-        l = List()
-        l.elts = []
-        l.ctx = Load()
-        self.targets = l
+        tl = List()
+        tl.elts = []
+        tl.ctx = Load()
+        self.targets = tl
+        
+        il = List()
+        il.elts = []
+        il.ctx = Load()
+        self.input_args = il
         
         self.nw = notebookwatcher
         self.functions = set()
@@ -223,24 +236,29 @@ class CodeVisitor(NodeTransformer):
 
 
     def get_func_id(self, node):
-        if isinstance(node.func,Name) :
-            func_id = node.func.id
-        elif isinstance(node.func,Attribute) and isinstance(node.func.value,Call):
-            func_id = node.func.value.func.id
-        elif isinstance(node.func,Attribute) and isinstance(node.func.value,Name):
-            func_id = node.func.value.id
-        else :
-            return None
+        try :
+            if isinstance(node.func,Name) :
+                func_id = node.func.id
+            elif isinstance(node.func,Attribute) and isinstance(node.func.value,Call):
+                func_id = node.func.value.func.id
+            elif isinstance(node.func,Attribute) and isinstance(node.func.value,Name):
+                func_id = node.func.value.id
+            else :
+                return None
         
-        return func_id
+            return func_id
+        except Exception as e:
+            log.warning('Could not retrieve function name')
+            log.debug(dump(node))
+            return None
 
     def visit_Call(self, node):
         self.generic_visit(node)
         fix_missing_locations(node)
         #self.nw.register_usage(node)
 
-        # log.debug("> call")
-        # print dump(node)
+        log.debug("> call")
+        log.debug(dump(node))
         
         func_id = self.get_func_id(node)
         
@@ -259,11 +277,28 @@ class CodeVisitor(NodeTransformer):
         # log.debug("Not skipping")
         
         try :
+            
+            # First we add the name of the function
             new_args = [node.func]
             
+            # Then we'll add the input argument names
+            if self.input_args:
+                ## Use the targets
+                new_args.append(self.input_args)
+                ## And reset them, to avoid propagation of target variable names to nested function calls.
+                l = List()
+                l.elts = []
+                l.ctx = Load()
+                self.input_args = l
+            else :
+                # log.debug("no targets")
+                l = Lists()
+                l.elts = []
+                l.ctx = Load()
+                new_args.append(l)
+            
+            # Then we'll add the output names (the targets)
             if self.targets:
-                
-                # print 'targets', dump(self.targets)
                 ## Use the targets
                 new_args.append(self.targets)
                 ## And reset them, to avoid propagation of target variable names to nested function calls.
@@ -277,6 +312,9 @@ class CodeVisitor(NodeTransformer):
                 l.elts = []
                 l.ctx = Load()
                 new_args.append(l)
+                
+                
+
             
             new_args.extend(node.args)
             # log.debug("New Args:", [dump(a) for a in new_args])
@@ -354,18 +392,22 @@ class CodeVisitor(NodeTransformer):
         # TODO Capture the assignment itself
         # This just captures the outputs expected from a function
         
-        # log.debug("> assign")
-        # print dump(node)
+        log.debug("> assign")
+        log.debug(dump(node))
         # log.debug("Resetting targets")
-        l = List()
-        l.elts = []
-        l.ctx = Load()
-        self.targets = l
-        self.function = None
+        tl = List()
+        tl.elts = []
+        tl.ctx = Load()
+        self.targets = tl
+        
+        al = List()
+        al.elts = []
+        al.ctx = Load()
+        self.input_args = al
         
         if isinstance(node.value,Call):
             # log.debug("We're assigning the output of a function call to the targets")
-            
+            input_args = []
             targets = []
             
             try :
@@ -379,21 +421,39 @@ class CodeVisitor(NodeTransformer):
                             if isinstance(t, Name):
                                 targets.append(t.id)
                 
+
+                
                 # Need to build a list that looks like the below to store the targets
                 # List(elts=[Str(s='a'), Str(s='b')], ctx=Load())
-                
                 # log.debug("Found the following target variables",targets)
                 
-                l = List()
-                l.elts = []
-                l.ctx = Load()
+                target_l = List()
+                target_l.elts = []
+                target_l.ctx = Load()
                 for t in targets:
                     e = Str()
                     e.s = t
-                    l.elts.append(e)
+                    target_l.elts.append(e)
+                    
+                    
+                # We'll do something similar for the names of the input arguments!
+                for arg in node.value.args :
+                    if isinstance(arg,Name):
+                        input_args.append(arg.id)
+                        
+                        
+                input_args_l = List()
+                input_args_l.elts = []
+                input_args_l.ctx = Load()
+                for arg in input_args:
+                    e = Str()
+                    e.s = arg
+                    input_args_l.elts.append(e)
+                    
+
+                self.targets = target_l
+                self.input_args = input_args_l
                 
-                # print dump(l)
-                self.targets = l
             except Exception as e:
                 print dump(node)
                 print e

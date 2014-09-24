@@ -50,22 +50,18 @@ class Viewer(object):
             httpd_thread.setDaemon(True)
             httpd_thread.start()
             
-            print "HTTP Server running at http://localhost:{}".format(self._PORT)
-        except :
-            print "HTTP Server failed to start (is it already running?)"
+            log.info("HTTP Server running at http://localhost:{}".format(self._PORT))
+        except Exception as e:
+            log.error("HTTP Server failed to start (is it already running?)")
+            log.debug(e)
             
         if not os.path.exists('www'):
             log.debug("Created 'www' directory for storing generated HTML files")
             os.makedirs('www')
             
 
-    def set_provoviz_url(self, provoviz_service_url='http://localhost:5000/service'):
-        """Sets the URL to which the provenance trace should be posted to obtain the visualization"""
-        
-        self._PROVOVIZ_SERVICE = provoviz_service_url
-        return "PROV-O-Viz service URL now set to '{}'".format(self._PROVOVIZ_SERVICE)
-
-    def view_local_prov(self):
+    def view_prov(self):
+        """Generate the provenance graph locally using a submodule version of PROV-O-Viz"""
         env = Environment(loader=PackageLoader('provomatic','templates'))
         template = env.get_template('activities_service_response_local.html')
         
@@ -82,7 +78,17 @@ class Viewer(object):
         
         return HTML(html)
 
-    def view_prov(self):
+
+
+
+
+    def set_provoviz_url(self, provoviz_service_url='http://localhost:5000/service'):
+        """Sets the URL to which the provenance trace should be posted to obtain the visualization"""
+        
+        self._PROVOVIZ_SERVICE = provoviz_service_url
+        return "PROV-O-Viz service URL now set to '{}'".format(self._PROVOVIZ_SERVICE)
+
+    def view_prov_service(self):
         """Posts the provenance graph to the PROV-O-Viz service URL, and returns an HTML object with an IFrame to the HTML page returned"""
         graph = get_graph()
     

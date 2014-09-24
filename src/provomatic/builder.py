@@ -6,7 +6,7 @@ from rdflib import Graph, Dataset, URIRef, Literal, Namespace, RDF, RDFS
 import logging
 
 log = logging.getLogger('provomatic.builder')
-log.setLevel(logging.DEBUG)
+log.setLevel(logging.WARNING)
     
 # Global variable holding the dataset that accumulates all provenance graphs
 _ds = Dataset()
@@ -44,13 +44,13 @@ def save_prov(trail_filename='provenance-trail.ttl'):
     
     try :
         graph.serialize(open(trail_filename,'w'),format='turtle')
-        log.debug("File saved to {}".format(trail_filename))
+        log.info("File saved to {}".format(trail_filename))
     except:
-        log.debug("Problem writing to {}".format(trail_filename))
+        log.warning("Problem writing to {}".format(trail_filename))
     
     return
     
-def add_prov(uri, prov):
+def add_prov(uri, prov=None,url=None):
     """
         prov should be a Turtle serialization of an RDF PROV-O graph
         uri is a unique id of the graph
@@ -64,8 +64,14 @@ def add_prov(uri, prov):
     ds = get_dataset()
     
     graph = ds.graph(URIRef(uri))
-    graph.parse(data=prov,format='turtle')
     
+    if prov :
+        graph.parse(data=prov,format='turtle')
+    elif url :
+        graph.parse(url,format='turtle')
+    else :
+        log.error("Should provide either provenance data or a URL where I can fetch some")
+        return
     
     
     log.debug("Loaded provenance graph with id {}".format(uri))
@@ -96,23 +102,8 @@ class ProvBuilder(object):
         self.variable_ticker[variable] = self.variable_ticker.setdefault(variable,0) + 1 
         return self.variable_ticker[variable]
         
-    def tick_and_add_entity(self, variable, digest, description):
-        # We increment the re-use of the variable by 1, and create a dependency
-        if variable in self.variable_ticker:
-            old_entity_uri = self.add_entity(variable, digest, description)
-            
-            self.tick(variable)
-            
-            entity_uri = self.add_entity(variable, digest, description)
-            
-            log.debug("Not adding prov:wasDerivedFrom as context is missing")
-            # self.g.add((entity_uri,self.PROV['wasDerivedFrom'],old_entity_uri))
-        else :
-            self.tick(variable)
-            entity_uri = self.add_entity(variable, digest, description)
-            
-             
-        return entity_uri
+    def get_ticker(self):
+        return self.variable_ticker
         
     def get_tick(self, variable):
         if variable in self.variable_ticker:
@@ -120,12 +111,13 @@ class ProvBuilder(object):
         else :
             return self.tick(variable)
         
-    def add_activity(self, name, description, inputs, outputs, dependencies={}, output_names=[], expand_output_dict=False, source=None):
+    def add_activity(self, name, description, inputs, outputs, dependencies={}, input_names=[], output_names=[], expand_output_dict=False, source=None, pre_ticker = None):
         """Adds an activity to the graph. Inputs should be a dictionary of inputs & values, outputs a list or tuple of just values
         
            If expand_output_dict is set, the keys of the dictionary are used to generate individual outputs, otherwise the output dictionary is a single output.
            
         """
+        log.debug(name)
         
         if not source:
             source = description
@@ -155,7 +147,7 @@ class ProvBuilder(object):
         
         # TODO: The PLAN part should be a qualified association
         self.g.add((plan_uri, RDF.type, self.PROV['Plan']))
-        self.g.add((plan_uri, RDF.type, self.PROV['Entity']))
+        # self.g.add((plan_uri, RDF.type, self.PROV['Entity']))
         self.g.add((plan_uri, RDFS.label, Literal(name)))
         self.g.add((plan_uri, self.DCT.description, Literal(description)))
         self.g.add((plan_uri,self.SKOS.note,Literal(source)))
@@ -169,21 +161,33 @@ class ProvBuilder(object):
         self.g.add((activity_uri,self.PROV['used'],plan_uri))
         self.g.add((activity_uri,self.DCT.description,Literal(description)))
     
+        log.debug("input names: {}".format(input_names))
+        log.debug("inputs: {}".format(inputs))
+        
         # For each input, create a 'used' relation
         for iname, value in inputs.items():
             value, vdigest = self.get_value(value)
             
-            input_uri = self.add_entity(iname, vdigest, value)
+            if input_names != []:
+                # Get the first external input name, and remove from the list
+                external_iname = input_names.pop(0)
+                
+                input_uri = self.add_entity(external_iname,vdigest,value,ticker=pre_ticker)
+            else :
+                input_uri = self.add_entity(iname, vdigest, value,ticker=pre_ticker)
         
             # log.debug("Relating Activity '{} ({})' to input Entity '{}'".format(name, timestamp, input_uri))
             self.g.add((activity_uri, self.PROV['used'], input_uri))
-        
+            
+            
+        log.debug("names: {}".format(output_names))
+        log.debug("outputs: {}".format(outputs))
+           
         # For each output, create a 'generated' relation
         # Always expand tuples, to capture the variables separately.
         if isinstance(outputs, tuple) and len(outputs) == len(output_names):
             count = 0
-            log.debug("names: ", output_names)
-            log.debug("outputs: ", outputs)
+
             for value in outputs:
                 
                 value, vdigest = self.get_value(value)
@@ -227,26 +231,51 @@ class ProvBuilder(object):
             self.g.add((activity_uri, self.PROV['generated'], output_uri))
             
         # For each dependency, create a 'wasInformedBy' relation
-        
-        # TODO: SKIPPING THIS FOR NOW
-        # for dname, value in dependencies.items():
-        #     value, vdigest = self.get_value(value)
-        #
-        #     dependency_uri = self.PROVOMATIC[vdigest]
-        #
-        #     self.g.add((dependency_uri,RDF.type,self.PROV['Activity']))
-        #     # self.g.add((dependency_uri,RDFS.label,Literal(dname)))
-        #     self.g.add((dependency_uri,self.SKOS.note,Literal(value)))
-        #
-        #     self.g.add((activity_uri, self.PROV['wasInformedBy'], dependency_uri))
+        for dname, value in dependencies.items():
+            value, vdigest = self.get_value(value)
+
+            dependency_uri = self.PROVOMATIC['id-'+vdigest]
+
+            self.g.add((dependency_uri,RDF.type,self.PROV['Plan']))
+            # self.g.add((dependency_uri,RDFS.label,Literal(dname)))
+            self.g.add((dependency_uri,self.SKOS.note,Literal(value)))
+
+            self.g.add((activity_uri, self.PROV['wasInformedBy'], dependency_uri))
         
         return activity_uri
 
 
-
-    def add_entity(self, name, digest, description):
-        tick = self.get_tick(name)
-        log.debug("{}\t{}".format(name, tick))
+    def tick_and_add_entity(self, variable, digest, description):
+        # We increment the re-use of the variable by 1, and create a dependency
+        if variable in self.variable_ticker:
+            old_entity_uri = self.add_entity(variable, digest, description)
+            
+            self.tick(variable)
+            
+            entity_uri = self.add_entity(variable, digest, description)
+            
+            log.debug("Adding prov:wasDerivedFrom between {} and {}".format(entity_uri, old_entity_uri))
+            self.g.add((entity_uri,self.PROV['wasDerivedFrom'],old_entity_uri))
+        else :
+            self.tick(variable)
+            entity_uri = self.add_entity(variable, digest, description)
+            
+             
+        return entity_uri
+        
+    def add_entity(self, name, digest, description, ticker=None):
+        # Make sure to use the old ticks, if provided.
+        if ticker:
+            try :
+                # Get the pre-tick from the pre_ticker
+                tick = ticker[name]
+            except :
+                # If the ticker does not contain the variable, just go the normal route
+                tick = self.get_tick(name)
+        else :
+            tick = self.get_tick(name)
+            
+        log.debug("Adding {} ({})".format(name, tick))
         
         entity_uri = self.PROVOMATIC['{}/{}/{}'.format(name.replace(' ','_').replace('%','_'),tick,digest)]
     
