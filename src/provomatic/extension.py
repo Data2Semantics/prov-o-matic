@@ -6,6 +6,7 @@ from viewer import Viewer
 from ducktape import Ducktape
 
 import logging
+import os
 
 log = logging.getLogger('provomatic.extension')
 log.setLevel(logging.WARNING)
@@ -27,6 +28,8 @@ def load_ipython_extension(ip):
     
     # Push the save_prov function (for saving the generated provenance trace to a file)    
     ip.push('save_prov')
+    # Push the add_prov function (for adding provenance from external files)
+    ip.push('add_prov')
     
 
     
@@ -49,7 +52,14 @@ def load_ipython_extension(ip):
     
     # Clear the provenance graph
     clear_dataset()
-    add_prov('http://www.w3.org/ns/prov#',url='http://localhost:8000/datafiles/prov-o.ttl')
+    try :
+        add_prov('http://www.w3.org/ns/prov#',url='http://localhost:8000/datafiles/prov-o.ttl')
+    except :
+        curwd = os.getcwd()
+        provopath = os.path.join(curwd,'datafiles/prov-o.ttl')
+        log.warning('Could not load PROV schema from URL, attempting to load from {}'.format(provopath))
+
+        add_prov('http://www.w3.org/ns/prov#',url='file://{}'.format(provopath))
     
     ## Initialize the notebookwatcher and code visitor.
     nw = NotebookWatcher(ip)

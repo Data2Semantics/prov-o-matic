@@ -84,7 +84,7 @@ function drawSankeyDiagram(graph_div, graph, tree_width, types, diameter) {
         .style("stroke", function(d) { return d3.rgb(d.color).darker(1); })
         .style("stroke-width", function(d) { if (d.type == 'origin') { return 2;} else { return 1;}})
         .append("title")
-        .text(function(d) { if (d.type == 'origin') {return d.label + "\n(activity)"; } else {return d.label + "\n(" + d.type + ")"; }});
+        .text(function(d) { return d.label + "\n(" + d.type + ")"; });
 
     node.append("text")
         .attr("x", -6)

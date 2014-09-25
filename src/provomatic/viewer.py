@@ -63,7 +63,7 @@ class Viewer(object):
     def view_prov(self):
         """Generate the provenance graph locally using a submodule version of PROV-O-Viz"""
         env = Environment(loader=PackageLoader('provomatic','templates'))
-        template = env.get_template('activities_service_response_local.html')
+        template = env.get_template('service_response_local.html')
         
         dataset = get_dataset()
         data_hash = dataset.md5_term_hash()

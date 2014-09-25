@@ -76,6 +76,17 @@ def replace(f, input_names, output_names, *args, **kwargs):
             inputs = inspect.getcallargs(f, *args, **kwargs)
             # Only use those inputs that have a value
             inputs = {k:v for k,v in inputs.items()}
+            
+            for input,ivalue in inputs.items():
+                log.debug(type(ivalue))
+                try :
+                    log.debug("{} {}".format(input,ivalue))
+                    if ivalue is None or isinstance(ivalue,types.NoneType):
+                        log.debug("Popping {}".format(input))
+                        inputs.pop(input,ivalue)
+                except Exception as e:
+                    log.warning(e)
+            
             source = inspect.getsource(f)
         except :
             log.warning('Function is not a Python function')

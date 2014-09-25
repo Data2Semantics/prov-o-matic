@@ -1,15 +1,49 @@
 import datetime
 import hashlib
 import chardet
-from rdflib import Graph, Dataset, URIRef, Literal, Namespace, RDF, RDFS
-
+from rdflib import Graph, Dataset, URIRef, Literal, Namespace, RDF, RDFS, XSD
+from rdflib.term import bind
 import logging
+import pandas as pd
+from StringIO import StringIO
+import re
 
 log = logging.getLogger('provomatic.builder')
 log.setLevel(logging.WARNING)
     
 # Global variable holding the dataset that accumulates all provenance graphs
 _ds = Dataset()
+
+PROV = Namespace('http://www.w3.org/ns/prov#')
+PROVOMATIC = Namespace('http://provomatic.org/resource/')
+SKOS = Namespace('http://www.w3.org/2004/02/skos/core#')
+DCT = Namespace('http://purl.org/dc/terms/')
+
+def get_decoded_value(io):
+    try :
+        value = unicode(io)
+    except :
+        encoding = chardet.detect(io)['encoding']
+        if encoding == None :
+            value = io.encode('string-escape').decode('utf-8')
+        else :
+            value = io.decode(encoding)
+            
+    return value
+
+# def construct_dataframe(csv):
+#     df = pd.DataFrame.from_csv(csv)
+#     return df
+#
+# def lexicalize_dataframe(df):
+#     csv = StringIO()
+#
+#     df.to_csv(csv)
+#     csv_value = get_decoded_value(csv.getvalue())
+#
+#     return csv_value
+#
+# bind(PROVOMATIC['DataFrame'],pd.DataFrame,constructor=construct_dataframe,lexicalizer=lexicalize_dataframe)
 
 
 def clear_dataset():
@@ -20,11 +54,6 @@ def get_dataset():
     
 
 def get_graph():
-    PROV = Namespace('http://www.w3.org/ns/prov#')
-    PROVOMATIC = Namespace('http://provomatic.org/resource/')
-    SKOS = Namespace('http://www.w3.org/2004/02/skos/core#')
-    DCT = Namespace('http://purl.org/dc/terms/')
-    
     graph = Graph()
     
     # Bind namespaces to prefixes
@@ -68,14 +97,42 @@ def add_prov(uri, prov=None,url=None):
     if prov :
         graph.parse(data=prov,format='turtle')
     elif url :
-        graph.parse(url,format='turtle')
+        try :
+            graph.parse(url,format='turtle')
+        except Exception as e:
+            log.error(e)
+            return
     else :
         log.error("Should provide either provenance data or a URL where I can fetch some")
         return
     
-    
+    entities = {}
+    pb = ProvBuilder()
+    ticker = pb.get_ticker()
+    for entity in graph.subjects(RDF.type,PROV['Entity']):
+        try :
+            labels = graph.objects(entity, RDFS['label'])
+            values = graph.objects(entity, RDF.value)
+            ticks = graph.objects(entity, PROVOMATIC['tick'])
+        
+            # Get the first items
+            label = labels.next().value
+            value = values.next().value
+            tick = values.next().value
+            
+            
+            varname = re.sub(r('\s\(d+\)$','',label))
+            
+            if varname in ticker:
+                pb.tick(varname)
+            
+            entities[label] = value
+        except Exception as e:
+            log.warning(e)
+            log.debug("Cannot convert to Python objects: prov:Entity instances in the provenance file should have an rdfs:label and rdf:value")
+        
     log.debug("Loaded provenance graph with id {}".format(uri))
-    return
+    return entities
     
     
 
@@ -124,6 +181,7 @@ class ProvBuilder(object):
             
         source, digest = self.get_value(source)
         
+        
         description = unicode(description)
         
         ts = self.now()
@@ -166,15 +224,15 @@ class ProvBuilder(object):
         
         # For each input, create a 'used' relation
         for iname, value in inputs.items():
-            value, vdigest = self.get_value(value)
+            unicodevalue, vdigest = self.get_value(value)
             
             if input_names != []:
                 # Get the first external input name, and remove from the list
                 external_iname = input_names.pop(0)
                 
-                input_uri = self.add_entity(external_iname,vdigest,value,ticker=pre_ticker)
+                input_uri = self.add_entity(external_iname,vdigest,unicodevalue,value=value, ticker=pre_ticker)
             else :
-                input_uri = self.add_entity(iname, vdigest, value,ticker=pre_ticker)
+                input_uri = self.add_entity(iname, vdigest, unicodevalue,value=value, ticker=pre_ticker)
         
             # log.debug("Relating Activity '{} ({})' to input Entity '{}'".format(name, timestamp, input_uri))
             self.g.add((activity_uri, self.PROV['used'], input_uri))
@@ -190,16 +248,16 @@ class ProvBuilder(object):
 
             for value in outputs:
                 
-                value, vdigest = self.get_value(value)
+                unicodevalue, vdigest = self.get_value(value)
                 
                 # If we know the output names (captured e.g. by 'replace'), we can also use them to generate nice names
                 # Otherwise we create a nameless output
                 print count
                 if output_names != [] :
                     # log.debug("Generating entity for {}".format(output_names[count]))
-                    output_uri = self.tick_and_add_entity(output_names[count],vdigest,value)
+                    output_uri = self.tick_and_add_entity(output_names[count],vdigest,unicodevalue, value=value)
                 else :
-                    output_uri = self.add_entity("{} output {}".format(name,count),vdigest,value)
+                    output_uri = self.add_entity("{} output {}".format(name,count),vdigest,unicodevalue, value=value)
             
                 # log.debug("Relating Activity '{} ({})' to output Entity '{}'".format(name, timestamp, output_uri))
                 self.g.add((activity_uri, self.PROV['generated'], output_uri))
@@ -208,23 +266,23 @@ class ProvBuilder(object):
         # Only expand dictionaries when explicitly told to do so
         elif expand_output_dict and isinstance(outputs,dict):
             for oname, value in outputs.items() :
-                value, vdigest = self.get_value(value)
+                unicodevalue, vdigest = self.get_value(value)
                 
-                output_uri = self.tick_and_add_entity(oname, vdigest, value)
+                output_uri = self.tick_and_add_entity(oname, vdigest, unicodevalue, value=value)
                 
                 # log.debug("Relating Activity '{}' to output Entity '{}'".format(name, output_uri))
                 self.g.add((activity_uri, self.PROV['generated'], output_uri))
         # Otherwise we'll take the value at 'face value'
         else :
-            value, vdigest = self.get_value(outputs)
+            unicodevalue, vdigest = self.get_value(outputs)
             
             # If we know the output name (captured e.g. by 'replace'), we can also use them to generate nice names
             # Otherwise we create a nameless output
             if output_names != []:
                 # log.debug("Generating entity for {}".format(output_names[0]))
-                output_uri = self.tick_and_add_entity(output_names[0],vdigest,value)
+                output_uri = self.tick_and_add_entity(output_names[0],vdigest,unicodevalue, value=outputs)
             else :
-                output_uri = self.add_entity("{} output".format(name), vdigest, value)
+                output_uri = self.add_entity("{} output".format(name), vdigest, unicodevalue, value=outputs)
             
         
             # log.debug("Relating Activity '{} ({})' to output Entity '{}'".format(name, timestamp, output_uri))
@@ -232,38 +290,38 @@ class ProvBuilder(object):
             
         # For each dependency, create a 'wasInformedBy' relation
         for dname, value in dependencies.items():
-            value, vdigest = self.get_value(value)
+            unicodevalue, vdigest = self.get_value(value)
 
             dependency_uri = self.PROVOMATIC['id-'+vdigest]
 
             self.g.add((dependency_uri,RDF.type,self.PROV['Plan']))
             # self.g.add((dependency_uri,RDFS.label,Literal(dname)))
-            self.g.add((dependency_uri,self.SKOS.note,Literal(value)))
+            self.g.add((dependency_uri,self.SKOS.note,Literal(unicodevalue)))
 
             self.g.add((activity_uri, self.PROV['wasInformedBy'], dependency_uri))
         
         return activity_uri
 
 
-    def tick_and_add_entity(self, variable, digest, description):
+    def tick_and_add_entity(self, variable, digest, description, value=None):
         # We increment the re-use of the variable by 1, and create a dependency
         if variable in self.variable_ticker:
-            old_entity_uri = self.add_entity(variable, digest, description)
+            old_entity_uri = self.add_entity(variable, digest, description, value=value)
             
             self.tick(variable)
             
-            entity_uri = self.add_entity(variable, digest, description)
+            entity_uri = self.add_entity(variable, digest, description, value=value)
             
             log.debug("Adding prov:wasDerivedFrom between {} and {}".format(entity_uri, old_entity_uri))
             self.g.add((entity_uri,self.PROV['wasDerivedFrom'],old_entity_uri))
         else :
             self.tick(variable)
-            entity_uri = self.add_entity(variable, digest, description)
+            entity_uri = self.add_entity(variable, digest, description, value=value)
             
              
         return entity_uri
         
-    def add_entity(self, name, digest, description, ticker=None):
+    def add_entity(self, name, digest, description, value=None, ticker=None):
         # Make sure to use the old ticks, if provided.
         if ticker:
             try :
@@ -281,28 +339,28 @@ class ProvBuilder(object):
     
         # log.debug("Adding Entity with label '{}' ({})".format(name,entity_uri))
     
+        log.debug("Adding tick to Entity name")
+        name = "{} ({})".format(name,tick)
+    
         self.g.add((entity_uri,RDF.type,self.PROV['Entity']))
         self.g.add((entity_uri,RDFS.label,Literal(name)))
         self.g.add((entity_uri,self.SKOS['note'],Literal(description)))
+        self.g.add((entity_uri,PROVOMATIC['tick'],Literal(tick)))
+        
+        
+        if value:
+            # Add the actual value, with the appropriate datatype, if known.
+            self.g.add((entity_uri,RDF.value,Literal(value)))
     
         return entity_uri
+    
+
     
     def get_value(self, io):
         """We'll just use the __unicode__ representation as source for the hash digest"""
         
         
-        try :
-            value = unicode(io)
-        except :
-            log.warning("Type: ", type(io))
-            log.warning("IO cannot be decoded")
-            encoding = chardet.detect(io)['encoding']
-            if encoding == None :
-                log.debug("No encoding")
-                value = io.encode('string-escape').decode('utf-8')
-            else :
-                log.debug("Encoding: {}".format(encoding))
-                value = io.decode(encoding)
+        value = get_decoded_value(io)
             
         
         vdigest = hashlib.md5(value.encode('utf-8')).hexdigest()
