@@ -109,50 +109,122 @@ def add_prov(uri, prov=None,url=None):
     
     log.debug("Loaded provenance graph with id {}".format(uri))
     return 
-    
-def revive(name):
-    namespaces = """
-        PREFIX prov: <http://www.w3.org/ns/prov#>. \n
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> . \n
-        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> . \n
-        PREFIX provomatic: <http://provomatic.org/resource/> . \n 
-    """
-    
-    pb = ProvBuilder()
-    ticker = pb.get_ticker()
-    
-    # This query retrieves all entities with a certain name, ordered by date
-    q = """
-        SELECT ?entity ?value ?tick WHERE {{ 
-            ?entity a prov:Entity .
-            ?entity rdfs:label ?label .
-            ?entity rdf:value ?value .
-            OPTIONAL {{ 
-                ?entity prov:wasGeneratedAtTime ?time .
-            }}
-            OPTIONAL {{
-                ?entity provomatic:tick ?tick .
-            }}
-            FILTER (str(?label) = "{}")
-        }} ORDER BY DESC(?time) DESC(?tick)""".format(name)
 
-    log.info(q)        
+def list_entities():
+    # This query retrieves all entities
+    
+    q = """
+        SELECT DISTINCT ?entity ?label ?time ?tick WHERE {
+            GRAPH ?g {
+                {{ ?entity a prov:Entity . }} UNION {{ ?entity prov:wasGeneratedBy ?a .}} 
+                ?entity rdfs:label ?label .
+                OPTIONAL {
+                    ?entity provomatic:tick ?tick 
+                }
+                OPTIONAL {
+                    ?entity prov:wasGeneratedAtTime ?time 
+                }
+            }
+        } ORDER BY DESC(?time) DESC(?tick)
+    """
+    ds = get_dataset()
+    results = ds.query(q)
+    
+    entities = {}
+    
+    for result in results:
+        uri = result['entity'].__str__()
+        label = result['label'].value
+        
+        tick = None
+        if result['tick']:
+            tick = result['tick'].value
+        
+        time = None
+        if result['time']:
+            time = result['time'].value
+        
+        
+        
+        entities.setdefault(label,[]).append({'uri': uri, 'name': label, 'tick': tick, 'time': time})
+        
+    return entities
+    
+    
+def revive(name, uri = None, tick = None):
+    
+    if not uri and not tick :
+        # This query retrieves all entities with a certain name, ordered by date
+        q = """
+            SELECT DISTINCT ?entity ?value ?time ?tick WHERE {{ 
+                GRAPH ?g {{
+                    {{ ?entity a prov:Entity . }} UNION {{ ?entity prov:wasGeneratedBy ?a .}}
+                    ?entity rdfs:label ?label .
+                    ?entity rdf:value ?value .
+                    OPTIONAL {{ 
+                        ?entity prov:wasGeneratedAtTime ?time .
+                    }}
+                    OPTIONAL {{
+                        ?entity provomatic:tick ?tick .
+                    }}
+                    FILTER (str(?label) = "{}")
+                }}
+            }} ORDER BY DESC(?time) DESC(?tick)""".format(name)
+    elif uri :
+        # This query retrieves the entity with the specified uri
+        q = """
+            SELECT DISTINCT ?entity ?value ?time ?tick WHERE {{ 
+                GRAPH ?g {{
+                    {{ <{0}> a prov:Entity . }} UNION {{ <{0}> prov:wasGeneratedBy ?a .}}
+                    <{0}> rdf:value ?value .
+                    OPTIONAL {{ 
+                        <{0}> prov:wasGeneratedAtTime ?time .
+                    }}
+                    OPTIONAL {{
+                        <{0}> provomatic:tick ?tick .
+                    }}
+                }}
+                BIND (<{0}> as ?entity )
+            }} ORDER BY DESC(?time) DESC(?tick)""".format(uri)        
+    elif tick :
+        # This query retrieves all entities with a certain name, that have the specified tick, ordered by date
+        q = """
+            SELECT ?entity ?value ?time ?tick WHERE {{ 
+                GRAPH ?g {{
+                    {{ ?entity a prov:Entity . }} UNION {{ ?entity prov:wasGeneratedBy ?a .}} 
+                    ?entity rdfs:label ?label .
+                    ?entity rdf:value ?value .
+                    OPTIONAL {{ 
+                        ?entity prov:wasGeneratedAtTime ?time .
+                    }}
+                    ?entity provomatic:tick ?tick.
+                    FILTER (str(?label) = "{}")
+                    FILTER (str(?tick) = "{}")
+                }}
+            }} ORDER BY DESC(?time) DESC(?tick)""".format(name, tick)
+
+    log.debug(q)        
     ds = get_dataset()
     results = ds.query(q)
 
-    log.info(results)
+
     
     entity = None
     value = None
     for result in results :
-        log.info(result['entity'])
-        entity = result['entity'].value
+        log.debug(result)
+        entity = result['entity'].__str__()
         value = result['value'].value
         
-        if 'tick' in results:
-            tick = result['tick'].value
+        etick = None
+        if result['tick']:
+            etick = result['tick'].value
+            
+        time = None
+        if result['time']:
+            time = result['time'].value
         
-        if not 'time' in result and not 'tick' in result:
+        if not result['time'] and not result['tick'] and not uri:
             log.warning('No ordering information in provenance graph... picking arbitrary entity value') 
         
         # We only pick the first result (the last generated entity)
@@ -160,10 +232,33 @@ def revive(name):
     
     if entity :
         log.info("Entity imported as variable of type '{}'".format(type(value)))
-        log.warning("NB: Proper binding in provenance graph is only supported if you bind the output of this function to a variable with the name you provided as argument to this function (i.e. {}).".format(name))
+        log.info("URI:\t{}".format(entity))
+        if time :
+            log.info("Time:\t{}".format(time.isoformat()))
+        if tick :
+            log.info("Tick:\t{}".format(etick))
+        
+        
+        pb = ProvBuilder()
+        g = _ds.graph(identifier=entity)
+        pb.set_graph(g)
+        
+        if etick :
+            new_tick = pb.set_tick(name, etick)
+        else :
+            new_tick = pb.get_tick(name)
+        
+        log.info("Imported value has tick {}".format(new_tick))
+        unicodevalue, vdigest = pb.get_value(value)
+        entity_uri = pb.add_entity(name, vdigest, unicodevalue, value=value, timestamp = pb.now())
+        
+        g.add((entity_uri,PROV['wasDerivedFrom'],URIRef(entity)))
+        
+        
+        
         return value
     else :
-        log.warning("No entity with that name found")
+        log.warning("No entity with that name found, or entity has no value for 'rdf:value'")
         return None
     
 
@@ -198,6 +293,17 @@ class ProvBuilder(object):
             return self.variable_ticker[variable]
         else :
             return self.tick(variable)
+            
+    def set_tick(self, variable, tick):
+        if variable in self.variable_ticker:
+            if tick > self.variable_ticker[variable] :
+                self.variable_ticker[variable] = tick + 1
+            else :
+                self.variable_ticker[variable] += 1
+        else :
+            self.variable_ticker[variable] = tick + 1
+        
+        return self.variable_ticker[variable]
         
     def add_activity(self, name, description, inputs, outputs, dependencies={}, input_names=[], output_names=[], expand_output_dict=False, source=None, pre_ticker = None):
         """Adds an activity to the graph. Inputs should be a dictionary of inputs & values, outputs a list or tuple of just values
@@ -406,6 +512,10 @@ class ProvBuilder(object):
 
     def get_graph(self):
         return self.g
+        
+    def set_graph(self, g):
+        self.g = g
+        return
         
     def now(self):
         return datetime.datetime.now()

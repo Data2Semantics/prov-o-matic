@@ -1,6 +1,6 @@
 from watcher import NotebookWatcher, CodeVisitor
 from wrapper import prov, replace
-from builder import get_dataset, save_prov, clear_dataset, add_prov, revive
+from builder import get_dataset, save_prov, clear_dataset, add_prov, revive, list_entities
 from viewer import Viewer
 
 from ducktape import Ducktape
@@ -32,6 +32,7 @@ def load_ipython_extension(ip):
     ip.push('add_prov')
     # Push the revive function (for binding a value from an inported provenance graph to a new variable)
     ip.push('revive')
+    ip.push('list_entities')
 
     
     ## Initialize the PROV-O-Viz adapter
