@@ -13,7 +13,7 @@ from builder import ProvBuilder
 import logging
 
 log = logging.getLogger('provomatic.watcher')
-log.setLevel(logging.WARNING)
+log.setLevel(logging.INFO)
 
 class NotebookWatcher(object):
     """The NotebookWatcher listens to execution events in the IPython Notebook, and generates the relevant provenance based on an analysis of the code being executed."""
@@ -115,19 +115,45 @@ class NotebookWatcher(object):
             # TEMPORARY: Test what happens if we don't exclude 'Out'
             if k.startswith('_') or k in ['In','exit','quit','get_ipython'] :
                 # log.debug("'{}' skipped, because it is in ['In','exit','quit','get_ipython'] or starts with '_'".format(k))
-                pass
+                continue
                 
             # For all other variables, see whether they were changed, and add them to the outputs
             ## This compares the value of the variable with the value it had previously, or
             ## checks that the variable did not exist previously.  
+            # Need to do some exception handling to deal with ValueErrors for objects that have ambiguous truth values
+            try :
+                # if (k in self.environment and not ((numpy.array_equal(v,self.environment[k]) or v == self.environment[k]) and self.pre_ticker.setdefault(k,0) == pb.get_tick(k))) or (not k in self.environment) or k == 'Out':
+                if (k in self.environment and not (v == self.environment[k] and self.pre_ticker.setdefault(k,0) == pb.get_tick(k))) or (not k in self.environment) or k == 'Out':
+                    changed = True
+                else:
+                    changed = False
+            except Exception as e:
+                log.debug("Caught numpy array comparison exception")
+                ## Special handling of Numpy silliness
+                if k in self.environment:
+                    if not numpy.asarray(v == self.environment[k]).all():
+                        log.debug("Not the same (value-comparison)")
+                        changed = True
+                    elif self.pre_ticker.setdefault(k,0) == pb.get_tick(k):
+                        log.debug("Not the same (tick-comparison)")
+                        changed = True
+                    else :
+                        changed = False
+                elif not k in self.environment :
+                    log.debug("Newly added variable")
+                    changed = True
+                elif k == 'Out' :
+                    log.debug("Out value")
+                    changed = True
+                else :
+                    log.debug("Not changed")
+                    changed = False
+                
             
-            elif (k in self.environment and not ((numpy.array_equal(v,self.environment[k]) or v == self.environment[k]) and self.pre_ticker.setdefault(k,0) == pb.get_tick(k))) or (not k in self.environment) or k == 'Out':
+            if changed:
+                log.debug("{} changed or was added".format(k))
                 
                 
-                # log.debug("{} changed or was added".format(k))
-                # OLD: This performed the check now included in the elif statement. Removed because of the addition of "k = 'Out'" (we're capturing everythin posted to Out)
-                # if k in self.environment and v == self.environment[k]:
-                #     log.debug("Problem with {}".format(k))
                 
                 # If the object is not a function, we'll use the value as output value.
                 if not callable(v):
@@ -167,7 +193,7 @@ class NotebookWatcher(object):
                 self.environment[k] = v
             else :
                 log.debug("'{}' skipped because it did not change (ticks: {} and {}).".format(k,self.pre_ticker[k],pb.get_tick(k)))
-                pass
+                
         
         # print dependencies.keys()
         pb.add_activity(name, description, inputs, outputs, dependencies, input_names=inputs.keys(), output_names=outputs.keys(), expand_output_dict=True, pre_ticker=self.pre_ticker)

@@ -1,6 +1,7 @@
 import datetime
 import hashlib
 import chardet
+import types
 from rdflib import Graph, Dataset, URIRef, Literal, Namespace, RDF, RDFS, XSD
 from rdflib.term import bind
 import logging
@@ -9,7 +10,7 @@ from StringIO import StringIO
 import re
 
 log = logging.getLogger('provomatic.builder')
-log.setLevel(logging.WARNING)
+log.setLevel(logging.INFO)
     
 # Global variable holding the dataset that accumulates all provenance graphs
 _ds = Dataset()
@@ -106,34 +107,64 @@ def add_prov(uri, prov=None,url=None):
         log.error("Should provide either provenance data or a URL where I can fetch some")
         return
     
-    entities = {}
+    log.debug("Loaded provenance graph with id {}".format(uri))
+    return 
+    
+def revive(name):
+    namespaces = """
+        PREFIX prov: <http://www.w3.org/ns/prov#>. \n
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> . \n
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> . \n
+        PREFIX provomatic: <http://provomatic.org/resource/> . \n 
+    """
+    
     pb = ProvBuilder()
     ticker = pb.get_ticker()
-    for entity in graph.subjects(RDF.type,PROV['Entity']):
-        try :
-            labels = graph.objects(entity, RDFS['label'])
-            values = graph.objects(entity, RDF.value)
-            ticks = graph.objects(entity, PROVOMATIC['tick'])
-        
-            # Get the first items
-            label = labels.next().value
-            value = values.next().value
-            tick = values.next().value
-            
-            
-            varname = re.sub(r('\s\(d+\)$','',label))
-            
-            if varname in ticker:
-                pb.tick(varname)
-            
-            entities[label] = value
-        except Exception as e:
-            log.warning(e)
-            log.debug("Cannot convert to Python objects: prov:Entity instances in the provenance file should have an rdfs:label and rdf:value")
-        
-    log.debug("Loaded provenance graph with id {}".format(uri))
-    return entities
     
+    # This query retrieves all entities with a certain name, ordered by date
+    q = """
+        SELECT ?entity ?value ?tick WHERE {{ 
+            ?entity a prov:Entity .
+            ?entity rdfs:label ?label .
+            ?entity rdf:value ?value .
+            OPTIONAL {{ 
+                ?entity prov:wasGeneratedAtTime ?time .
+            }}
+            OPTIONAL {{
+                ?entity provomatic:tick ?tick .
+            }}
+            FILTER (str(?label) = "{}")
+        }} ORDER BY DESC(?time) DESC(?tick)""".format(name)
+
+    log.info(q)        
+    ds = get_dataset()
+    results = ds.query(q)
+
+    log.info(results)
+    
+    entity = None
+    value = None
+    for result in results :
+        log.info(result['entity'])
+        entity = result['entity'].value
+        value = result['value'].value
+        
+        if 'tick' in results:
+            tick = result['tick'].value
+        
+        if not 'time' in result and not 'tick' in result:
+            log.warning('No ordering information in provenance graph... picking arbitrary entity value') 
+        
+        # We only pick the first result (the last generated entity)
+        break
+    
+    if entity :
+        log.info("Entity imported as variable of type '{}'".format(type(value)))
+        log.warning("NB: Proper binding in provenance graph is only supported if you bind the output of this function to a variable with the name you provided as argument to this function (i.e. {}).".format(name))
+        return value
+    else :
+        log.warning("No entity with that name found")
+        return None
     
 
 class ProvBuilder(object):
@@ -255,9 +286,9 @@ class ProvBuilder(object):
                 print count
                 if output_names != [] :
                     # log.debug("Generating entity for {}".format(output_names[count]))
-                    output_uri = self.tick_and_add_entity(output_names[count],vdigest,unicodevalue, value=value)
+                    output_uri = self.tick_and_add_entity(output_names[count],vdigest,unicodevalue, value=value, timestamp = ts)
                 else :
-                    output_uri = self.add_entity("{} output {}".format(name,count),vdigest,unicodevalue, value=value)
+                    output_uri = self.add_entity("{} output {}".format(name,count),vdigest,unicodevalue, value=value, timestamp = ts)
             
                 # log.debug("Relating Activity '{} ({})' to output Entity '{}'".format(name, timestamp, output_uri))
                 self.g.add((activity_uri, self.PROV['generated'], output_uri))
@@ -268,7 +299,7 @@ class ProvBuilder(object):
             for oname, value in outputs.items() :
                 unicodevalue, vdigest = self.get_value(value)
                 
-                output_uri = self.tick_and_add_entity(oname, vdigest, unicodevalue, value=value)
+                output_uri = self.tick_and_add_entity(oname, vdigest, unicodevalue, value=value, timestamp=ts)
                 
                 # log.debug("Relating Activity '{}' to output Entity '{}'".format(name, output_uri))
                 self.g.add((activity_uri, self.PROV['generated'], output_uri))
@@ -280,9 +311,9 @@ class ProvBuilder(object):
             # Otherwise we create a nameless output
             if output_names != []:
                 # log.debug("Generating entity for {}".format(output_names[0]))
-                output_uri = self.tick_and_add_entity(output_names[0],vdigest,unicodevalue, value=outputs)
+                output_uri = self.tick_and_add_entity(output_names[0],vdigest,unicodevalue, value=outputs, timestamp=ts)
             else :
-                output_uri = self.add_entity("{} output".format(name), vdigest, unicodevalue, value=outputs)
+                output_uri = self.add_entity("{} output".format(name), vdigest, unicodevalue, value=outputs, timestamp=ts)
             
         
             # log.debug("Relating Activity '{} ({})' to output Entity '{}'".format(name, timestamp, output_uri))
@@ -303,25 +334,25 @@ class ProvBuilder(object):
         return activity_uri
 
 
-    def tick_and_add_entity(self, variable, digest, description, value=None):
+    def tick_and_add_entity(self, variable, digest, description, value=None, timestamp = None):
         # We increment the re-use of the variable by 1, and create a dependency
         if variable in self.variable_ticker:
             old_entity_uri = self.add_entity(variable, digest, description, value=value)
             
             self.tick(variable)
             
-            entity_uri = self.add_entity(variable, digest, description, value=value)
+            entity_uri = self.add_entity(variable, digest, description, value=value, timestamp=timestamp)
             
             log.debug("Adding prov:wasDerivedFrom between {} and {}".format(entity_uri, old_entity_uri))
             self.g.add((entity_uri,self.PROV['wasDerivedFrom'],old_entity_uri))
         else :
             self.tick(variable)
-            entity_uri = self.add_entity(variable, digest, description, value=value)
+            entity_uri = self.add_entity(variable, digest, description, value=value, timestamp=timestamp)
             
              
         return entity_uri
         
-    def add_entity(self, name, digest, description, value=None, ticker=None):
+    def add_entity(self, name, digest, description, value=None, ticker=None, timestamp = None):
         # Make sure to use the old ticks, if provided.
         if ticker:
             try :
@@ -338,17 +369,20 @@ class ProvBuilder(object):
         entity_uri = self.PROVOMATIC['{}/{}/{}'.format(name.replace(' ','_').replace('%','_'),tick,digest)]
     
         # log.debug("Adding Entity with label '{}' ({})".format(name,entity_uri))
-    
-        log.debug("Adding tick to Entity name")
-        name = "{} ({})".format(name,tick)
+        
+        # log.debug("Adding tick to Entity name")
+        # name = "{} ({})".format(name,tick)
     
         self.g.add((entity_uri,RDF.type,self.PROV['Entity']))
         self.g.add((entity_uri,RDFS.label,Literal(name)))
         self.g.add((entity_uri,self.SKOS['note'],Literal(description)))
         self.g.add((entity_uri,PROVOMATIC['tick'],Literal(tick)))
         
+        if timestamp:
+            self.g.add((entity_uri,PROV['wasGeneratedAtTime'],Literal(timestamp)))
         
-        if value:
+        
+        if not value is None or not isinstance(value, types.NoneType):
             # Add the actual value, with the appropriate datatype, if known.
             self.g.add((entity_uri,RDF.value,Literal(value)))
     
