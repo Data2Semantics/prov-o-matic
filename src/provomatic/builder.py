@@ -150,7 +150,31 @@ def list_entities():
         
     return entities
     
+def list_activities():
+    # This query retrieves all activities
     
+    q = """
+        SELECT DISTINCT ?activity ?label WHERE {
+            GRAPH ?g {
+                ?activity a prov:Activity . 
+                ?activity rdfs:label ?label .
+            }
+        } 
+    """
+    ds = get_dataset()
+    results = ds.query(q)
+    
+    activities = {}
+    
+    for result in results:
+        uri = result['activity'].__str__()
+        label = result['label'].value
+
+        activities.setdefault(label,[]).append({'uri': uri, 'name': label})
+        
+    return activities
+
+
 def revive(name, uri = None, tick = None):
     
     if not uri and not tick :
