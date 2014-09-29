@@ -1,4 +1,4 @@
-from builder import get_graph, get_dataset
+from builder import get_graph, get_dataset, list_entities, list_activities
 from rdflib import Graph, ConjunctiveGraph
 
 from IPython.display import HTML
@@ -16,7 +16,7 @@ from provoviz.views import generate_graphs
 from jinja2 import Environment, PackageLoader
 
 log = logging.getLogger('provomatic.viewer')
-log.setLevel(logging.DEBUG)
+log.setLevel(logging.INFO)
 
 
 class Viewer(object):
@@ -60,15 +60,32 @@ class Viewer(object):
             os.makedirs('www')
             
 
-    def view_prov(self):
+    def view_prov(self, name = None):
         """Generate the provenance graph locally using a submodule version of PROV-O-Viz"""
         env = Environment(loader=PackageLoader('provomatic','templates'))
         template = env.get_template('service_response_local.html')
         
+        
+        if name :
+            entities = list_entities()
+            activities = list_activities()
+        
+        
+            if name in entities:
+                resources = [{'id': e['uri'], 'text': e['name']} for e in entities[name]]
+            elif name in activities :
+                resources = [{'id': a['uri'], 'text': a['name']} for a in activities[name]]
+            else :
+                resources = None
+        else :
+            resource = None
+            
+        log.debug(resources)
+        
         dataset = get_dataset()
         data_hash = dataset.md5_term_hash()
         
-        response = generate_graphs(ConjunctiveGraph(dataset.store))
+        response = generate_graphs(ConjunctiveGraph(dataset.store), resources=resources)
         
         json_response = json.dumps(response)
         
