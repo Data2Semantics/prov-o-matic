@@ -80,12 +80,12 @@ class Viewer(object):
         else :
             resource = None
             
-        log.debug(resources)
+        log.debug("Resources found: {}".format(resources))
         
         dataset = get_dataset()
         data_hash = dataset.md5_term_hash()
         
-        response = generate_graphs(ConjunctiveGraph(dataset.store), resources=resources)
+        response = generate_graphs(ConjunctiveGraph(dataset.store), predefined_resources=resources)
         
         json_response = json.dumps(response)
         
