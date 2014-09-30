@@ -118,6 +118,7 @@ def list_entities():
             GRAPH ?g {
                 {{ ?entity a prov:Entity . }} UNION {{ ?entity prov:wasGeneratedBy ?a .}} 
                 ?entity rdfs:label ?label .
+                ?entity rdf:value ?v .
                 OPTIONAL {
                     ?entity provomatic:tick ?tick 
                 }
@@ -413,7 +414,7 @@ class ProvBuilder(object):
                 
                 # If we know the output names (captured e.g. by 'replace'), we can also use them to generate nice names
                 # Otherwise we create a nameless output
-                print count
+                # print count
                 if output_names != [] :
                     # log.debug("Generating entity for {}".format(output_names[count]))
                     output_uri = self.tick_and_add_entity(output_names[count],vdigest,unicodevalue, value=value, timestamp = ts)

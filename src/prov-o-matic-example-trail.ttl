@@ -1,0 +1,2117 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix provomatic: <http://provomatic.org/resource/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://provomatic.org/resource/id-022afd9a1c7c4db04cac83b64ef52780/2014-09-30T15:08:47.339589> a prov:Activity ;
+    rdfs:label "In [8] (15:08:47)" ;
+    dcterms:description """8: 
+### Saving the Provenance Trace to a File
+""" ;
+    prov:generated <http://provomatic.org/resource/Out_[8]/1/68ae785a1b4a100457740ea9dd98c9c6> ;
+    prov:used provomatic:id-022afd9a1c7c4db04cac83b64ef52780 .
+
+<http://provomatic.org/resource/id-3130e18dd725957849a3cf1e86006cfe/2014-09-30T15:06:01.788930> a prov:Activity ;
+    rdfs:label "add (15:06:01)" ;
+    dcterms:description """def add(a,b):
+    return a+b
+""" ;
+    prov:generated <http://provomatic.org/resource/z/2/e4da3b7fbbce2345d7772b0674a318d5> ;
+    prov:used provomatic:id-3130e18dd725957849a3cf1e86006cfe,
+        <http://provomatic.org/resource/x/1/c81e728d9d4c2f636f067f89cc14862c>,
+        <http://provomatic.org/resource/y/1/eccbc87e4b5ce2fe28308fd9f2a7baf3> .
+
+<http://provomatic.org/resource/id-4db791b793f73b6421d6e2ad584d87c2/2014-09-30T15:06:04.497320> a prov:Activity ;
+    rdfs:label "In [7] (15:06:04)" ;
+    dcterms:description """7: 
+view_prov()
+""" ;
+    prov:generated <http://provomatic.org/resource/Out_[7]/1/68ae785a1b4a100457740ea9dd98c9c6> ;
+    prov:used provomatic:id-4db791b793f73b6421d6e2ad584d87c2 ;
+    prov:wasInformedBy provomatic:id-8bc9b7a752427dd479e29812776f4f48 .
+
+<http://provomatic.org/resource/id-54363ab8d3b58fc1f84b3c98f09633c2/2014-09-30T14:49:32.992338> a prov:Activity ;
+    rdfs:label "In [2] (14:49:32)" ;
+    dcterms:description """2: 
+x = 2
+y = 3
+""" ;
+    prov:generated <http://provomatic.org/resource/x/1/c81e728d9d4c2f636f067f89cc14862c>,
+        <http://provomatic.org/resource/y/1/eccbc87e4b5ce2fe28308fd9f2a7baf3> ;
+    prov:used provomatic:id-54363ab8d3b58fc1f84b3c98f09633c2 .
+
+<http://provomatic.org/resource/id-7cd9d94e3ca45f38c9d16d88ab467b91/2014-09-30T14:49:30.823352> a prov:Activity ;
+    rdfs:label "In [1] (14:49:30)" ;
+    dcterms:description """1: 
+get_ipython().magic(u'reload_ext provomatic.extension')
+""" ;
+    prov:generated <http://provomatic.org/resource/add_prov/1/52755181d870ca25cd67b7f1458d0c6a>,
+        <http://provomatic.org/resource/list_activities/1/a5dcd1130bc88a37990de6e77798df94>,
+        <http://provomatic.org/resource/list_entities/1/540142d2fd23d545254ac0a637aea3f9>,
+        <http://provomatic.org/resource/load_ducktape/1/f3e68c3c03e94ea8a5d46a34a047363f>,
+        <http://provomatic.org/resource/prov/1/9769014c83e117a8ae90c1d7ecca307b>,
+        <http://provomatic.org/resource/replace/1/332ffc318c61192da33def7e6b210921>,
+        <http://provomatic.org/resource/revive/1/9c4756922bb7f461d4b82dde123591e1>,
+        <http://provomatic.org/resource/save_prov/1/f4f022fa16402a7dd2b95051dddec325>,
+        <http://provomatic.org/resource/set_provoviz_url/1/4efaa4ccaec3496dbdaf3047dd96f827>,
+        <http://provomatic.org/resource/view_prov/1/8bc9b7a752427dd479e29812776f4f48>,
+        <http://provomatic.org/resource/view_prov_service/1/df65388220314d9c5dbdc7092fcb562a> ;
+    prov:used provomatic:id-7cd9d94e3ca45f38c9d16d88ab467b91 .
+
+<http://provomatic.org/resource/id-8bc9b7a752427dd479e29812776f4f48/2014-09-30T14:49:35.585838> a prov:Activity ;
+    rdfs:label "view_prov (14:49:35)" ;
+    dcterms:description """    def view_prov(self, activity = None):
+        \"\"\"Generate the provenance graph locally using a submodule version of PROV-O-Viz\"\"\"
+        env = Environment(loader=PackageLoader('provomatic','templates'))
+        template = env.get_template('service_response_local.html')
+        
+        
+        if activity :
+            activities = list_activities()
+        
+            if activity in activities :
+                resources = [{'id': a['uri'], 'text': activity} for a in activities[activity]]
+            else :
+                log.warning("No activity with name '{}' was found...".format(activity))
+                resources = None
+        else :
+            resources = None
+            
+        log.debug("Resources found: {}".format(resources))
+        
+        dataset = get_dataset()
+        data_hash = dataset.md5_term_hash()
+        
+        response = generate_graphs(ConjunctiveGraph(dataset.store), predefined_resources=resources)
+        
+        json_response = json.dumps(response)
+        
+        visualization_html = template.render(response=json_response, data_hash=data_hash)
+        
+        html = self.generate_iframe(visualization_html, data_hash)
+        
+        return HTML(html)
+""" ;
+    prov:generated <http://provomatic.org/resource/view_prov_output/1/7521ae4e8f6fb5d910b2349d1f45f493> ;
+    prov:used provomatic:id-8bc9b7a752427dd479e29812776f4f48,
+        <http://provomatic.org/resource/self/1/13d11a6eaeaea101287755ff4172daba> .
+
+<http://provomatic.org/resource/id-8bc9b7a752427dd479e29812776f4f48/2014-09-30T15:06:04.493980> a prov:Activity ;
+    rdfs:label "view_prov (15:06:04)" ;
+    dcterms:description """    def view_prov(self, activity = None):
+        \"\"\"Generate the provenance graph locally using a submodule version of PROV-O-Viz\"\"\"
+        env = Environment(loader=PackageLoader('provomatic','templates'))
+        template = env.get_template('service_response_local.html')
+        
+        
+        if activity :
+            activities = list_activities()
+        
+            if activity in activities :
+                resources = [{'id': a['uri'], 'text': activity} for a in activities[activity]]
+            else :
+                log.warning("No activity with name '{}' was found...".format(activity))
+                resources = None
+        else :
+            resources = None
+            
+        log.debug("Resources found: {}".format(resources))
+        
+        dataset = get_dataset()
+        data_hash = dataset.md5_term_hash()
+        
+        response = generate_graphs(ConjunctiveGraph(dataset.store), predefined_resources=resources)
+        
+        json_response = json.dumps(response)
+        
+        visualization_html = template.render(response=json_response, data_hash=data_hash)
+        
+        html = self.generate_iframe(visualization_html, data_hash)
+        
+        return HTML(html)
+""" ;
+    prov:generated <http://provomatic.org/resource/view_prov_output/1/5088c2cbe8d07b08f1b96917d5c13491> ;
+    prov:used provomatic:id-8bc9b7a752427dd479e29812776f4f48,
+        <http://provomatic.org/resource/self/1/13d11a6eaeaea101287755ff4172daba> .
+
+<http://provomatic.org/resource/id-c69d80d7b775947a7be05f1c19b3b922/2014-09-30T14:49:33.790830> a prov:Activity ;
+    rdfs:label "In [3] (14:49:33)" ;
+    dcterms:description """3: 
+z = x + y
+""" ;
+    prov:generated <http://provomatic.org/resource/z/1/e4da3b7fbbce2345d7772b0674a318d5> ;
+    prov:used provomatic:id-c69d80d7b775947a7be05f1c19b3b922,
+        <http://provomatic.org/resource/x/1/c81e728d9d4c2f636f067f89cc14862c>,
+        <http://provomatic.org/resource/y/1/eccbc87e4b5ce2fe28308fd9f2a7baf3> .
+
+<http://provomatic.org/resource/id-e45f975f44bf429f96e6d21d5b6e57aa/2014-09-30T14:49:35.592675> a prov:Activity ;
+    rdfs:label "In [4] (14:49:35)" ;
+    dcterms:description """4: 
+view_prov()
+""" ;
+    prov:generated <http://provomatic.org/resource/Out_[4]/1/b19569f834aea86568202483c4752805> ;
+    prov:used provomatic:id-e45f975f44bf429f96e6d21d5b6e57aa ;
+    prov:wasInformedBy provomatic:id-8bc9b7a752427dd479e29812776f4f48 .
+
+<http://provomatic.org/resource/id-f074bfc75deecb4612ef8ebdeec4fd03/2014-09-30T15:06:01.791497> a prov:Activity ;
+    rdfs:label "In [6] (15:06:01)" ;
+    dcterms:description """6: 
+z = add(x,y)
+""" ;
+    prov:generated <http://provomatic.org/resource/Out_[6]/1/b19569f834aea86568202483c4752805>,
+        <http://provomatic.org/resource/z/3/e4da3b7fbbce2345d7772b0674a318d5> ;
+    prov:used provomatic:id-f074bfc75deecb4612ef8ebdeec4fd03,
+        <http://provomatic.org/resource/x/1/c81e728d9d4c2f636f067f89cc14862c>,
+        <http://provomatic.org/resource/y/1/eccbc87e4b5ce2fe28308fd9f2a7baf3>,
+        <http://provomatic.org/resource/z/1/e4da3b7fbbce2345d7772b0674a318d5> ;
+    prov:wasInformedBy provomatic:id-3130e18dd725957849a3cf1e86006cfe .
+
+<http://provomatic.org/resource/id-f95a1a6bf1501ecf6ce9f74adf2a4109/2014-09-30T15:06:00.969810> a prov:Activity ;
+    rdfs:label "In [5] (15:06:00)" ;
+    dcterms:description """5: 
+def add(a,b):
+    return a+b
+""" ;
+    prov:generated <http://provomatic.org/resource/Out_[5]/1/b19569f834aea86568202483c4752805>,
+        <http://provomatic.org/resource/add/1/3130e18dd725957849a3cf1e86006cfe> ;
+    prov:used provomatic:id-f95a1a6bf1501ecf6ce9f74adf2a4109 .
+
+rdfs:comment a ns1:AnnotationProperty ;
+    rdfs:comment ""@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> .
+
+rdfs:isDefinedBy a ns1:AnnotationProperty .
+
+rdfs:label a ns1:AnnotationProperty ;
+    rdfs:comment ""@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> .
+
+ns1:versionInfo a ns1:AnnotationProperty .
+
+prov: a ns1:Ontology .
+
+prov:Bundle a ns1:Class ;
+    rdfs:label "Bundle" ;
+    rdfs:comment "Note that there are kinds of bundles (e.g. handwritten letters, audio recordings, etc.) that are not expressed in PROV-O, but can be still be described by PROV-O."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subClassOf prov:Entity ;
+    prov:category "expanded" ;
+    prov:definition "A bundle is a named set of provenance descriptions, and is itself an Entity, so allowing provenance of provenance to be expressed."@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-bundle-entity"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-bundle-declaration"^^xsd:anyURI .
+
+prov:EmptyCollection a ns1:Class,
+        ns1:NamedIndividual ;
+    rdfs:label "EmptyCollection"@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subClassOf prov:Collection ;
+    prov:category "expanded" ;
+    prov:component "collections" ;
+    prov:definition "An empty collection is a collection without members."@en .
+
+prov:Organization a ns1:Class ;
+    rdfs:label "Organization" ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subClassOf prov:Agent ;
+    prov:category "expanded" ;
+    prov:component "agents-responsibility" ;
+    prov:definition "An organization is a social or legal institution such as a company, society, etc." ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-agent"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-types"^^xsd:anyURI .
+
+prov:Person a ns1:Class ;
+    rdfs:label "Person" ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subClassOf prov:Agent ;
+    prov:category "expanded" ;
+    prov:component "agents-responsibility" ;
+    prov:definition "Person agents are people."@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-agent"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-types"^^xsd:anyURI .
+
+prov:SoftwareAgent a ns1:Class ;
+    rdfs:label "SoftwareAgent" ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subClassOf prov:Agent ;
+    prov:category "expanded" ;
+    prov:component "agents-responsibility" ;
+    prov:definition "A software agent is running software."@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-agent"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-types"^^xsd:anyURI .
+
+prov:aq a ns1:AnnotationProperty ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subPropertyOf rdfs:seeAlso .
+
+prov:category a ns1:AnnotationProperty ;
+    rdfs:comment "Classify prov-o terms into three categories, including 'starting-point', 'qualifed', and 'extended'. This classification is used by the prov-o html document to gently introduce prov-o terms to its users. "@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> .
+
+prov:component a ns1:AnnotationProperty ;
+    rdfs:comment "Classify prov-o terms into six components according to prov-dm, including 'agents-responsibility', 'alternate', 'annotations', 'collections', 'derivations', and 'entities-activities'. This classification is used so that readers of prov-o specification can find its correspondence with the prov-dm specification."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> .
+
+prov:constraints a ns1:AnnotationProperty ;
+    rdfs:comment "A reference to the principal section of the PROV-CONSTRAINTS document that describes this concept."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subPropertyOf rdfs:seeAlso .
+
+prov:dm a ns1:AnnotationProperty ;
+    rdfs:comment "A reference to the principal section of the PROV-DM document that describes this concept."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subPropertyOf rdfs:seeAlso .
+
+prov:editorialNote a ns1:AnnotationProperty ;
+    rdfs:comment "A note by the OWL development team about how this term expresses the PROV-DM concept, or how it should be used in context of semantic web or linked data."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> .
+
+prov:editorsDefinition a ns1:AnnotationProperty ;
+    rdfs:comment "When the prov-o term does not have a definition drawn from prov-dm, and the prov-o editor provides one."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subPropertyOf prov:definition .
+
+prov:generated a ns1:ObjectProperty ;
+    rdfs:label "generated" ;
+    rdfs:domain prov:Activity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Entity ;
+    rdfs:subPropertyOf prov:influenced ;
+    ns1:inverseOf prov:wasGeneratedBy ;
+    prov:category "expanded" ;
+    prov:component "entities-activities" ;
+    prov:editorialNote "prov:generated is one of few inverse property defined, to allow Activity-oriented assertions in addition to Entity-oriented assertions."@en ;
+    prov:inverse "wasGeneratedBy" ;
+    prov:sharesDefinitionWith prov:Generation .
+
+prov:hadGeneration a ns1:ObjectProperty ;
+    rdfs:label "hadGeneration" ;
+    rdfs:comment "The _optional_ Generation involved in an Entity's Derivation."@en ;
+    rdfs:domain prov:Derivation ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Generation ;
+    prov:category "qualified" ;
+    prov:component "derivations" ;
+    prov:inverse "generatedAsDerivation" ;
+    prov:sharesDefinitionWith prov:Generation .
+
+prov:hadPlan a ns1:ObjectProperty ;
+    rdfs:label "hadPlan" ;
+    rdfs:comment "The _optional_ Plan adopted by an Agent in Association with some Activity. Plan specifications are out of the scope of this specification."@en ;
+    rdfs:domain prov:Association ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Plan ;
+    prov:category "qualified" ;
+    prov:component "agents-responsibility" ;
+    prov:inverse "wasPlanOf" ;
+    prov:sharesDefinitionWith prov:Plan .
+
+prov:hadUsage a ns1:ObjectProperty ;
+    rdfs:label "hadUsage" ;
+    rdfs:comment "The _optional_ Usage involved in an Entity's Derivation."@en ;
+    rdfs:domain prov:Derivation ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Usage ;
+    prov:category "qualified" ;
+    prov:component "derivations" ;
+    prov:inverse "wasUsedInDerivation" ;
+    prov:sharesDefinitionWith prov:Usage .
+
+prov:invalidated a ns1:ObjectProperty ;
+    rdfs:label "invalidated" ;
+    rdfs:domain prov:Activity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Entity ;
+    rdfs:subPropertyOf prov:influenced ;
+    ns1:inverseOf prov:wasInvalidatedBy ;
+    prov:category "expanded" ;
+    prov:component "entities-activities" ;
+    prov:editorialNote "prov:invalidated is one of few inverse property defined, to allow Activity-oriented assertions in addition to Entity-oriented assertions."@en ;
+    prov:inverse "wasInvalidatedBy" ;
+    prov:sharesDefinitionWith prov:Invalidation .
+
+prov:inverse a ns1:AnnotationProperty ;
+    rdfs:comment "PROV-O does not define all property inverses. The directionalities defined in PROV-O should be given preference over those not defined. However, if users wish to name the inverse of a PROV-O property, the local name given by prov:inverse should be used."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:seeAlso <http://www.w3.org/TR/prov-o/#names-of-inverse-properties> .
+
+prov:n a ns1:AnnotationProperty ;
+    rdfs:comment "A reference to the principal section of the PROV-DM document that describes this concept."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subPropertyOf rdfs:seeAlso .
+
+prov:order a ns1:AnnotationProperty ;
+    rdfs:comment "The position that this OWL term should be listed within documentation. The scope of the documentation (e.g., among all terms, among terms within a prov:category, among properties applying to a particular class, etc.) is unspecified."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> .
+
+prov:qualifiedForm a ns1:AnnotationProperty ;
+    rdfs:comment """This annotation property links a subproperty of prov:wasInfluencedBy with the subclass of prov:Influence and the qualifying property that are used to qualify it. 
+
+Example annotation:
+
+    prov:wasGeneratedBy prov:qualifiedForm prov:qualifiedGeneration, prov:Generation .
+
+Then this unqualified assertion:
+
+    :entity1 prov:wasGeneratedBy :activity1 .
+
+can be qualified by adding:
+
+   :entity1 prov:qualifiedGeneration :entity1Gen .
+   :entity1Gen 
+       a prov:Generation, prov:Influence;
+       prov:activity :activity1;
+       :customValue 1337 .
+
+Note how the value of the unqualified influence (prov:wasGeneratedBy :activity1) is mirrored as the value of the prov:activity (or prov:entity, or prov:agent) property on the influence class."""@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subPropertyOf rdfs:seeAlso .
+
+prov:sharesDefinitionWith a ns1:AnnotationProperty ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subPropertyOf rdfs:seeAlso .
+
+prov:todo a ns1:AnnotationProperty .
+
+prov:unqualifiedForm a ns1:AnnotationProperty ;
+    rdfs:comment "Classes and properties used to qualify relationships are annotated with prov:unqualifiedForm to indicate the property used to assert an unqualified provenance relation."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subPropertyOf rdfs:seeAlso .
+
+prov:value a ns1:DatatypeProperty ;
+    rdfs:label "value" ;
+    rdfs:domain prov:Entity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    prov:category "expanded" ;
+    prov:component "entities-activities" ;
+    prov:definition "Provides a value that is a direct representation of an entity."@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-attribute-value"^^xsd:anyURI ;
+    prov:editorialNote "The editor's definition comes from http://www.w3.org/TR/rdf-primer/#rdfvalue",
+        "This property serves the same purpose as rdf:value, but has been reintroduced to avoid some of the definitional ambiguity in the RDF specification (specifically, 'may be used in describing structured values')."@en .
+
+<http://provomatic.org/resource/Out_[4]/1/b19569f834aea86568202483c4752805> a prov:Entity ;
+    rdfs:label "Out [4]" ;
+    provomatic:tick 1 ;
+    rdf:value "{4: <IPython.core.display.HTML object at 0x10713e150>}" ;
+    skos:note "{4: <IPython.core.display.HTML object at 0x10713e150>}" ;
+    prov:wasGeneratedAtTime "2014-09-30T14:49:35.592675"^^xsd:dateTime .
+
+<http://provomatic.org/resource/Out_[5]/1/b19569f834aea86568202483c4752805> a prov:Entity ;
+    rdfs:label "Out [5]" ;
+    provomatic:tick 1 ;
+    rdf:value "{4: <IPython.core.display.HTML object at 0x10713e150>}" ;
+    skos:note "{4: <IPython.core.display.HTML object at 0x10713e150>}" ;
+    prov:wasGeneratedAtTime "2014-09-30T15:06:00.969810"^^xsd:dateTime .
+
+<http://provomatic.org/resource/Out_[6]/1/b19569f834aea86568202483c4752805> a prov:Entity ;
+    rdfs:label "Out [6]" ;
+    provomatic:tick 1 ;
+    rdf:value "{4: <IPython.core.display.HTML object at 0x10713e150>}" ;
+    skos:note "{4: <IPython.core.display.HTML object at 0x10713e150>}" ;
+    prov:wasGeneratedAtTime "2014-09-30T15:06:01.791497"^^xsd:dateTime .
+
+<http://provomatic.org/resource/Out_[7]/1/68ae785a1b4a100457740ea9dd98c9c6> a prov:Entity ;
+    rdfs:label "Out [7]" ;
+    provomatic:tick 1 ;
+    rdf:value "{4: <IPython.core.display.HTML object at 0x10713e150>, 7: <IPython.core.display.HTML object at 0x107128f50>}" ;
+    skos:note "{4: <IPython.core.display.HTML object at 0x10713e150>, 7: <IPython.core.display.HTML object at 0x107128f50>}" ;
+    prov:wasGeneratedAtTime "2014-09-30T15:06:04.497320"^^xsd:dateTime .
+
+<http://provomatic.org/resource/Out_[8]/1/68ae785a1b4a100457740ea9dd98c9c6> a prov:Entity ;
+    rdfs:label "Out [8]" ;
+    provomatic:tick 1 ;
+    rdf:value "{4: <IPython.core.display.HTML object at 0x10713e150>, 7: <IPython.core.display.HTML object at 0x107128f50>}" ;
+    skos:note "{4: <IPython.core.display.HTML object at 0x10713e150>, 7: <IPython.core.display.HTML object at 0x107128f50>}" ;
+    prov:wasGeneratedAtTime "2014-09-30T15:08:47.339589"^^xsd:dateTime .
+
+<http://provomatic.org/resource/add/1/3130e18dd725957849a3cf1e86006cfe> a prov:Entity ;
+    rdfs:label "add" ;
+    provomatic:tick 1 ;
+    rdf:value """def add(a,b):
+    return a+b
+""" ;
+    skos:note """def add(a,b):
+    return a+b
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T15:06:00.969810"^^xsd:dateTime .
+
+<http://provomatic.org/resource/add_prov/1/52755181d870ca25cd67b7f1458d0c6a> a prov:Entity ;
+    rdfs:label "add_prov" ;
+    provomatic:tick 1 ;
+    rdf:value """def add_prov(uri, prov=None,url=None):
+    \"\"\"
+        prov should be a Turtle serialization of an RDF PROV-O graph
+        uri is a unique id of the graph
+        
+        \"\"\"
+    PROV = Namespace('http://www.w3.org/ns/prov#')
+    PROVOMATIC = Namespace('http://provomatic.org/resource/')
+    SKOS = Namespace('http://www.w3.org/2004/02/skos/core#')
+    DCT = Namespace('http://purl.org/dc/terms/')
+        
+    ds = get_dataset()
+    
+    graph = ds.graph(URIRef(uri))
+    
+    if prov :
+        graph.parse(data=prov,format='turtle')
+    elif url :
+        try :
+            graph.parse(url,format='turtle')
+        except Exception as e:
+            log.error(e)
+            return
+    else :
+        log.error("Should provide either provenance data or a URL where I can fetch some")
+        return
+    
+    log.debug("Loaded provenance graph with id {}".format(uri))
+    return 
+""" ;
+    skos:note """def add_prov(uri, prov=None,url=None):
+    \"\"\"
+        prov should be a Turtle serialization of an ...e")
+        return
+    
+    log.debug("Loaded provenance graph with id {}".format(uri))
+    return 
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T14:49:30.823352"^^xsd:dateTime .
+
+provomatic:id-022afd9a1c7c4db04cac83b64ef52780 a prov:Plan ;
+    rdfs:label "In [8]" ;
+    dcterms:description """8: 
+### Saving the Provenance Trace to a File
+""" ;
+    skos:note """8: 
+### Saving the Provenance Trace to a File
+""" .
+
+provomatic:id-4db791b793f73b6421d6e2ad584d87c2 a prov:Plan ;
+    rdfs:label "In [7]" ;
+    dcterms:description """7: 
+view_prov()
+""" ;
+    skos:note """7: 
+view_prov()
+""" .
+
+provomatic:id-54363ab8d3b58fc1f84b3c98f09633c2 a prov:Plan ;
+    rdfs:label "In [2]" ;
+    dcterms:description """2: 
+x = 2
+y = 3
+""" ;
+    skos:note """2: 
+x = 2
+y = 3
+""" .
+
+provomatic:id-7cd9d94e3ca45f38c9d16d88ab467b91 a prov:Plan ;
+    rdfs:label "In [1]" ;
+    dcterms:description """1: 
+get_ipython().magic(u'reload_ext provomatic.extension')
+""" ;
+    skos:note """1: 
+get_ipython().magic(u'reload_ext provomatic.extension')
+""" .
+
+provomatic:id-c69d80d7b775947a7be05f1c19b3b922 a prov:Plan ;
+    rdfs:label "In [3]" ;
+    dcterms:description """3: 
+z = x + y
+""" ;
+    skos:note """3: 
+z = x + y
+""" .
+
+provomatic:id-e45f975f44bf429f96e6d21d5b6e57aa a prov:Plan ;
+    rdfs:label "In [4]" ;
+    dcterms:description """4: 
+view_prov()
+""" ;
+    skos:note """4: 
+view_prov()
+""" .
+
+provomatic:id-f074bfc75deecb4612ef8ebdeec4fd03 a prov:Plan ;
+    rdfs:label "In [6]" ;
+    dcterms:description """6: 
+z = add(x,y)
+""" ;
+    skos:note """6: 
+z = add(x,y)
+""" .
+
+provomatic:id-f95a1a6bf1501ecf6ce9f74adf2a4109 a prov:Plan ;
+    rdfs:label "In [5]" ;
+    dcterms:description """5: 
+def add(a,b):
+    return a+b
+""" ;
+    skos:note """5: 
+def add(a,b):
+    return a+b
+""" .
+
+<http://provomatic.org/resource/list_activities/1/a5dcd1130bc88a37990de6e77798df94> a prov:Entity ;
+    rdfs:label "list_activities" ;
+    provomatic:tick 1 ;
+    rdf:value """def list_activities():
+    # This query retrieves all activities
+    
+    q = \"\"\"
+        SELECT DISTINCT ?activity ?label WHERE {
+            GRAPH ?g {
+                ?activity a prov:Activity . 
+                ?activity rdfs:label ?label .
+            }
+        } 
+    \"\"\"
+    ds = get_dataset()
+    results = ds.query(q)
+    
+    activities = {}
+    
+    for result in results:
+        uri = result['activity'].__str__()
+        label = result['label'].value
+
+        activities.setdefault(label,[]).append({'uri': uri, 'name': label})
+        
+    return activities
+""" ;
+    skos:note """def list_activities():
+    # This query retrieves all activities
+    
+    q = \"\"\"
+        SELECT DI... activities.setdefault(label,[]).append({'uri': uri, 'name': label})
+        
+    return activities
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T14:49:30.823352"^^xsd:dateTime .
+
+<http://provomatic.org/resource/list_entities/1/540142d2fd23d545254ac0a637aea3f9> a prov:Entity ;
+    rdfs:label "list_entities" ;
+    provomatic:tick 1 ;
+    rdf:value """def list_entities():
+    # This query retrieves all entities
+    
+    q = \"\"\"
+        SELECT DISTINCT ?entity ?label ?time ?tick WHERE {
+            GRAPH ?g {
+                {{ ?entity a prov:Entity . }} UNION {{ ?entity prov:wasGeneratedBy ?a .}} 
+                ?entity rdfs:label ?label .
+                ?entity rdf:value ?v .
+                OPTIONAL {
+                    ?entity provomatic:tick ?tick 
+                }
+                OPTIONAL {
+                    ?entity prov:wasGeneratedAtTime ?time 
+                }
+            }
+        } ORDER BY DESC(?time) DESC(?tick)
+    \"\"\"
+    ds = get_dataset()
+    results = ds.query(q)
+    
+    entities = {}
+    
+    for result in results:
+        uri = result['entity'].__str__()
+        label = result['label'].value
+        
+        tick = None
+        if result['tick']:
+            tick = result['tick'].value
+        
+        time = None
+        if result['time']:
+            time = result['time'].value
+        
+        
+        
+        entities.setdefault(label,[]).append({'uri': uri, 'name': label, 'tick': tick, 'time': time})
+        
+    return entities
+""" ;
+    skos:note """def list_entities():
+    # This query retrieves all entities
+    
+    q = \"\"\"
+        SELECT DISTIN...el,[]).append({'uri': uri, 'name': label, 'tick': tick, 'time': time})
+        
+    return entities
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T14:49:30.823352"^^xsd:dateTime .
+
+<http://provomatic.org/resource/load_ducktape/1/f3e68c3c03e94ea8a5d46a34a047363f> a prov:Entity ;
+    rdfs:label "load_ducktape" ;
+    provomatic:tick 1 ;
+    rdf:value """    def load(self, provenance_uri,data_uri):
+        r = requests.get(data_uri)
+        
+        tables = json.loads(r.content)
+        
+        for name,data in tables.items():
+            log.debug("Loading {}".format(name))
+            self._ip.push({name: data})
+            self.__dict__[name] = data
+            
+            
+            
+            
+        r = requests.get(provenance_uri)
+        add_prov(provenance_uri,r.content)
+""" ;
+    skos:note """    def load(self, provenance_uri,data_uri):
+        r = requests.get(data_uri)
+        
+        ta...  
+            
+        r = requests.get(provenance_uri)
+        add_prov(provenance_uri,r.content)
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T14:49:30.823352"^^xsd:dateTime .
+
+<http://provomatic.org/resource/prov/1/9769014c83e117a8ae90c1d7ecca307b> a prov:Entity ;
+    rdfs:label "prov" ;
+    provomatic:tick 1 ;
+    rdf:value """def prov(f):
+    \"\"\"Decorator that generates a wrapper function\"\"\"
+    def prov_wrapper(*args, **kwargs):
+        \"\"\"Provenance wrapper for arbitrary functions\"\"\"
+        # log.debug('---\\nWRAPPER: function name "{}"\\n---'.format(f.__name__))
+        
+        inputs = inspect.getcallargs(f, *args, **kwargs)
+        
+        outputs = f(*args, **kwargs)
+        
+        pb = ProvBuilder()
+        
+        pb.add_activity(f.__name__, prov_wrapper.source, inputs, outputs)
+        
+        prov_wrapper.prov = pb.get_graph()
+        # prov_wrapper.prov_ttl = pb.get_graph().serialize(format='turtle')
+        
+        return outputs
+
+    prov_wrapper.source = inspect.getsource(f)
+    return prov_wrapper
+""" ;
+    skos:note """def prov(f):
+    \"\"\"Decorator that generates a wrapper function\"\"\"
+    def prov_wrapper(*args, **kw...    
+        return outputs
+
+    prov_wrapper.source = inspect.getsource(f)
+    return prov_wrapper
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T14:49:30.823352"^^xsd:dateTime .
+
+<http://provomatic.org/resource/replace/1/332ffc318c61192da33def7e6b210921> a prov:Entity ;
+    rdfs:label "replace" ;
+    provomatic:tick 1 ;
+    rdf:value """def replace(f, input_names, output_names, *args, **kwargs):
+    \"\"\"Provenance-enabled replacement for arbitrary functions\"\"\"
+    
+    # Inputs is a dictionary of argument names and values
+    # Outputs is whatever the wrapped function returns
+    # Source is the source code of the function, or its docstring.
+    
+    
+    ## If we're dealing with a 'ufunc' (i.e. numpy universal function)
+    if isinstance(f,np.ufunc):
+        inputs = {'x{}'.format(n) : args[n-1] for n in range(1,f.nin+1)}
+        source = f.__doc__
+        
+    ## If we're dealing with a 'wrapper_descriptor' (i.e. a wrapper around a C-function) we cannot retrieve the argument names
+    elif isinstance(f,types.TypeType):
+        inputs = {'x{}'.format(n) : args[n-1] for n in range(1,len(args)+1)}
+        source = f.__doc__
+        
+    ## If we're dealing with a 'classobj' (i.e. an expression that instantiates a object of a class, or something... whatever.)
+    elif inspect.isclass(f):
+        inputs = inspect.getcallargs(f.__init__, f, *args, **kwargs)
+        # Only use those inputs that have a value
+        inputs = {k:v for k,v in inputs.items()}
+        source = inspect.getsource(f)
+        
+    ## If we're dealing with a builtin function
+    elif isinstance(f,types.BuiltinFunctionType):
+        inputs = {}
+        source = f.__name__
+        
+    # If we're dealing with the 'get_ipython' function, we need to take some extra care, otherwise we introduce a cycle in the provenance graph.
+    elif hasattr(f,'__name__') and getattr(f,'__name__') == 'get_ipython':
+        inputs = {}
+        source = inspect.getsource(f)
+        
+    ## If we're dealing with any other function, we just get all args and kwargs as inputs as a dictionary.
+    else :
+        try :
+            inputs = inspect.getcallargs(f, *args, **kwargs)
+            # Only use those inputs that have a value
+            inputs = {k:v for k,v in inputs.items()}
+            
+            for input,ivalue in inputs.items():
+                log.debug(type(ivalue))
+                try :
+                    log.debug("{} {}".format(input,ivalue))
+                    if ivalue is None or isinstance(ivalue,types.NoneType):
+                        log.debug("Popping {}".format(input))
+                        inputs.pop(input,ivalue)
+                except Exception as e:
+                    log.warning(e)
+            
+            source = inspect.getsource(f)
+        except :
+            log.warning('Function is not a Python function')
+            inputs = {'x{}'.format(n) : args[n-1] for n in range(1,len(args)+1)}
+            source = f.__doc__
+    
+    pb = ProvBuilder()
+    
+    pre_ticker = deepcopy(pb.get_ticker())
+    
+    outputs = f(*args, **kwargs)
+
+    if hasattr(f,'__name__'):
+        name = f.__name__
+    elif hasattr(f,'__str__'):
+        name = f.__str__
+    elif hasattr(f,'__doc__'):
+        name = f.__doc__
+    else :
+        name = 'unknown_function'
+    
+    pb.add_activity(name , source, inputs, outputs, input_names=input_names, output_names=output_names,pre_ticker=pre_ticker)
+    
+    replace.prov = pb.get_graph()
+    
+    # prov_wrapper.prov_ttl = pb.get_graph().serialize(format='turtle')
+    
+    return outputs    
+""" ;
+    skos:note """def replace(f, input_names, output_names, *args, **kwargs):
+    \"\"\"Provenance-enabled replacement f...    # prov_wrapper.prov_ttl = pb.get_graph().serialize(format='turtle')
+    
+    return outputs    
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T14:49:30.823352"^^xsd:dateTime .
+
+<http://provomatic.org/resource/revive/1/9c4756922bb7f461d4b82dde123591e1> a prov:Entity ;
+    rdfs:label "revive" ;
+    provomatic:tick 1 ;
+    rdf:value """def revive(name, uri = None, tick = None):
+    
+    if not uri and not tick :
+        # This query retrieves all entities with a certain name, ordered by date
+        q = \"\"\"
+            SELECT DISTINCT ?entity ?value ?time ?tick WHERE {{ 
+                GRAPH ?g {{
+                    {{ ?entity a prov:Entity . }} UNION {{ ?entity prov:wasGeneratedBy ?a .}}
+                    ?entity rdfs:label ?label .
+                    ?entity rdf:value ?value .
+                    OPTIONAL {{ 
+                        ?entity prov:wasGeneratedAtTime ?time .
+                    }}
+                    OPTIONAL {{
+                        ?entity provomatic:tick ?tick .
+                    }}
+                    FILTER (str(?label) = "{}")
+                }}
+            }} ORDER BY DESC(?time) DESC(?tick)\"\"\".format(name)
+    elif uri :
+        # This query retrieves the entity with the specified uri
+        q = \"\"\"
+            SELECT DISTINCT ?entity ?value ?time ?tick WHERE {{ 
+                GRAPH ?g {{
+                    {{ <{0}> a prov:Entity . }} UNION {{ <{0}> prov:wasGeneratedBy ?a .}}
+                    <{0}> rdf:value ?value .
+                    OPTIONAL {{ 
+                        <{0}> prov:wasGeneratedAtTime ?time .
+                    }}
+                    OPTIONAL {{
+                        <{0}> provomatic:tick ?tick .
+                    }}
+                }}
+                BIND (<{0}> as ?entity )
+            }} ORDER BY DESC(?time) DESC(?tick)\"\"\".format(uri)        
+    elif tick :
+        # This query retrieves all entities with a certain name, that have the specified tick, ordered by date
+        q = \"\"\"
+            SELECT ?entity ?value ?time ?tick WHERE {{ 
+                GRAPH ?g {{
+                    {{ ?entity a prov:Entity . }} UNION {{ ?entity prov:wasGeneratedBy ?a .}} 
+                    ?entity rdfs:label ?label .
+                    ?entity rdf:value ?value .
+                    OPTIONAL {{ 
+                        ?entity prov:wasGeneratedAtTime ?time .
+                    }}
+                    ?entity provomatic:tick ?tick.
+                    FILTER (str(?label) = "{}")
+                    FILTER (str(?tick) = "{}")
+                }}
+            }} ORDER BY DESC(?time) DESC(?tick)\"\"\".format(name, tick)
+
+    log.debug(q)        
+    ds = get_dataset()
+    results = ds.query(q)
+
+
+    
+    entity = None
+    value = None
+    for result in results :
+        log.debug(result)
+        entity = result['entity'].__str__()
+        value = result['value'].value
+        
+        etick = None
+        if result['tick']:
+            etick = result['tick'].value
+            
+        time = None
+        if result['time']:
+            time = result['time'].value
+        
+        if not result['time'] and not result['tick'] and not uri:
+            log.warning('No ordering information in provenance graph... picking arbitrary entity value') 
+        
+        # We only pick the first result (the last generated entity)
+        break
+    
+    if entity :
+        log.info("Entity imported as variable of type '{}'".format(type(value)))
+        log.info("URI:\\t{}".format(entity))
+        if time :
+            log.info("Time:\\t{}".format(time.isoformat()))
+        if tick :
+            log.info("Tick:\\t{}".format(etick))
+        
+        
+        pb = ProvBuilder()
+        g = _ds.graph(identifier=entity)
+        pb.set_graph(g)
+        
+        if etick :
+            new_tick = pb.set_tick(name, etick)
+        else :
+            new_tick = pb.get_tick(name)
+        
+        log.info("Imported value has tick {}".format(new_tick))
+        unicodevalue, vdigest = pb.get_value(value)
+        entity_uri = pb.add_entity(name, vdigest, unicodevalue, value=value, timestamp = pb.now())
+        
+        g.add((entity_uri,PROV['wasDerivedFrom'],URIRef(entity)))
+        
+        
+        
+        return value
+    else :
+        log.warning("No entity with that name found, or entity has no value for 'rdf:value'")
+        return None
+""" ;
+    skos:note """def revive(name, uri = None, tick = None):
+    
+    if not uri and not tick :
+        # This query ...rning("No entity with that name found, or entity has no value for 'rdf:value'")
+        return None
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T14:49:30.823352"^^xsd:dateTime .
+
+<http://provomatic.org/resource/save_prov/1/f4f022fa16402a7dd2b95051dddec325> a prov:Entity ;
+    rdfs:label "save_prov" ;
+    provomatic:tick 1 ;
+    rdf:value """def save_prov(trail_filename='provenance-trail.ttl'):
+    graph = get_graph()
+    
+    try :
+        graph.serialize(open(trail_filename,'w'),format='turtle')
+        log.info("File saved to {}".format(trail_filename))
+    except:
+        log.warning("Problem writing to {}".format(trail_filename))
+    
+    return
+""" ;
+    skos:note """def save_prov(trail_filename='provenance-trail.ttl'):
+    graph = get_graph()
+    
+    try :
+      ...e))
+    except:
+        log.warning("Problem writing to {}".format(trail_filename))
+    
+    return
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T14:49:30.823352"^^xsd:dateTime .
+
+<http://provomatic.org/resource/set_provoviz_url/1/4efaa4ccaec3496dbdaf3047dd96f827> a prov:Entity ;
+    rdfs:label "set_provoviz_url" ;
+    provomatic:tick 1 ;
+    rdf:value """    def set_provoviz_url(self, provoviz_service_url='http://localhost:5000/service'):
+        \"\"\"Sets the URL to which the provenance trace should be posted to obtain the visualization\"\"\"
+        
+        self._PROVOVIZ_SERVICE = provoviz_service_url
+        return "PROV-O-Viz service URL now set to '{}'".format(self._PROVOVIZ_SERVICE)
+""" ;
+    skos:note """    def set_provoviz_url(self, provoviz_service_url='http://localhost:5000/service'):
+        \"\"\"Se..._service_url
+        return "PROV-O-Viz service URL now set to '{}'".format(self._PROVOVIZ_SERVICE)
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T14:49:30.823352"^^xsd:dateTime .
+
+<http://provomatic.org/resource/view_prov/1/8bc9b7a752427dd479e29812776f4f48> a prov:Entity ;
+    rdfs:label "view_prov" ;
+    provomatic:tick 1 ;
+    rdf:value """    def view_prov(self, activity = None):
+        \"\"\"Generate the provenance graph locally using a submodule version of PROV-O-Viz\"\"\"
+        env = Environment(loader=PackageLoader('provomatic','templates'))
+        template = env.get_template('service_response_local.html')
+        
+        
+        if activity :
+            activities = list_activities()
+        
+            if activity in activities :
+                resources = [{'id': a['uri'], 'text': activity} for a in activities[activity]]
+            else :
+                log.warning("No activity with name '{}' was found...".format(activity))
+                resources = None
+        else :
+            resources = None
+            
+        log.debug("Resources found: {}".format(resources))
+        
+        dataset = get_dataset()
+        data_hash = dataset.md5_term_hash()
+        
+        response = generate_graphs(ConjunctiveGraph(dataset.store), predefined_resources=resources)
+        
+        json_response = json.dumps(response)
+        
+        visualization_html = template.render(response=json_response, data_hash=data_hash)
+        
+        html = self.generate_iframe(visualization_html, data_hash)
+        
+        return HTML(html)
+""" ;
+    skos:note """    def view_prov(self, activity = None):
+        \"\"\"Generate the provenance graph locally using a ...      html = self.generate_iframe(visualization_html, data_hash)
+        
+        return HTML(html)
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T14:49:30.823352"^^xsd:dateTime .
+
+<http://provomatic.org/resource/view_prov_output/1/5088c2cbe8d07b08f1b96917d5c13491> a prov:Entity ;
+    rdfs:label "view_prov output" ;
+    provomatic:tick 1 ;
+    rdf:value "<IPython.core.display.HTML object at 0x107128f50>" ;
+    skos:note "<IPython.core.display.HTML object at 0x107128f50>" ;
+    prov:wasGeneratedAtTime "2014-09-30T15:06:04.493980"^^xsd:dateTime .
+
+<http://provomatic.org/resource/view_prov_output/1/7521ae4e8f6fb5d910b2349d1f45f493> a prov:Entity ;
+    rdfs:label "view_prov output" ;
+    provomatic:tick 1 ;
+    rdf:value "<IPython.core.display.HTML object at 0x10713e150>" ;
+    skos:note "<IPython.core.display.HTML object at 0x10713e150>" ;
+    prov:wasGeneratedAtTime "2014-09-30T14:49:35.585838"^^xsd:dateTime .
+
+<http://provomatic.org/resource/view_prov_service/1/df65388220314d9c5dbdc7092fcb562a> a prov:Entity ;
+    rdfs:label "view_prov_service" ;
+    provomatic:tick 1 ;
+    rdf:value """    def view_prov_service(self):
+        \"\"\"Posts the provenance graph to the PROV-O-Viz service URL, and returns an HTML object with an IFrame to the HTML page returned\"\"\"
+        graph = get_graph()
+    
+        graph_ttl = graph.serialize(format='turtle')
+    
+        digest = hashlib.md5(graph_ttl).hexdigest()
+    
+        graph_uri = "http://provomatic.org/export/{}".format(digest)
+    
+        payload = {'graph_uri': graph_uri, 'data': graph_ttl}
+        log.debug("Posting to {}".format(self._PROVOVIZ_SERVICE))
+        response = requests.post(self._PROVOVIZ_SERVICE, data=payload)
+    
+        if response.status_code == 200 :
+            html = self.generate_iframe(response.text, digest)
+        else :
+            html = \"\"\"<p><strong>Error</strong> communicating with PROV-O-Viz service at {}, response status {}.<p>\"\"\".format(self._PROVOVIZ_SERVICE,response.status_code)
+    
+    
+        return HTML(html)
+""" ;
+    skos:note """    def view_prov_service(self):
+        \"\"\"Posts the provenance graph to the PROV-O-Viz service UR...s {}.<p>\"\"\".format(self._PROVOVIZ_SERVICE,response.status_code)
+    
+    
+        return HTML(html)
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T14:49:30.823352"^^xsd:dateTime .
+
+<http://provomatic.org/resource/z/3/e4da3b7fbbce2345d7772b0674a318d5> a prov:Entity ;
+    rdfs:label "z" ;
+    provomatic:tick 3 ;
+    rdf:value 5 ;
+    skos:note "5" ;
+    prov:wasDerivedFrom <http://provomatic.org/resource/z/2/e4da3b7fbbce2345d7772b0674a318d5> ;
+    prov:wasGeneratedAtTime "2014-09-30T15:06:01.791497"^^xsd:dateTime .
+
+ns1:Thing a ns1:Class .
+
+prov:atLocation a ns1:ObjectProperty ;
+    rdfs:label "atLocation" ;
+    rdfs:comment "This property has multiple RDFS domains to suit multiple OWL Profiles. See <a href=\"#owl-profile\">PROV-O OWL Profile</a>.",
+        "The Location of any resource."@en ;
+    rdfs:domain [ a ns1:Class ;
+            ns1:unionOf ( prov:Activity prov:Agent prov:Entity prov:InstantaneousEvent ) ] ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Location ;
+    prov:category "expanded" ;
+    prov:editorialNote "The naming of prov:atLocation parallels prov:atTime, and is not named prov:hadLocation to avoid conflicting with the convention that prov:had* properties are used on prov:Influence classes."@en,
+        "This property is not functional because the many values could be at a variety of granularies (In this building, in this room, in that chair)."@en ;
+    prov:inverse "locationOf" ;
+    prov:sharesDefinitionWith prov:Location .
+
+prov:definition a ns1:AnnotationProperty ;
+    rdfs:comment "A definition quoted from PROV-DM or PROV-CONSTRAINTS that describes the concept expressed with this OWL term."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> .
+
+prov:endedAtTime a ns1:DatatypeProperty ;
+    rdfs:label "endedAtTime" ;
+    rdfs:comment "The time at which an activity ended. See also prov:startedAtTime."@en ;
+    rdfs:domain prov:Activity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range xsd:dateTime ;
+    prov:category "starting-point" ;
+    prov:component "entities-activities" ;
+    prov:editorialNote "It is the intent that the property chain holds: (prov:qualifiedEnd o prov:atTime) rdfs:subPropertyOf prov:endedAtTime."@en ;
+    prov:qualifiedForm prov:End,
+        prov:atTime .
+
+prov:generatedAtTime a ns1:DatatypeProperty ;
+    rdfs:label "generatedAtTime" ;
+    rdfs:comment "The time at which an entity was completely created and is available for use."@en ;
+    rdfs:domain prov:Entity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range xsd:dateTime ;
+    prov:category "expanded" ;
+    prov:component "entities-activities" ;
+    prov:editorialNote "It is the intent that the property chain holds: (prov:qualifiedGeneration o prov:atTime) rdfs:subPropertyOf prov:generatedAtTime."@en ;
+    prov:qualifiedForm prov:Generation,
+        prov:atTime .
+
+prov:hadActivity a ns1:ObjectProperty ;
+    rdfs:label "hadActivity" ;
+    rdfs:comment "This property has multiple RDFS domains to suit multiple OWL Profiles. See <a href=\"#owl-profile\">PROV-O OWL Profile</a>.",
+        "The _optional_ Activity of an Influence, which used, generated, invalidated, or was the responsibility of some Entity. This property is _not_ used by ActivityInfluence (use prov:activity instead)."@en ;
+    rdfs:domain [ a ns1:Class ;
+            ns1:unionOf ( prov:Delegation prov:Derivation prov:End prov:Start ) ],
+        prov:Influence ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Activity ;
+    prov:category "qualified" ;
+    prov:component "derivations" ;
+    prov:editorialNote "The multiple rdfs:domain assertions are intended. One is simpler and works for OWL-RL, the union is more specific but is not recognized by OWL-RL."@en ;
+    prov:inverse "wasActivityOfInfluence" ;
+    prov:sharesDefinitionWith prov:Activity .
+
+prov:hadMember a ns1:ObjectProperty ;
+    rdfs:label "hadMember" ;
+    rdfs:domain prov:Collection ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Entity ;
+    rdfs:subPropertyOf prov:wasInfluencedBy ;
+    prov:category "expanded" ;
+    prov:component "expanded" ;
+    prov:inverse "wasMemberOf" ;
+    prov:sharesDefinitionWith prov:Collection .
+
+prov:hadRole a ns1:ObjectProperty ;
+    rdfs:label "hadRole" ;
+    rdfs:comment "This property has multiple RDFS domains to suit multiple OWL Profiles. See <a href=\"#owl-profile\">PROV-O OWL Profile</a>.",
+        "The _optional_ Role that an Entity assumed in the context of an Activity. For example, :baking prov:used :spoon; prov:qualified [ a prov:Usage; prov:entity :spoon; prov:hadRole roles:mixing_implement ]."@en ;
+    rdfs:domain [ a ns1:Class ;
+            ns1:unionOf ( prov:Association prov:InstantaneousEvent ) ],
+        prov:Influence ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Role ;
+    prov:category "qualified" ;
+    prov:component "agents-responsibility" ;
+    prov:editorsDefinition "prov:hadRole references the Role (i.e. the function of an entity with respect to an activity), in the context of an instantaneous usage, generation, association, start, and end."@en ;
+    prov:inverse "wasRoleIn" ;
+    prov:sharesDefinitionWith prov:Role .
+
+prov:invalidatedAtTime a ns1:DatatypeProperty ;
+    rdfs:label "invalidatedAtTime" ;
+    rdfs:comment "The time at which an entity was invalidated (i.e., no longer usable)."@en ;
+    rdfs:domain prov:Entity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range xsd:dateTime ;
+    prov:category "expanded" ;
+    prov:component "entities-activities" ;
+    prov:editorialNote "It is the intent that the property chain holds: (prov:qualifiedInvalidation o prov:atTime) rdfs:subPropertyOf prov:invalidatedAtTime."@en ;
+    prov:qualifiedForm prov:Invalidation,
+        prov:atTime .
+
+prov:specializationOf a ns1:AnnotationProperty,
+        ns1:ObjectProperty ;
+    rdfs:label "specializationOf" ;
+    rdfs:domain prov:Entity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Entity ;
+    rdfs:seeAlso prov:alternateOf ;
+    rdfs:subPropertyOf prov:alternateOf ;
+    prov:category "expanded" ;
+    prov:component "alternate" ;
+    prov:constraints "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"^^xsd:anyURI ;
+    prov:definition "An entity that is a specialization of another shares all aspects of the latter, and additionally presents more specific aspects of the same thing as the latter. In particular, the lifetime of the entity being specialized contains that of any specialization. Examples of aspects include a time period, an abstraction, and a context associated with the entity."@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-specialization"^^xsd:anyURI ;
+    prov:inverse "generalizationOf" ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-specialization"^^xsd:anyURI .
+
+prov:startedAtTime a ns1:DatatypeProperty ;
+    rdfs:label "startedAtTime" ;
+    rdfs:comment "The time at which an activity started. See also prov:endedAtTime."@en ;
+    rdfs:domain prov:Activity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range xsd:dateTime ;
+    prov:category "starting-point" ;
+    prov:component "entities-activities" ;
+    prov:editorialNote "It is the intent that the property chain holds: (prov:qualifiedStart o prov:atTime) rdfs:subPropertyOf prov:startedAtTime."@en ;
+    prov:qualifiedForm prov:Start,
+        prov:atTime .
+
+prov:wasInformedBy a ns1:ObjectProperty ;
+    rdfs:label "wasInformedBy" ;
+    rdfs:comment "An activity a2 is dependent on or informed by another activity a1, by way of some unspecified entity that is generated by a1 and used by a2."@en ;
+    rdfs:domain prov:Activity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Activity ;
+    rdfs:subPropertyOf prov:wasInfluencedBy ;
+    ns1:propertyChainAxiom ( prov:qualifiedCommunication prov:activity ) ;
+    prov:category "starting-point" ;
+    prov:component "entities-activities" ;
+    prov:inverse "informed" ;
+    prov:qualifiedForm prov:Communication,
+        prov:qualifiedCommunication .
+
+provomatic:id-3130e18dd725957849a3cf1e86006cfe a prov:Plan ;
+    rdfs:label "add" ;
+    dcterms:description """def add(a,b):
+    return a+b
+""" ;
+    skos:note """def add(a,b):
+    return a+b
+""" .
+
+<http://provomatic.org/resource/self/1/13d11a6eaeaea101287755ff4172daba> a prov:Entity ;
+    rdfs:label "self" ;
+    provomatic:tick 1 ;
+    rdf:value "<provomatic.viewer.Viewer object at 0x102f92110>" ;
+    skos:note "<provomatic.viewer.Viewer object at 0x102f92110>" .
+
+<http://provomatic.org/resource/z/2/e4da3b7fbbce2345d7772b0674a318d5> a prov:Entity ;
+    rdfs:label "z" ;
+    provomatic:tick 2 ;
+    rdf:value 5 ;
+    skos:note "5" ;
+    prov:wasDerivedFrom <http://provomatic.org/resource/z/1/e4da3b7fbbce2345d7772b0674a318d5> ;
+    prov:wasGeneratedAtTime "2014-09-30T15:06:01.788930"^^xsd:dateTime .
+
+prov:Location a ns1:Class ;
+    rdfs:label "Location" ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:seeAlso prov:atLocation ;
+    prov:category "expanded" ;
+    prov:definition "A location can be an identifiable geographic place (ISO 19112), but it can also be a non-geographic place such as a directory, row, or column. As such, there are numerous ways in which location can be expressed, such as by a coordinate, address, landmark, and so forth."@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-attribute-location"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-attribute"^^xsd:anyURI .
+
+prov:Role a ns1:Class ;
+    rdfs:label "Role" ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:seeAlso prov:hadRole ;
+    prov:category "qualified" ;
+    prov:component "agents-responsibility" ;
+    prov:definition "A role is the function of an entity or agent with respect to an activity, in the context of a usage, generation, invalidation, association, start, and end."@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-attribute-role"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-attribute"^^xsd:anyURI .
+
+prov:actedOnBehalfOf a ns1:ObjectProperty ;
+    rdfs:label "actedOnBehalfOf" ;
+    rdfs:comment "An object property to express the accountability of an agent towards another agent. The subordinate agent acted on behalf of the responsible agent in an actual activity. "@en ;
+    rdfs:domain prov:Agent ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Agent ;
+    rdfs:subPropertyOf prov:wasInfluencedBy ;
+    ns1:propertyChainAxiom ( prov:qualifiedDelegation prov:agent ) ;
+    prov:category "starting-point" ;
+    prov:component "agents-responsibility" ;
+    prov:inverse "hadDelegate" ;
+    prov:qualifiedForm prov:Delegation,
+        prov:qualifiedDelegation .
+
+prov:alternateOf a ns1:ObjectProperty ;
+    rdfs:label "alternateOf" ;
+    rdfs:domain prov:Entity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Entity ;
+    rdfs:seeAlso prov:specializationOf ;
+    prov:category "expanded" ;
+    prov:component "alternate" ;
+    prov:constraints "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"^^xsd:anyURI ;
+    prov:definition "Two alternate entities present aspects of the same thing. These aspects may be the same or different, and the alternate entities may or may not overlap in time."@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-alternate"^^xsd:anyURI ;
+    prov:inverse "alternateOf" ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-alternate"^^xsd:anyURI .
+
+prov:influenced a ns1:ObjectProperty ;
+    rdfs:label "influenced" ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    ns1:inverseOf prov:wasInfluencedBy ;
+    prov:category "expanded" ;
+    prov:component "agents-responsibility" ;
+    prov:inverse "wasInfluencedBy" ;
+    prov:sharesDefinitionWith prov:Influence .
+
+prov:qualifiedAssociation a ns1:ObjectProperty ;
+    rdfs:label "qualifiedAssociation" ;
+    rdfs:comment "If this Activity prov:wasAssociatedWith Agent :ag, then it can qualify the Association using prov:qualifiedAssociation [ a prov:Association;  prov:agent :ag; :foo :bar ]."@en ;
+    rdfs:domain prov:Activity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Association ;
+    rdfs:subPropertyOf prov:qualifiedInfluence ;
+    prov:category "qualified" ;
+    prov:component "agents-responsibility" ;
+    prov:inverse "qualifiedAssociationOf" ;
+    prov:sharesDefinitionWith prov:Association ;
+    prov:unqualifiedForm prov:wasAssociatedWith .
+
+prov:qualifiedAttribution a ns1:ObjectProperty ;
+    rdfs:label "qualifiedAttribution" ;
+    rdfs:comment "If this Entity prov:wasAttributedTo Agent :ag, then it can qualify how it was influenced using prov:qualifiedAttribution [ a prov:Attribution;  prov:agent :ag; :foo :bar ]."@en ;
+    rdfs:domain prov:Entity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Attribution ;
+    rdfs:subPropertyOf prov:qualifiedInfluence ;
+    prov:category "qualified" ;
+    prov:component "agents-responsibility" ;
+    prov:inverse "qualifiedAttributionOf" ;
+    prov:sharesDefinitionWith prov:Attribution ;
+    prov:unqualifiedForm prov:wasAttributedTo .
+
+prov:qualifiedCommunication a ns1:ObjectProperty ;
+    rdfs:label "qualifiedCommunication" ;
+    rdfs:comment "If this Activity prov:wasInformedBy Activity :a, then it can qualify how it was influenced using prov:qualifiedCommunication [ a prov:Communication;  prov:activity :a; :foo :bar ]."@en ;
+    rdfs:domain prov:Activity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Communication ;
+    rdfs:subPropertyOf prov:qualifiedInfluence ;
+    prov:category "qualified" ;
+    prov:component "entities-activities" ;
+    prov:inverse "qualifiedCommunicationOf" ;
+    prov:qualifiedForm prov:Communication ;
+    prov:sharesDefinitionWith prov:Communication .
+
+prov:qualifiedDelegation a ns1:ObjectProperty ;
+    rdfs:label "qualifiedDelegation" ;
+    rdfs:comment "If this Agent prov:actedOnBehalfOf Agent :ag, then it can qualify how with prov:qualifiedResponsibility [ a prov:Responsibility;  prov:agent :ag; :foo :bar ]."@en ;
+    rdfs:domain prov:Agent ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Delegation ;
+    rdfs:subPropertyOf prov:qualifiedInfluence ;
+    prov:category "qualified" ;
+    prov:component "agents-responsibility" ;
+    prov:inverse "qualifiedDelegationOf" ;
+    prov:sharesDefinitionWith prov:Delegation ;
+    prov:unqualifiedForm prov:actedOnBehalfOf .
+
+prov:qualifiedDerivation a ns1:ObjectProperty ;
+    rdfs:label "qualifiedDerivation" ;
+    rdfs:comment "If this Entity prov:wasDerivedFrom Entity :e, then it can qualify how it was derived using prov:qualifiedDerivation [ a prov:Derivation;  prov:entity :e; :foo :bar ]."@en ;
+    rdfs:domain prov:Entity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Derivation ;
+    rdfs:subPropertyOf prov:qualifiedInfluence ;
+    prov:category "qualified" ;
+    prov:component "derivations" ;
+    prov:inverse "qualifiedDerivationOf" ;
+    prov:sharesDefinitionWith prov:Derivation ;
+    prov:unqualifiedForm prov:wasDerivedFrom .
+
+prov:qualifiedEnd a ns1:ObjectProperty ;
+    rdfs:label "qualifiedEnd" ;
+    rdfs:comment "If this Activity prov:wasEndedBy Entity :e1, then it can qualify how it was ended using prov:qualifiedEnd [ a prov:End;  prov:entity :e1; :foo :bar ]."@en ;
+    rdfs:domain prov:Activity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:End ;
+    rdfs:subPropertyOf prov:qualifiedInfluence ;
+    prov:category "qualified" ;
+    prov:component "entities-activities" ;
+    prov:inverse "qualifiedEndOf" ;
+    prov:sharesDefinitionWith prov:End ;
+    prov:unqualifiedForm prov:wasEndedBy .
+
+prov:qualifiedGeneration a ns1:ObjectProperty ;
+    rdfs:label "qualifiedGeneration" ;
+    rdfs:comment "If this Activity prov:generated Entity :e, then it can qualify how it performed the Generation using prov:qualifiedGeneration [ a prov:Generation;  prov:entity :e; :foo :bar ]."@en ;
+    rdfs:domain prov:Entity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Generation ;
+    rdfs:subPropertyOf prov:qualifiedInfluence ;
+    prov:category "qualified" ;
+    prov:component "entities-activities" ;
+    prov:inverse "qualifiedGenerationOf" ;
+    prov:sharesDefinitionWith prov:Generation ;
+    prov:unqualifiedForm prov:wasGeneratedBy .
+
+prov:qualifiedInvalidation a ns1:ObjectProperty ;
+    rdfs:label "qualifiedInvalidation" ;
+    rdfs:comment "If this Entity prov:wasInvalidatedBy Activity :a, then it can qualify how it was invalidated using prov:qualifiedInvalidation [ a prov:Invalidation;  prov:activity :a; :foo :bar ]."@en ;
+    rdfs:domain prov:Entity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Invalidation ;
+    rdfs:subPropertyOf prov:qualifiedInfluence ;
+    prov:category "qualified" ;
+    prov:component "entities-activities" ;
+    prov:inverse "qualifiedInvalidationOf" ;
+    prov:sharesDefinitionWith prov:Invalidation ;
+    prov:unqualifiedForm prov:wasInvalidatedBy .
+
+prov:qualifiedPrimarySource a ns1:ObjectProperty ;
+    rdfs:label "qualifiedPrimarySource" ;
+    rdfs:comment "If this Entity prov:hadPrimarySource Entity :e, then it can qualify how using prov:qualifiedPrimarySource [ a prov:PrimarySource; prov:entity :e; :foo :bar ]."@en ;
+    rdfs:domain prov:Entity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:PrimarySource ;
+    rdfs:subPropertyOf prov:qualifiedInfluence ;
+    prov:category "qualified" ;
+    prov:component "derivations" ;
+    prov:inverse "qualifiedSourceOf" ;
+    prov:sharesDefinitionWith prov:PrimarySource ;
+    prov:unqualifiedForm prov:hadPrimarySource .
+
+prov:qualifiedQuotation a ns1:ObjectProperty ;
+    rdfs:label "qualifiedQuotation" ;
+    rdfs:comment "If this Entity prov:wasQuotedFrom Entity :e, then it can qualify how using prov:qualifiedQuotation [ a prov:Quotation;  prov:entity :e; :foo :bar ]."@en ;
+    rdfs:domain prov:Entity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Quotation ;
+    rdfs:subPropertyOf prov:qualifiedInfluence ;
+    prov:category "qualified" ;
+    prov:component "derivations" ;
+    prov:inverse "qualifiedQuotationOf" ;
+    prov:sharesDefinitionWith prov:Quotation ;
+    prov:unqualifiedForm prov:wasQuotedFrom .
+
+prov:qualifiedRevision a ns1:ObjectProperty ;
+    rdfs:label "qualifiedRevision" ;
+    rdfs:comment "If this Entity prov:wasRevisionOf Entity :e, then it can qualify how it was revised using prov:qualifiedRevision [ a prov:Revision;  prov:entity :e; :foo :bar ]."@en ;
+    rdfs:domain prov:Entity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Revision ;
+    rdfs:subPropertyOf prov:qualifiedInfluence ;
+    prov:category "qualified" ;
+    prov:component "derivations" ;
+    prov:inverse "revisedEntity" ;
+    prov:sharesDefinitionWith prov:Revision ;
+    prov:unqualifiedForm prov:wasRevisionOf .
+
+prov:qualifiedStart a ns1:ObjectProperty ;
+    rdfs:label "qualifiedStart" ;
+    rdfs:comment "If this Activity prov:wasStartedBy Entity :e1, then it can qualify how it was started using prov:qualifiedStart [ a prov:Start;  prov:entity :e1; :foo :bar ]."@en ;
+    rdfs:domain prov:Activity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Start ;
+    rdfs:subPropertyOf prov:qualifiedInfluence ;
+    prov:category "qualified" ;
+    prov:component "entities-activities" ;
+    prov:inverse "qualifiedStartOf" ;
+    prov:sharesDefinitionWith prov:Start ;
+    prov:unqualifiedForm prov:wasStartedBy .
+
+prov:qualifiedUsage a ns1:ObjectProperty ;
+    rdfs:label "qualifiedUsage" ;
+    rdfs:comment "If this Activity prov:used Entity :e, then it can qualify how it used it using prov:qualifiedUsage [ a prov:Usage; prov:entity :e; :foo :bar ]."@en ;
+    rdfs:domain prov:Activity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Usage ;
+    rdfs:subPropertyOf prov:qualifiedInfluence ;
+    prov:category "qualified" ;
+    prov:component "entities-activities" ;
+    prov:inverse "qualifiedUsingActivity" ;
+    prov:sharesDefinitionWith prov:Usage ;
+    prov:unqualifiedForm prov:used .
+
+prov:used a ns1:ObjectProperty ;
+    rdfs:label "used" ;
+    rdfs:comment "A prov:Entity that was used by this prov:Activity. For example, :baking prov:used :spoon, :egg, :oven ."@en ;
+    rdfs:domain prov:Activity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Entity ;
+    rdfs:subPropertyOf prov:wasInfluencedBy ;
+    ns1:propertyChainAxiom ( prov:qualifiedUsage prov:entity ) ;
+    prov:category "starting-point" ;
+    prov:component "entities-activities" ;
+    prov:inverse "wasUsedBy" ;
+    prov:qualifiedForm prov:Usage,
+        prov:qualifiedUsage .
+
+prov:wasAssociatedWith a ns1:ObjectProperty ;
+    rdfs:label "wasAssociatedWith" ;
+    rdfs:comment "An prov:Agent that had some (unspecified) responsibility for the occurrence of this prov:Activity."@en ;
+    rdfs:domain prov:Activity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Agent ;
+    rdfs:subPropertyOf prov:wasInfluencedBy ;
+    ns1:propertyChainAxiom ( prov:qualifiedAssociation prov:agent ) ;
+    prov:category "starting-point" ;
+    prov:component "agents-responsibility" ;
+    prov:inverse "wasAssociateFor" ;
+    prov:qualifiedForm prov:Association,
+        prov:qualifiedAssociation .
+
+prov:wasEndedBy a ns1:ObjectProperty ;
+    rdfs:label "wasEndedBy" ;
+    rdfs:comment "End is when an activity is deemed to have ended. An end may refer to an entity, known as trigger, that terminated the activity."@en ;
+    rdfs:domain prov:Activity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Entity ;
+    rdfs:subPropertyOf prov:wasInfluencedBy ;
+    ns1:propertyChainAxiom ( prov:qualifiedEnd prov:entity ) ;
+    prov:category "expanded" ;
+    prov:component "entities-activities" ;
+    prov:inverse "ended" ;
+    prov:qualifiedForm prov:End,
+        prov:qualifiedEnd .
+
+prov:wasStartedBy a ns1:ObjectProperty ;
+    rdfs:label "wasStartedBy" ;
+    rdfs:comment "Start is when an activity is deemed to have started. A start may refer to an entity, known as trigger, that initiated the activity."@en ;
+    rdfs:domain prov:Activity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Entity ;
+    rdfs:subPropertyOf prov:wasInfluencedBy ;
+    ns1:propertyChainAxiom ( prov:qualifiedStart prov:entity ) ;
+    prov:category "expanded" ;
+    prov:component "entities-activities" ;
+    prov:inverse "started" ;
+    prov:qualifiedForm prov:Start,
+        prov:qualifiedStart .
+
+<http://provomatic.org/resource/z/1/e4da3b7fbbce2345d7772b0674a318d5> a prov:Entity ;
+    rdfs:label "z" ;
+    provomatic:tick 1 ;
+    rdf:value 5 ;
+    skos:note "5" ;
+    prov:wasGeneratedAtTime "2014-09-30T14:49:33.790830"^^xsd:dateTime .
+
+prov:Attribution a ns1:Class ;
+    rdfs:label "Attribution" ;
+    rdfs:comment "An instance of prov:Attribution provides additional descriptions about the binary prov:wasAttributedTo relation from an prov:Entity to some prov:Agent that had some responsible for it. For example, :cake prov:wasAttributedTo :baker; prov:qualifiedAttribution [ a prov:Attribution; prov:entity :baker; :foo :bar ]."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subClassOf prov:AgentInfluence ;
+    prov:category "qualified" ;
+    prov:component "agents-responsibility" ;
+    prov:constraints "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"^^xsd:anyURI ;
+    prov:definition """Attribution is the ascribing of an entity to an agent.
+
+When an entity e is attributed to agent ag, entity e was generated by some unspecified activity that in turn was associated to agent ag. Thus, this relation is useful when the activity is not known, or irrelevant."""@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-attribution"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-attribution"^^xsd:anyURI ;
+    prov:unqualifiedForm prov:wasAttributedTo .
+
+prov:Collection a ns1:Class ;
+    rdfs:label "Collection" ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subClassOf prov:Entity ;
+    prov:category "expanded" ;
+    prov:component "collections" ;
+    prov:definition "A collection is an entity that provides a structure to some constituents, which are themselves entities. These constituents are said to be member of the collections."@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-collection"^^xsd:anyURI .
+
+prov:PrimarySource a ns1:Class ;
+    rdfs:label "PrimarySource" ;
+    rdfs:comment "An instance of prov:PrimarySource provides additional descriptions about the binary prov:hadPrimarySource relation from some secondary prov:Entity to an earlier, primary prov:Entity. For example, :blog prov:hadPrimarySource :newsArticle; prov:qualifiedPrimarySource [ a prov:PrimarySource; prov:entity :newsArticle; :foo :bar ] ."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subClassOf prov:Derivation ;
+    prov:category "qualified" ;
+    prov:component "derivations" ;
+    prov:definition """A primary source for a topic refers to something produced by some agent with direct experience and knowledge about the topic, at the time of the topic's study, without benefit from hindsight.
+
+Because of the directness of primary sources, they 'speak for themselves' in ways that cannot be captured through the filter of secondary sources. As such, it is important for secondary sources to reference those primary sources from which they were derived, so that their reliability can be investigated.
+
+A primary source relation is a particular case of derivation of secondary materials from their primary sources. It is recognized that the determination of primary sources can be up to interpretation, and should be done according to conventions accepted within the application's domain."""@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-primary-source"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-original-source"^^xsd:anyURI ;
+    prov:unqualifiedForm prov:hadPrimarySource .
+
+prov:Quotation a ns1:Class ;
+    rdfs:label "Quotation" ;
+    rdfs:comment "An instance of prov:Quotation provides additional descriptions about the binary prov:wasQuotedFrom relation from some taken prov:Entity from an earlier, larger prov:Entity. For example, :here_is_looking_at_you_kid prov:wasQuotedFrom :casablanca_script; prov:qualifiedQuotation [ a prov:Quotation; prov:entity :casablanca_script; :foo :bar ]."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subClassOf prov:Derivation ;
+    prov:category "qualified" ;
+    prov:component "derivations" ;
+    prov:definition "A quotation is the repeat of (some or all of) an entity, such as text or image, by someone who may or may not be its original author. Quotation is a particular case of derivation."@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-quotation"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-quotation"^^xsd:anyURI ;
+    prov:unqualifiedForm prov:wasQuotedFrom .
+
+prov:Revision a ns1:Class ;
+    rdfs:label "Revision" ;
+    rdfs:comment "An instance of prov:Revision provides additional descriptions about the binary prov:wasRevisionOf relation from some newer prov:Entity to an earlier prov:Entity. For example, :draft_2 prov:wasRevisionOf :draft_1; prov:qualifiedRevision [ a prov:Revision; prov:entity :draft_1; :foo :bar ]."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subClassOf prov:Derivation ;
+    prov:category "qualified" ;
+    prov:component "derivations" ;
+    prov:definition "A revision is a derivation for which the resulting entity is a revised version of some original. The implication here is that the resulting entity contains substantial content from the original. Revision is a particular case of derivation."@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-revision"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-Revision"^^xsd:anyURI ;
+    prov:unqualifiedForm prov:wasRevisionOf .
+
+prov:hadPrimarySource a ns1:ObjectProperty ;
+    rdfs:label "hadPrimarySource" ;
+    rdfs:domain prov:Entity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Entity ;
+    rdfs:subPropertyOf prov:wasDerivedFrom ;
+    ns1:propertyChainAxiom ( prov:qualifiedPrimarySource prov:entity ) ;
+    prov:category "expanded" ;
+    prov:component "derivations" ;
+    prov:inverse "wasPrimarySourceOf" ;
+    prov:qualifiedForm prov:PrimarySource,
+        prov:qualifiedPrimarySource .
+
+prov:influencer a ns1:ObjectProperty ;
+    rdfs:label "influencer" ;
+    rdfs:comment "Subproperties of prov:influencer are used to cite the object of an unqualified PROV-O triple whose predicate is a subproperty of prov:wasInfluencedBy (e.g. prov:used, prov:wasGeneratedBy). prov:influencer is used much like rdf:object is used."@en ;
+    rdfs:domain prov:Influence ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range ns1:Thing ;
+    prov:category "qualified" ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-influence"^^xsd:anyURI ;
+    prov:editorialNote "This property and its subproperties are used in the same way as the rdf:object property, i.e. to reference the object of an unqualified prov:wasInfluencedBy or prov:influenced triple."@en ;
+    prov:editorsDefinition "This property is used as part of the qualified influence pattern. Subclasses of prov:Influence use these subproperties to reference the resource (Entity, Agent, or Activity) whose influence is being qualified."@en ;
+    prov:inverse "hadInfluence" .
+
+prov:wasAttributedTo a ns1:ObjectProperty ;
+    rdfs:label "wasAttributedTo" ;
+    rdfs:comment "Attribution is the ascribing of an entity to an agent."@en ;
+    rdfs:domain prov:Entity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Agent ;
+    rdfs:subPropertyOf prov:wasInfluencedBy ;
+    ns1:propertyChainAxiom ( prov:qualifiedAttribution prov:agent ) ;
+    prov:category "starting-point" ;
+    prov:component "agents-responsibility" ;
+    prov:definition "Attribution is the ascribing of an entity to an agent."@en ;
+    prov:inverse "contributed" ;
+    prov:qualifiedForm prov:Attribution,
+        prov:qualifiedAttribution .
+
+prov:wasGeneratedBy a ns1:ObjectProperty ;
+    rdfs:label "wasGeneratedBy" ;
+    rdfs:domain prov:Entity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Activity ;
+    rdfs:subPropertyOf prov:wasInfluencedBy ;
+    ns1:propertyChainAxiom ( prov:qualifiedGeneration prov:activity ) ;
+    prov:category "starting-point" ;
+    prov:component "entities-activities" ;
+    prov:inverse "generated" ;
+    prov:qualifiedForm prov:Generation,
+        prov:qualifiedGeneration .
+
+prov:wasInvalidatedBy a ns1:ObjectProperty ;
+    rdfs:label "wasInvalidatedBy" ;
+    rdfs:domain prov:Entity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Activity ;
+    rdfs:subPropertyOf prov:wasInfluencedBy ;
+    ns1:propertyChainAxiom ( prov:qualifiedInvalidation prov:activity ) ;
+    prov:category "expanded" ;
+    prov:component "entities-activities" ;
+    prov:inverse "invalidated" ;
+    prov:qualifiedForm prov:Invalidation,
+        prov:qualifiedInvalidation .
+
+prov:wasQuotedFrom a ns1:ObjectProperty ;
+    rdfs:label "wasQuotedFrom" ;
+    rdfs:comment "An entity is derived from an original entity by copying, or 'quoting', some or all of it."@en ;
+    rdfs:domain prov:Entity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Entity ;
+    rdfs:subPropertyOf prov:wasDerivedFrom ;
+    ns1:propertyChainAxiom ( prov:qualifiedQuotation prov:entity ) ;
+    prov:category "expanded" ;
+    prov:component "derivations" ;
+    prov:inverse "quotedAs" ;
+    prov:qualifiedForm prov:Quotation,
+        prov:qualifiedQuotation .
+
+prov:wasRevisionOf a ns1:AnnotationProperty,
+        ns1:ObjectProperty ;
+    rdfs:label "wasRevisionOf" ;
+    rdfs:comment "A revision is a derivation that revises an entity into a revised version."@en ;
+    rdfs:domain prov:Entity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Entity ;
+    rdfs:subPropertyOf prov:wasDerivedFrom ;
+    ns1:propertyChainAxiom ( prov:qualifiedRevision prov:entity ) ;
+    prov:category "expanded" ;
+    prov:component "derivations" ;
+    prov:inverse "hadRevision" ;
+    prov:qualifiedForm prov:Revision,
+        prov:qualifiedRevision .
+
+provomatic:id-8bc9b7a752427dd479e29812776f4f48 a prov:Plan ;
+    rdfs:label "view_prov" ;
+    dcterms:description """    def view_prov(self, activity = None):
+        \"\"\"Generate the provenance graph locally using a submodule version of PROV-O-Viz\"\"\"
+        env = Environment(loader=PackageLoader('provomatic','templates'))
+        template = env.get_template('service_response_local.html')
+        
+        
+        if activity :
+            activities = list_activities()
+        
+            if activity in activities :
+                resources = [{'id': a['uri'], 'text': activity} for a in activities[activity]]
+            else :
+                log.warning("No activity with name '{}' was found...".format(activity))
+                resources = None
+        else :
+            resources = None
+            
+        log.debug("Resources found: {}".format(resources))
+        
+        dataset = get_dataset()
+        data_hash = dataset.md5_term_hash()
+        
+        response = generate_graphs(ConjunctiveGraph(dataset.store), predefined_resources=resources)
+        
+        json_response = json.dumps(response)
+        
+        visualization_html = template.render(response=json_response, data_hash=data_hash)
+        
+        html = self.generate_iframe(visualization_html, data_hash)
+        
+        return HTML(html)
+""" ;
+    skos:note """    def view_prov(self, activity = None):
+        \"\"\"Generate the provenance graph locally using a ...      html = self.generate_iframe(visualization_html, data_hash)
+        
+        return HTML(html)
+""" .
+
+<http://provomatic.org/resource/x/1/c81e728d9d4c2f636f067f89cc14862c> a prov:Entity ;
+    rdfs:label "x" ;
+    provomatic:tick 1 ;
+    rdf:value 2 ;
+    skos:note "2" ;
+    prov:wasGeneratedAtTime "2014-09-30T14:49:32.992338"^^xsd:dateTime .
+
+<http://provomatic.org/resource/y/1/eccbc87e4b5ce2fe28308fd9f2a7baf3> a prov:Entity ;
+    rdfs:label "y" ;
+    provomatic:tick 1 ;
+    rdf:value 3 ;
+    skos:note "3" ;
+    prov:wasGeneratedAtTime "2014-09-30T14:49:32.992338"^^xsd:dateTime .
+
+prov:ActivityInfluence a ns1:Class ;
+    rdfs:label "ActivityInfluence" ;
+    rdfs:comment "ActivityInfluence provides additional descriptions of an Activity's binary influence upon any other kind of resource. Instances of ActivityInfluence use the prov:activity property to cite the influencing Activity."@en,
+        "It is not recommended that the type ActivityInfluence be asserted without also asserting one of its more specific subclasses."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:seeAlso prov:activity ;
+    rdfs:subClassOf [ a ns1:Restriction ;
+            ns1:maxCardinality "0"^^xsd:nonNegativeInteger ;
+            ns1:onProperty prov:hadActivity ],
+        prov:Influence ;
+    ns1:disjointWith prov:EntityInfluence ;
+    prov:category "qualified" ;
+    prov:editorsDefinition "ActivitiyInfluence is the capacity of an activity to have an effect on the character, development, or behavior of another by means of generation, invalidation, communication, or other."@en .
+
+prov:AgentInfluence a ns1:Class ;
+    rdfs:label "AgentInfluence" ;
+    rdfs:comment "AgentInfluence provides additional descriptions of an Agent's binary influence upon any other kind of resource. Instances of AgentInfluence use the prov:agent property to cite the influencing Agent."@en,
+        "It is not recommended that the type AgentInfluence be asserted without also asserting one of its more specific subclasses."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:seeAlso prov:agent ;
+    rdfs:subClassOf prov:Influence ;
+    prov:category "qualified" ;
+    prov:editorsDefinition "AgentInfluence is the capacity of an agent to have an effect on the character, development, or behavior of another by means of attribution, association, delegation, or other."@en .
+
+prov:Communication a ns1:Class ;
+    rdfs:label "Communication" ;
+    rdfs:comment "An instance of prov:Communication provides additional descriptions about the binary prov:wasInformedBy relation from an informed prov:Activity to the prov:Activity that informed it. For example, :you_jumping_off_bridge prov:wasInformedBy :everyone_else_jumping_off_bridge; prov:qualifiedCommunication [ a prov:Communication; prov:activity :everyone_else_jumping_off_bridge; :foo :bar ]."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subClassOf prov:ActivityInfluence ;
+    prov:category "qualified" ;
+    prov:component "entities-activities" ;
+    prov:constraints "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"^^xsd:anyURI ;
+    prov:definition "Communication is the exchange of an entity by two activities, one activity using the entity generated by the other." ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-Communication"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-wasInformedBy"^^xsd:anyURI ;
+    prov:unqualifiedForm prov:wasInformedBy .
+
+prov:Delegation a ns1:Class ;
+    rdfs:label "Delegation" ;
+    rdfs:comment "An instance of prov:Delegation provides additional descriptions about the binary prov:actedOnBehalfOf relation from a performing prov:Agent to some prov:Agent for whom it was performed. For example, :mixing prov:wasAssociatedWith :toddler . :toddler prov:actedOnBehalfOf :mother; prov:qualifiedDelegation [ a prov:Delegation; prov:entity :mother; :foo :bar ]."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subClassOf prov:AgentInfluence ;
+    prov:category "qualified" ;
+    prov:component "agents-responsibility" ;
+    prov:definition """Delegation is the assignment of authority and responsibility to an agent (by itself or by another agent) to carry out a specific activity as a delegate or representative, while the agent it acts on behalf of retains some responsibility for the outcome of the delegated work.
+
+For example, a student acted on behalf of his supervisor, who acted on behalf of the department chair, who acted on behalf of the university; all those agents are responsible in some way for the activity that took place but we do not say explicitly who bears responsibility and to what degree."""@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-delegation"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-delegation"^^xsd:anyURI ;
+    prov:unqualifiedForm prov:actedOnBehalfOf .
+
+prov:activity a ns1:ObjectProperty ;
+    rdfs:label "activity" ;
+    rdfs:domain prov:ActivityInfluence ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Activity ;
+    rdfs:subPropertyOf prov:influencer ;
+    prov:category "qualified" ;
+    prov:editorialNote "This property behaves in spirit like rdf:object; it references the object of a prov:wasInfluencedBy triple."@en ;
+    prov:editorsDefinition "The prov:activity property references an prov:Activity which influenced a resource. This property applies to an prov:ActivityInfluence, which is given by a subproperty of prov:qualifiedInfluence from the influenced prov:Entity, prov:Activity or prov:Agent." ;
+    prov:inverse "activityOfInfluence" .
+
+prov:agent a ns1:ObjectProperty ;
+    rdfs:label "agent" ;
+    rdfs:domain prov:AgentInfluence ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Agent ;
+    rdfs:subPropertyOf prov:influencer ;
+    prov:category "qualified" ;
+    prov:editorialNote "This property behaves in spirit like rdf:object; it references the object of a prov:wasInfluencedBy triple."@en ;
+    prov:editorsDefinition "The prov:agent property references an prov:Agent which influenced a resource. This property applies to an prov:AgentInfluence, which is given by a subproperty of prov:qualifiedInfluence from the influenced prov:Entity, prov:Activity or prov:Agent."@en ;
+    prov:inverse "agentOfInfluence" .
+
+prov:atTime a ns1:DatatypeProperty ;
+    rdfs:label "atTime" ;
+    rdfs:comment "The time at which an InstantaneousEvent occurred, in the form of xsd:dateTime."@en ;
+    rdfs:domain prov:InstantaneousEvent ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range xsd:dateTime ;
+    prov:category "qualified" ;
+    prov:component "entities-activities" ;
+    prov:sharesDefinitionWith prov:InstantaneousEvent ;
+    prov:unqualifiedForm prov:endedAtTime,
+        prov:generatedAtTime,
+        prov:invalidatedAtTime,
+        prov:startedAtTime .
+
+prov:Association a ns1:Class ;
+    rdfs:label "Association" ;
+    rdfs:comment "An instance of prov:Association provides additional descriptions about the binary prov:wasAssociatedWith relation from an prov:Activity to some prov:Agent that had some responsiblity for it. For example, :baking prov:wasAssociatedWith :baker; prov:qualifiedAssociation [ a prov:Association; prov:agent :baker; :foo :bar ]."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subClassOf prov:AgentInfluence ;
+    prov:category "qualified" ;
+    prov:component "agents-responsibility" ;
+    prov:definition "An activity association is an assignment of responsibility to an agent for an activity, indicating that the agent had a role in the activity. It further allows for a plan to be specified, which is the plan intended by the agent to achieve some goals in the context of this activity."@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-Association"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-Association"^^xsd:anyURI ;
+    prov:unqualifiedForm prov:wasAssociatedWith .
+
+prov:End a ns1:Class ;
+    rdfs:label "End" ;
+    rdfs:comment "An instance of prov:End provides additional descriptions about the binary prov:wasEndedBy relation from some ended prov:Activity to an prov:Entity that ended it. For example, :ball_game prov:wasEndedBy :buzzer; prov:qualifiedEnd [ a prov:End; prov:entity :buzzer; :foo :bar; prov:atTime '2012-03-09T08:05:08-05:00'^^xsd:dateTime ]."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subClassOf prov:EntityInfluence,
+        prov:InstantaneousEvent ;
+    prov:category "qualified" ;
+    prov:component "entities-activities" ;
+    prov:constraints "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"^^xsd:anyURI ;
+    prov:definition "End is when an activity is deemed to have been ended by an entity, known as trigger. The activity no longer exists after its end. Any usage, generation, or invalidation involving an activity precedes the activity's end. An end may refer to a trigger entity that terminated the activity, or to an activity, known as ender that generated the trigger."@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-End"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-End"^^xsd:anyURI ;
+    prov:unqualifiedForm prov:wasEndedBy .
+
+prov:Invalidation a ns1:Class ;
+    rdfs:label "Invalidation" ;
+    rdfs:comment "An instance of prov:Invalidation provides additional descriptions about the binary prov:wasInvalidatedBy relation from an invalidated prov:Entity to the prov:Activity that invalidated it. For example, :uncracked_egg prov:wasInvalidatedBy :baking; prov:qualifiedInvalidation [ a prov:Invalidation; prov:activity :baking; :foo :bar ]."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subClassOf prov:ActivityInfluence,
+        prov:InstantaneousEvent ;
+    prov:category "qualified" ;
+    prov:component "entities-activities" ;
+    prov:constraints "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"^^xsd:anyURI ;
+    prov:definition "Invalidation is the start of the destruction, cessation, or expiry of an existing entity by an activity. The entity is no longer available for use (or further invalidation) after invalidation. Any generation or usage of an entity precedes its invalidation." ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-Invalidation"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-Invalidation"^^xsd:anyURI ;
+    prov:unqualifiedForm prov:wasInvalidatedBy .
+
+prov:Start a ns1:Class ;
+    rdfs:label "Start" ;
+    rdfs:comment "An instance of prov:Start provides additional descriptions about the binary prov:wasStartedBy relation from some started prov:Activity to an prov:Entity that started it. For example, :foot_race prov:wasStartedBy :bang; prov:qualifiedStart [ a prov:Start; prov:entity :bang; :foo :bar; prov:atTime '2012-03-09T08:05:08-05:00'^^xsd:dateTime ] ."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subClassOf prov:EntityInfluence,
+        prov:InstantaneousEvent ;
+    prov:category "qualified" ;
+    prov:component "entities-activities" ;
+    prov:constraints "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"^^xsd:anyURI ;
+    prov:definition "Start is when an activity is deemed to have been started by an entity, known as trigger. The activity did not exist before its start. Any usage, generation, or invalidation involving an activity follows the activity's start. A start may refer to a trigger entity that set off the activity, or to an activity, known as starter, that generated the trigger."@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-Start"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-Start"^^xsd:anyURI ;
+    prov:unqualifiedForm prov:wasStartedBy .
+
+prov:Usage a ns1:Class ;
+    rdfs:label "Usage" ;
+    rdfs:comment "An instance of prov:Usage provides additional descriptions about the binary prov:used relation from some prov:Activity to an prov:Entity that it used. For example, :keynote prov:used :podium; prov:qualifiedUsage [ a prov:Usage; prov:entity :podium; :foo :bar ]."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subClassOf prov:EntityInfluence,
+        prov:InstantaneousEvent ;
+    prov:category "qualified" ;
+    prov:component "entities-activities" ;
+    prov:constraints "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"^^xsd:anyURI ;
+    prov:definition "Usage is the beginning of utilizing an entity by an activity. Before usage, the activity had not begun to utilize this entity and could not have been affected by the entity."@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-Usage"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-Usage"^^xsd:anyURI ;
+    prov:unqualifiedForm prov:used .
+
+prov:EntityInfluence a ns1:Class ;
+    rdfs:label "EntityInfluence" ;
+    rdfs:comment "EntityInfluence provides additional descriptions of an Entity's binary influence upon any other kind of resource. Instances of EntityInfluence use the prov:entity property to cite the influencing Entity."@en,
+        "It is not recommended that the type EntityInfluence be asserted without also asserting one of its more specific subclasses."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:seeAlso prov:entity ;
+    rdfs:subClassOf prov:Influence ;
+    prov:category "qualified" ;
+    prov:editorsDefinition "EntityInfluence is the capacity of an entity to have an effect on the character, development, or behavior of another by means of usage, start, end, derivation, or other. "@en .
+
+rdfs:seeAlso a ns1:AnnotationProperty ;
+    rdfs:comment ""@en .
+
+prov:Generation a ns1:Class ;
+    rdfs:label "Generation" ;
+    rdfs:comment "An instance of prov:Generation provides additional descriptions about the binary prov:wasGeneratedBy relation from a generated prov:Entity to the prov:Activity that generated it. For example, :cake prov:wasGeneratedBy :baking; prov:qualifiedGeneration [ a prov:Generation; prov:activity :baking; :foo :bar ]."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subClassOf prov:ActivityInfluence,
+        prov:InstantaneousEvent ;
+    prov:category "qualified" ;
+    prov:component "entities-activities" ;
+    prov:constraints "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"^^xsd:anyURI ;
+    prov:definition "Generation is the completion of production of a new entity by an activity. This entity did not exist before generation and becomes available for usage after this generation."@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-Generation"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-Generation"^^xsd:anyURI ;
+    prov:unqualifiedForm prov:wasGeneratedBy .
+
+prov:entity a ns1:ObjectProperty ;
+    rdfs:label "entity" ;
+    rdfs:domain prov:EntityInfluence ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Entity ;
+    rdfs:subPropertyOf prov:influencer ;
+    prov:category "qualified" ;
+    prov:editorialNote "This property behaves in spirit like rdf:object; it references the object of a prov:wasInfluencedBy triple."@en ;
+    prov:editorsDefinition "The prov:entity property references an prov:Entity which influenced a resource. This property applies to an prov:EntityInfluence, which is given by a subproperty of prov:qualifiedInfluence from the influenced prov:Entity, prov:Activity or prov:Agent." ;
+    prov:inverse "entityOfInfluence" .
+
+prov:Derivation a ns1:Class ;
+    rdfs:label "Derivation" ;
+    rdfs:comment "An instance of prov:Derivation provides additional descriptions about the binary prov:wasDerivedFrom relation from some derived prov:Entity to another prov:Entity from which it was derived. For example, :chewed_bubble_gum prov:wasDerivedFrom :unwrapped_bubble_gum; prov:qualifiedDerivation [ a prov:Derivation; prov:entity :unwrapped_bubble_gum; :foo :bar ]."@en,
+        "The more specific forms of prov:Derivation (i.e., prov:Revision, prov:Quotation, prov:PrimarySource) should be asserted if they apply."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subClassOf prov:EntityInfluence ;
+    prov:category "qualified" ;
+    prov:component "derivations" ;
+    prov:constraints "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"^^xsd:anyURI ;
+    prov:definition "A derivation is a transformation of an entity into another, an update of an entity resulting in a new one, or the construction of a new entity based on a pre-existing entity."@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-Derivation"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#Derivation-Relation"^^xsd:anyURI ;
+    prov:unqualifiedForm prov:wasDerivedFrom .
+
+prov:wasDerivedFrom a ns1:ObjectProperty ;
+    rdfs:label "wasDerivedFrom" ;
+    rdfs:comment "The more specific subproperties of prov:wasDerivedFrom (i.e., prov:wasQuotedFrom, prov:wasRevisionOf, prov:hadPrimarySource) should be used when applicable."@en ;
+    rdfs:domain prov:Entity ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Entity ;
+    rdfs:subPropertyOf prov:wasInfluencedBy ;
+    ns1:propertyChainAxiom ( prov:qualifiedDerivation prov:entity ) ;
+    prov:category "starting-point" ;
+    prov:component "derivations" ;
+    prov:definition "A derivation is a transformation of an entity into another, an update of an entity resulting in a new one, or the construction of a new entity based on a pre-existing entity."@en ;
+    prov:inverse "hadDerivation" ;
+    prov:qualifiedForm prov:Derivation,
+        prov:qualifiedDerivation .
+
+prov:Influence a ns1:Class ;
+    rdfs:label "Influence" ;
+    rdfs:comment "An instance of prov:Influence provides additional descriptions about the binary prov:wasInfluencedBy relation from some influenced Activity, Entity, or Agent to the influencing Activity, Entity, or Agent. For example, :stomach_ache prov:wasInfluencedBy :spoon; prov:qualifiedInfluence [ a prov:Influence; prov:entity :spoon; :foo :bar ] . Because prov:Influence is a broad relation, the more specific relations (Communication, Delegation, End, etc.) should be used when applicable."@en,
+        "Because prov:Influence is a broad relation, its most specific subclasses (e.g. prov:Communication, prov:Delegation, prov:End, prov:Revision, etc.) should be used when applicable."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    prov:category "qualified" ;
+    prov:component "derivations" ;
+    prov:definition "Influence is the capacity of an entity, activity, or agent to have an effect on the character, development, or behavior of another by means of usage, start, end, generation, invalidation, communication, derivation, attribution, association, or delegation."@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-influence"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-influence"^^xsd:anyURI ;
+    prov:unqualifiedForm prov:wasInfluencedBy .
+
+prov:InstantaneousEvent a ns1:Class ;
+    rdfs:label "InstantaneousEvent" ;
+    rdfs:comment "An instantaneous event, or event for short, happens in the world and marks a change in the world, in its activities and in its entities. The term 'event' is commonly used in process algebra with a similar meaning. Events represent communications or interactions; they are assumed to be atomic and instantaneous."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    prov:category "qualified" ;
+    prov:component "entities-activities" ;
+    prov:constraints "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#dfn-event"^^xsd:anyURI ;
+    prov:definition "The PROV data model is implicitly based on a notion of instantaneous events (or just events), that mark transitions in the world. Events include generation, usage, or invalidation of entities, as well as starting or ending of activities. This notion of event is not first-class in the data model, but it is useful for explaining its other concepts and its semantics."@en .
+
+prov:Plan a ns1:Class ;
+    rdfs:label "Plan" ;
+    rdfs:comment "There exist no prescriptive requirement on the nature of plans, their representation, the actions or steps they consist of, or their intended goals. Since plans may evolve over time, it may become necessary to track their provenance, so plans themselves are entities. Representing the plan explicitly in the provenance can be useful for various tasks: for example, to validate the execution as represented in the provenance record, to manage expectation failures, or to provide explanations."@en ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:subClassOf prov:Entity ;
+    prov:category "expanded",
+        "qualified" ;
+    prov:component "agents-responsibility" ;
+    prov:definition "A plan is an entity that represents a set of actions or steps intended by one or more agents to achieve some goals." ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-Association"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-Association"^^xsd:anyURI .
+
+prov:qualifiedInfluence a ns1:ObjectProperty ;
+    rdfs:label "qualifiedInfluence" ;
+    rdfs:comment "Because prov:qualifiedInfluence is a broad relation, the more specific relations (qualifiedCommunication, qualifiedDelegation, qualifiedEnd, etc.) should be used when applicable."@en ;
+    rdfs:domain [ a ns1:Class ;
+            ns1:unionOf ( prov:Activity prov:Agent prov:Entity ) ] ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range prov:Influence ;
+    prov:category "qualified" ;
+    prov:component "derivations" ;
+    prov:inverse "qualifiedInfluenceOf" ;
+    prov:sharesDefinitionWith prov:Influence ;
+    prov:unqualifiedForm prov:wasInfluencedBy .
+
+prov:Agent a ns1:Class ;
+    rdfs:label "Agent" ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    ns1:disjointWith prov:InstantaneousEvent ;
+    prov:category "starting-point" ;
+    prov:component "agents-responsibility" ;
+    prov:definition "An agent is something that bears some form of responsibility for an activity taking place, for the existence of an entity, or for another agent's activity. "@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-agent"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-Agent"^^xsd:anyURI .
+
+prov:wasInfluencedBy a ns1:ObjectProperty ;
+    rdfs:label "wasInfluencedBy" ;
+    rdfs:comment "This property has multiple RDFS domains to suit multiple OWL Profiles. See <a href=\"#owl-profile\">PROV-O OWL Profile</a>.",
+        "Because prov:wasInfluencedBy is a broad relation, its more specific subproperties (e.g. prov:wasInformedBy, prov:actedOnBehalfOf, prov:wasEndedBy, etc.) should be used when applicable."@en ;
+    rdfs:domain [ a ns1:Class ;
+            ns1:unionOf ( prov:Activity prov:Agent prov:Entity ) ] ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    rdfs:range [ a ns1:Class ;
+            ns1:unionOf ( prov:Activity prov:Agent prov:Entity ) ] ;
+    prov:category "qualified" ;
+    prov:component "agents-responsibility" ;
+    prov:editorialNote """The sub-properties of prov:wasInfluencedBy can be elaborated in more detail using the Qualification Pattern. For example, the binary relation :baking prov:used :spoon can be qualified by asserting :baking prov:qualifiedUsage [ a prov:Usage; prov:entity :spoon; prov:atLocation :kitchen ] .
+
+Subproperties of prov:wasInfluencedBy may also be asserted directly without being qualified.
+
+prov:wasInfluencedBy should not be used without also using one of its subproperties. 
+"""@en ;
+    prov:inverse "influenced" ;
+    prov:qualifiedForm prov:Influence,
+        prov:qualifiedInfluence ;
+    prov:sharesDefinitionWith prov:Influence .
+
+prov:Activity a ns1:Class ;
+    rdfs:label "Activity" ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    ns1:disjointWith prov:Entity ;
+    prov:category "starting-point" ;
+    prov:component "entities-activities" ;
+    prov:constraints "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"^^xsd:anyURI ;
+    prov:definition "An activity is something that occurs over a period of time and acts upon or with entities; it may include consuming, processing, transforming, modifying, relocating, using, or generating entities." ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-Activity"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-Activity"^^xsd:anyURI .
+
+prov:Entity a ns1:Class ;
+    rdfs:label "Entity" ;
+    rdfs:isDefinedBy <http://www.w3.org/ns/prov-o#> ;
+    ns1:disjointWith prov:InstantaneousEvent ;
+    prov:category "starting-point" ;
+    prov:component "entities-activities" ;
+    prov:constraints "http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#prov-dm-constraints-fig"^^xsd:anyURI ;
+    prov:definition "An entity is a physical, digital, conceptual, or other kind of thing with some fixed aspects; entities may be real or imaginary. "@en ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-entity"^^xsd:anyURI ;
+    prov:n "http://www.w3.org/TR/2013/REC-prov-n-20130430/#expression-Entity"^^xsd:anyURI .
+
+<http://www.w3.org/ns/prov-o#> a ns1:Ontology ;
+    rdfs:label "W3C PROVenance Interchange Ontology (PROV-O)"@en ;
+    rdfs:comment """This document is published by the Provenance Working Group (http://www.w3.org/2011/prov/wiki/Main_Page). 
+
+If you wish to make comments regarding this document, please send them to public-prov-comments@w3.org (subscribe public-prov-comments-request@w3.org, archives http://lists.w3.org/Archives/Public/public-prov-comments/). All feedback is welcome."""@en ;
+    rdfs:seeAlso <http://www.w3.org/TR/prov-o/>,
+        <http://www.w3.org/ns/prov> ;
+    ns1:versionIRI <http://www.w3.org/ns/prov-o-20130430> ;
+    ns1:versionInfo "Recommendation version 2013-04-30"@en ;
+    prov:specializationOf <http://www.w3.org/ns/prov-o> ;
+    prov:wasRevisionOf <http://www.w3.org/ns/prov-o-20130312> .
+
+[] a ns1:Axiom ;
+    rdfs:comment "A collection is an entity that provides a structure to some constituents, which are themselves entities. These constituents are said to be member of the collections."@en ;
+    ns1:annotatedProperty rdfs:range ;
+    ns1:annotatedSource prov:hadMember ;
+    ns1:annotatedTarget prov:Entity ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-collection" .
+
+[] a ns1:Axiom ;
+    rdfs:comment "hadPrimarySource property is a particular case of wasDerivedFrom (see http://www.w3.org/TR/prov-dm/#term-original-source) that aims to give credit to the source that originated some information." ;
+    ns1:annotatedProperty rdfs:subPropertyOf ;
+    ns1:annotatedSource prov:hadPrimarySource ;
+    ns1:annotatedTarget prov:wasDerivedFrom .
+
+[] a ns1:Axiom ;
+    rdfs:comment "Attribution is a particular case of trace (see http://www.w3.org/TR/prov-dm/#concept-trace), in the sense that it links an entity to the agent that ascribed it." ;
+    ns1:annotatedProperty rdfs:subPropertyOf ;
+    ns1:annotatedSource prov:wasAttributedTo ;
+    ns1:annotatedTarget prov:wasInfluencedBy ;
+    prov:definition "IF wasAttributedTo(e2,ag1,aAttr) holds, THEN wasInfluencedBy(e2,ag1) also holds. " .
+
+[] a ns1:Axiom ;
+    rdfs:comment "Derivation is a particular case of trace (see http://www.w3.org/TR/prov-dm/#term-trace), since it links an entity to another entity that contributed to its existence." ;
+    ns1:annotatedProperty rdfs:subPropertyOf ;
+    ns1:annotatedSource prov:wasDerivedFrom ;
+    ns1:annotatedTarget prov:wasInfluencedBy .
+
+[] a ns1:Axiom ;
+    ns1:annotatedProperty rdfs:range ;
+    ns1:annotatedSource prov:wasInfluencedBy ;
+    ns1:annotatedTarget [ a ns1:Class ;
+            ns1:unionOf ( prov:Activity prov:Agent prov:Entity ) ] ;
+    prov:definition "influencer: an identifier (o1) for an ancestor entity, activity, or agent that the former depends on;" ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-influence" .
+
+[] a ns1:Axiom ;
+    ns1:annotatedProperty rdfs:domain ;
+    ns1:annotatedSource prov:wasInfluencedBy ;
+    ns1:annotatedTarget [ a ns1:Class ;
+            ns1:unionOf ( prov:Activity prov:Agent prov:Entity ) ] ;
+    prov:definition "influencee: an identifier (o2) for an entity, activity, or agent; " ;
+    prov:dm "http://www.w3.org/TR/2013/REC-prov-dm-20130430/#term-influence" .
+
+[] a ns1:Axiom ;
+    rdfs:comment "Quotation is a particular case of derivation (see http://www.w3.org/TR/prov-dm/#term-quotation) in which an entity is derived from an original entity by copying, or \"quoting\", some or all of it. " ;
+    ns1:annotatedProperty rdfs:subPropertyOf ;
+    ns1:annotatedSource prov:wasQuotedFrom ;
+    ns1:annotatedTarget prov:wasDerivedFrom .
+
+[] a ns1:Axiom ;
+    rdfs:comment """Revision is a derivation (see http://www.w3.org/TR/prov-dm/#term-Revision). Moreover, according to 
+http://www.w3.org/TR/2013/REC-prov-constraints-20130430/#term-Revision 23 April 2012 'wasRevisionOf is a strict sub-relation of wasDerivedFrom since two entities e2 and e1 may satisfy wasDerivedFrom(e2,e1) without being a variant of each other.'""" ;
+    ns1:annotatedProperty rdfs:subPropertyOf ;
+    ns1:annotatedSource prov:wasRevisionOf ;
+    ns1:annotatedTarget prov:wasDerivedFrom .
+

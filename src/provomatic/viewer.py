@@ -47,7 +47,7 @@ class Viewer(object):
             httpd = SocketServer.TCPServer(("", self._PORT), Handler)
 
             httpd_thread = threading.Thread(target=httpd.serve_forever)
-            httpd_thread.setDaemon(True)
+            # httpd_thread.setDaemon(True)
             httpd_thread.start()
             
             log.info("HTTP Server running at http://localhost:{}".format(self._PORT))
@@ -60,25 +60,22 @@ class Viewer(object):
             os.makedirs('www')
             
 
-    def view_prov(self, name = None):
+    def view_prov(self, activity = None):
         """Generate the provenance graph locally using a submodule version of PROV-O-Viz"""
         env = Environment(loader=PackageLoader('provomatic','templates'))
         template = env.get_template('service_response_local.html')
         
         
-        if name :
-            entities = list_entities()
+        if activity :
             activities = list_activities()
         
-        
-            if name in entities:
-                resources = [{'id': e['uri'], 'text': e['name']} for e in entities[name]]
-            elif name in activities :
-                resources = [{'id': a['uri'], 'text': a['name']} for a in activities[name]]
+            if activity in activities :
+                resources = [{'id': a['uri'], 'text': activity} for a in activities[activity]]
             else :
+                log.warning("No activity with name '{}' was found...".format(activity))
                 resources = None
         else :
-            resource = None
+            resources = None
             
         log.debug("Resources found: {}".format(resources))
         
