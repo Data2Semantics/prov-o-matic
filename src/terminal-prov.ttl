@@ -1,0 +1,1280 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix provomatic: <http://provomatic.org/resource/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://provomatic.org/resource/id-0145108470f5d67671b77eebfc01bb65/2014-09-30T17:12:49.091492> a prov:Activity ;
+    rdfs:label "add (17:12:49)" ;
+    dcterms:description """def add(x,y):
+    return x+y
+""" ;
+    prov:generated <http://provomatic.org/resource/z/2/8f14e45fceea167a5a36dedd4bea2543> ;
+    prov:used provomatic:id-0145108470f5d67671b77eebfc01bb65,
+        <http://provomatic.org/resource/x/1/eccbc87e4b5ce2fe28308fd9f2a7baf3>,
+        <http://provomatic.org/resource/y/1/a87ff679a2f3e71d9181a67b7542122c> .
+
+<http://provomatic.org/resource/id-0145108470f5d67671b77eebfc01bb65/2014-09-30T17:12:54.637825> a prov:Activity ;
+    rdfs:label "add (17:12:54)" ;
+    dcterms:description """def add(x,y):
+    return x+y
+""" ;
+    prov:generated <http://provomatic.org/resource/z/4/6512bd43d9caa6e02c990b0a82652dca> ;
+    prov:used provomatic:id-0145108470f5d67671b77eebfc01bb65,
+        <http://provomatic.org/resource/x/1/8f14e45fceea167a5a36dedd4bea2543>,
+        <http://provomatic.org/resource/z/3/a87ff679a2f3e71d9181a67b7542122c> .
+
+<http://provomatic.org/resource/id-0145108470f5d67671b77eebfc01bb65/2014-09-30T17:13:04.976452> a prov:Activity ;
+    rdfs:label "add (17:13:04)" ;
+    dcterms:description """def add(x,y):
+    return x+y
+""" ;
+    prov:generated <http://provomatic.org/resource/y/2/c74d97b01eae257e44aa9d5bade97baf> ;
+    prov:used provomatic:id-0145108470f5d67671b77eebfc01bb65,
+        <http://provomatic.org/resource/x/1/e4da3b7fbbce2345d7772b0674a318d5>,
+        <http://provomatic.org/resource/z/5/6512bd43d9caa6e02c990b0a82652dca> .
+
+<http://provomatic.org/resource/id-0bb93c3c4173ae0ff19ca5de76d5900f/2014-09-30T17:12:10.458092> a prov:Activity ;
+    rdfs:label "In [3] (17:12:10)" ;
+    dcterms:description """3: 
+z = add(3,4)
+""" ;
+    prov:used provomatic:id-0bb93c3c4173ae0ff19ca5de76d5900f ;
+    prov:wasInformedBy provomatic:id-0145108470f5d67671b77eebfc01bb65 .
+
+<http://provomatic.org/resource/id-11e908b53658a8b4a82f03864715bca2/2014-09-30T17:11:47.868198> a prov:Activity ;
+    rdfs:label "In [1] (17:11:47)" ;
+    dcterms:description """1: 
+import ipython_instrumented
+""" ;
+    prov:generated <http://provomatic.org/resource/ipython_instrumented/1/84f1e062fe468ff1442dff86bcfb6629> ;
+    prov:used provomatic:id-11e908b53658a8b4a82f03864715bca2 .
+
+<http://provomatic.org/resource/id-24202825d7be223319cc61f3e08da264/2014-09-30T17:12:49.093980> a prov:Activity ;
+    rdfs:label "In [5] (17:12:49)" ;
+    dcterms:description """5: 
+z = add(3,4)
+""" ;
+    prov:generated <http://provomatic.org/resource/z/3/8f14e45fceea167a5a36dedd4bea2543> ;
+    prov:used provomatic:id-24202825d7be223319cc61f3e08da264,
+        <http://provomatic.org/resource/z/1/d3d9446802a44259755d38e6d163e820> ;
+    prov:wasInformedBy provomatic:id-0145108470f5d67671b77eebfc01bb65 .
+
+<http://provomatic.org/resource/id-24f339fcc7443b0e158ef2664ecd858c/2014-09-30T17:12:54.640324> a prov:Activity ;
+    rdfs:label "In [6] (17:12:54)" ;
+    dcterms:description """6: 
+z = add(z,4)
+""" ;
+    prov:generated <http://provomatic.org/resource/z/5/6512bd43d9caa6e02c990b0a82652dca> ;
+    prov:used provomatic:id-24f339fcc7443b0e158ef2664ecd858c,
+        <http://provomatic.org/resource/z/3/8f14e45fceea167a5a36dedd4bea2543> ;
+    prov:wasInformedBy provomatic:id-0145108470f5d67671b77eebfc01bb65 .
+
+<http://provomatic.org/resource/id-4173cf0052390033a16085fd3907be8d/2014-09-30T17:12:03.384513> a prov:Activity ;
+    rdfs:label "In [2] (17:12:03)" ;
+    dcterms:description """2: 
+def add(x,y):
+    return x+y
+""" ;
+    prov:generated <http://provomatic.org/resource/add/1/0145108470f5d67671b77eebfc01bb65> ;
+    prov:used provomatic:id-4173cf0052390033a16085fd3907be8d .
+
+<http://provomatic.org/resource/id-683605224bef889a950f072044324409/2014-09-30T17:13:04.979118> a prov:Activity ;
+    rdfs:label "In [7] (17:13:04)" ;
+    dcterms:description """7: 
+y = add(5,z)
+""" ;
+    prov:generated <http://provomatic.org/resource/y/3/c74d97b01eae257e44aa9d5bade97baf> ;
+    prov:used provomatic:id-683605224bef889a950f072044324409,
+        <http://provomatic.org/resource/y/1/eccbc87e4b5ce2fe28308fd9f2a7baf3>,
+        <http://provomatic.org/resource/z/5/6512bd43d9caa6e02c990b0a82652dca> ;
+    prov:wasInformedBy provomatic:id-0145108470f5d67671b77eebfc01bb65 .
+
+<http://provomatic.org/resource/id-b450684db62505a5c8746931b43e5cf2/2014-09-30T17:12:47.169395> a prov:Activity ;
+    rdfs:label "In [4] (17:12:47)" ;
+    dcterms:description """4: 
+from ipython_instrumented import *
+""" ;
+    prov:generated <http://provomatic.org/resource/CodeVisitor/1/4e09879c497ce5116c7bcc5c29509ada>,
+        <http://provomatic.org/resource/NotebookWatcher/1/e922a2c0c316fcd8df321c411a625798>,
+        <http://provomatic.org/resource/add/2/0145108470f5d67671b77eebfc01bb65>,
+        <http://provomatic.org/resource/add_prov/1/52755181d870ca25cd67b7f1458d0c6a>,
+        <http://provomatic.org/resource/clear_dataset/1/4c2733db7443060a848b9357b5c05434>,
+        <http://provomatic.org/resource/cv/1/9dff082094f541caed08e0da5920e1fd>,
+        <http://provomatic.org/resource/get_dataset/1/60f0c24d1fb55f1e1a21a4c1de2e3506>,
+        <http://provomatic.org/resource/ip/1/2c988add6c56f6f5e45a6bb8d640d855>,
+        <http://provomatic.org/resource/list_activities/1/a5dcd1130bc88a37990de6e77798df94>,
+        <http://provomatic.org/resource/list_entities/1/540142d2fd23d545254ac0a637aea3f9>,
+        <http://provomatic.org/resource/nw/1/9d6a4e6fd5aad4aa425f74d3218878de>,
+        <http://provomatic.org/resource/prov/1/9769014c83e117a8ae90c1d7ecca307b>,
+        <http://provomatic.org/resource/replace/1/332ffc318c61192da33def7e6b210921>,
+        <http://provomatic.org/resource/revive/1/9c4756922bb7f461d4b82dde123591e1>,
+        <http://provomatic.org/resource/save_prov/1/f4f022fa16402a7dd2b95051dddec325>,
+        <http://provomatic.org/resource/x/1/c81e728d9d4c2f636f067f89cc14862c>,
+        <http://provomatic.org/resource/y/1/eccbc87e4b5ce2fe28308fd9f2a7baf3>,
+        <http://provomatic.org/resource/z/1/d3d9446802a44259755d38e6d163e820> ;
+    prov:used provomatic:id-b450684db62505a5c8746931b43e5cf2 .
+
+<http://provomatic.org/resource/CodeVisitor/1/4e09879c497ce5116c7bcc5c29509ada> a prov:Entity ;
+    rdfs:label "CodeVisitor" ;
+    provomatic:tick 1 ;
+    rdf:value """class CodeVisitor(NodeTransformer):
+    \"\"\"Adds a PROV decorator to all function definitions\"\"\"
+
+    
+    def __init__(self, notebookwatcher):
+        tl = List()
+        tl.elts = []
+        tl.ctx = Load()
+        self.targets = tl
+        
+        il = List()
+        il.elts = []
+        il.ctx = Load()
+        self.input_args = il
+        
+        self.nw = notebookwatcher
+        self.functions = set()
+
+
+
+    def visit_Name(self, node):
+        self.generic_visit(node)
+        # print dump(node)
+        self.nw.register_usage(node.id)
+        return node
+    
+
+    
+    def visit_Attribute(self, node):
+        self.generic_visit(node)
+        
+        if isinstance(node.value,Name):
+            # print node.value.id, node.attr
+            self.nw.register_usage(node.value.id + '.' + node.attr)
+            
+        return node
+
+
+    def get_func_id(self, node):
+        try :
+            if isinstance(node.func,Name) :
+                func_id = node.func.id
+            elif isinstance(node.func,Attribute) and isinstance(node.func.value,Call):
+                func_id = node.func.value.func.id
+            elif isinstance(node.func,Attribute) and isinstance(node.func.value,Name):
+                func_id = node.func.value.id
+            else :
+                return None
+        
+            return func_id
+        except Exception as e:
+            log.warning('Could not retrieve function name')
+            log.debug(dump(node))
+            return None
+
+    def visit_Call(self, node):
+        self.generic_visit(node)
+        fix_missing_locations(node)
+        #self.nw.register_usage(node)
+
+        log.debug("> call")
+        log.debug(dump(node))
+        
+        func_id = self.get_func_id(node)
+        
+        if not func_id:
+            # log.debug("Unknown function type")
+            # log.debug("===")
+            return node
+        
+        # print func_id
+        if func_id == 'replace':
+            # log.debug("Skipping {}, already replaced".format(dump(node.func)))
+            # print dump(node)
+            # log.debug("===")
+            return node
+            
+        # log.debug("Not skipping")
+        
+        try :
+            
+            # First we add the name of the function
+            new_args = [node.func]
+            
+            # Then we'll add the input argument names
+            if self.input_args:
+                ## Use the targets
+                new_args.append(self.input_args)
+                ## And reset them, to avoid propagation of target variable names to nested function calls.
+                l = List()
+                l.elts = []
+                l.ctx = Load()
+                self.input_args = l
+            else :
+                # log.debug("no targets")
+                l = Lists()
+                l.elts = []
+                l.ctx = Load()
+                new_args.append(l)
+            
+            # Then we'll add the output names (the targets)
+            if self.targets:
+                ## Use the targets
+                new_args.append(self.targets)
+                ## And reset them, to avoid propagation of target variable names to nested function calls.
+                l = List()
+                l.elts = []
+                l.ctx = Load()
+                self.targets = l
+            else :
+                # log.debug("no targets")
+                l = Lists()
+                l.elts = []
+                l.ctx = Load()
+                new_args.append(l)
+                
+                
+
+            
+            new_args.extend(node.args)
+            # log.debug("New Args:", [dump(a) for a in new_args])
+            new_call = Call(Name('replace',Load()),new_args,node.keywords,node.starargs,node.kwargs)
+            copy_location(new_call,node)
+            fix_missing_locations(new_call)
+            
+            # log.debug("New")
+            # print dump(new_call)
+            
+        except Exception as e:
+            log.debug("Whoops!")
+            print dump(node)
+            print e
+            return node
+            
+        # log.debug("===")
+        return new_call
+
+    def visit_Module(self, node):
+        self.generic_visit(node)
+        fix_missing_locations(node)
+        return node
+       
+    # def visit_Module(self,node):
+    #     self.functions=set()
+    #     # print dump(node)
+    #     self.generic_visit(node)
+    #     
+    #     body = node.body
+    #     for f in self.functions:
+    #         if f == 'prov' or 'view_prov':
+    #             # log.debug("Already wrapped or in exclusion list")
+    #         else :
+    #             # log.debug("Inserting prov wrapper")
+    #             body.insert(0,parse("{} = prov({})".format(f,f)))
+    #     
+    #     fix_missing_locations(node)
+    #     return node
+    
+    
+    
+    # ====
+    # No longer used as we dynamically wrap *any* function call, regardless of whether it is imported or defined.
+    # TODO: Rewrite this to a function creation activity (now that would be cool)
+    # ====
+    
+    # def visit_FunctionDef(self, node):
+    #     try :
+    #         decorators = [dump(e,annotate_fields=False) for e in node.decorator_list]
+    #     except Exception as e:
+    #         # print e
+    #         
+    #     try :
+    #         if not(PROV_WRAPPER_AST_CALL in decorators):
+    #             # # log.debug("Adding PROV Wrapper to {}".format(node.name))
+    #             prov_decorator = eval(PROV_WRAPPER_AST_CALL)
+    #             node.decorator_list.append(prov_decorator)
+    #     except Exception as e:
+    #         # print e
+    #     
+    #     try :
+    #         self.generic_visit(node)
+    #     except Exception as e:
+    #         # print e
+    #     return node
+    
+    def visit_AugAssign(self,node):
+        # TODO Capture augmentation assignments
+        # log.debug("> augassign")
+        # print dump(node)
+        return self.generic_visit(node)
+        
+    def visit_Assign(self, node):
+        # TODO Capture the assignment itself
+        # This just captures the outputs expected from a function
+        
+        log.debug("> assign")
+        log.debug(dump(node))
+        # log.debug("Resetting targets")
+        tl = List()
+        tl.elts = []
+        tl.ctx = Load()
+        self.targets = tl
+        
+        al = List()
+        al.elts = []
+        al.ctx = Load()
+        self.input_args = al
+        
+        if isinstance(node.value,Call):
+            # log.debug("We're assigning the output of a function call to the targets")
+            input_args = []
+            targets = []
+            
+            try :
+                for t in node.targets :
+                    if isinstance(t,Name):
+                        # "We're assigning to a single variable"
+                        targets.append(t.id)
+                    elif isinstance(t,Tuple):
+                        # "We're assigning to a tuple of variables"
+                        for t in t.elts:
+                            if isinstance(t, Name):
+                                targets.append(t.id)
+                
+
+                
+                # Need to build a list that looks like the below to store the targets
+                # List(elts=[Str(s='a'), Str(s='b')], ctx=Load())
+                # log.debug("Found the following target variables",targets)
+                
+                target_l = List()
+                target_l.elts = []
+                target_l.ctx = Load()
+                for t in targets:
+                    e = Str()
+                    e.s = t
+                    target_l.elts.append(e)
+                    
+                    
+                # We'll do something similar for the names of the input arguments!
+                for arg in node.value.args :
+                    if isinstance(arg,Name):
+                        input_args.append(arg.id)
+                        
+                        
+                input_args_l = List()
+                input_args_l.elts = []
+                input_args_l.ctx = Load()
+                for arg in input_args:
+                    e = Str()
+                    e.s = arg
+                    input_args_l.elts.append(e)
+                    
+
+                self.targets = target_l
+                self.input_args = input_args_l
+                
+            except Exception as e:
+                print dump(node)
+                print e
+        
+        self.generic_visit(node)
+        return node
+""" ;
+    skos:note """class CodeVisitor(NodeTransformer):
+    \"\"\"Adds a PROV decorator to all function definitions\"\"\"
+
+  ...nt dump(node)
+                print e
+        
+        self.generic_visit(node)
+        return node
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:47.169395"^^xsd:dateTime .
+
+<http://provomatic.org/resource/NotebookWatcher/1/e922a2c0c316fcd8df321c411a625798> a prov:Entity ;
+    rdfs:label "NotebookWatcher" ;
+    provomatic:tick 1 ;
+    rdf:value """class NotebookWatcher(object):
+    \"\"\"The NotebookWatcher listens to execution events in the IPython Notebook, and generates the relevant provenance based on an analysis of the code being executed.\"\"\"
+    environment = {}
+    
+    
+    used = set()
+    
+    
+    def __init__(self, ip):
+        \"\"\"Takes an InteractiveShell instance as input.\"\"\"
+        self.shell = ip
+        # The HistoryAccessor allows us to... eh, access the history of the Python interpreter.
+        self.hist = HistoryAccessor()
+        self.last_x = None
+        self.pre_ticker = {}
+
+        
+        
+
+    def pre_execute(self):
+        \"\"\"Before the code is executed, we reset the list of variables/functions etc. 'used' (as we don't know them yet).\"\"\"
+        # Reset the used list
+        self.used = set()
+        
+        pb = ProvBuilder()
+        self.pre_ticker = deepcopy(pb.get_ticker())
+
+
+    def post_execute(self):
+        \"\"\"This will build the provenance for the execution of the code block in the IPython Notebook\"\"\"
+        # Initialize a provenance builder
+        pb = ProvBuilder()
+
+        # Get the description (i.e. the code) from the code we just executed
+        description = self.hist_to_string(1) 
+        position = len(get_ipython().user_ns.get('_ih')) -1
+        name = "In [{}]".format(position)
+        
+        # Initialize inputs, outputs and dependencies dictionaries for activity generator in ProvBuilder
+        inputs = {}
+        outputs = {}
+        dependencies = {}
+        
+        # For all nodes (variables/functions) that were recognized by the CodeVisitor
+        # If the node is a *global* variable, add it to the inputs
+        # If the node is a *function* name, add it to the dependencies
+        for node in self.used:    
+            # log.debug("Checking wether " + node + " is a variable or a function")
+            try :
+                evaluated_node = self.shell.ev(node)
+                # log.debug("> Could evaluate {}".format(node) )
+                if node in self.environment and not callable(evaluated_node) :
+                    # log.debug(">> {} is in environment and not callable (it is a variable)".format(node))
+                    # # log.debug("Used global variable {}".format(node))
+                    # Set the input of the node to the value that it had prior to executing the code (if available)
+                    if node in self.environment:
+                        # log.debug("Global variable existed before, adding to inputs")
+                        inputs[node] = self.environment[node]
+                    # Otherwise, we do nothing, since the variable may have been used, but was first introduced in the code.
+                    else :
+                        # log.debug("Global variable was introduced here, not doing anything")
+                        pass
+               
+                elif callable(evaluated_node):
+                    # log.debug(">> {} is a function, adding to dependencies.".format(node))
+                    try :
+                        dependencies[node] = inspect.getsource(evaluated_node)
+                    except Exception as e:
+                        # print e
+                        dependencies[node] = unicode(evaluated_node)
+                else :
+                    # log.debug(">> {} is not callable, and not in environment... it was a variable that was newly introduced here?".format(node))
+                    pass
+            except :
+                ## log.debug("Used local {} variable or function".format(node))
+                # log.debug("> Could not evaluate " + node)
+                if node in self.environment :
+                    # log.debug(">> Node is in environment, we'll use its evaluated value from the environment")
+                    evaluated_node = self.environment[node]
+                    
+                    if not callable(evaluated_node) :
+                        # log.debug(">>> {} is a variable".format(node))
+                        inputs[node] = evaluated_node
+                    else :
+                        # log.debug(">>> {} is a function".format(node))
+                        dependencies[node] = inspect.getsource(evaluated_node)
+                else :
+                    # log.debug(">> {} was introduced here, not doing anything".format(node))
+                    pass
+                
+        # We'll loop through all known entities in the user namespace.
+        for k,v in self.shell.user_ns.items():
+            # Ignore any standard IPython/Python variables in the user namespace
+            # if k.startswith('_') or k in ['In','Out','exit','quit','get_ipython'] :
+            #     log.debug("'{}' skipped, because it is in ['In','Out','exit','quit','get_ipython'] or starts with '_'".format(k))
+            #     pass
+            
+            # TEMPORARY: Test what happens if we don't exclude 'Out'
+            if k.startswith('_') or k in ['In','exit','quit','get_ipython'] :
+                # log.debug("'{}' skipped, because it is in ['In','exit','quit','get_ipython'] or starts with '_'".format(k))
+                continue
+                
+            # For all other variables, see whether they were changed, and add them to the outputs
+            ## This compares the value of the variable with the value it had previously, or
+            ## checks that the variable did not exist previously.  
+            # Need to do some exception handling to deal with ValueErrors for objects that have ambiguous truth values
+            try :
+                # if (k in self.environment and not ((numpy.array_equal(v,self.environment[k]) or v == self.environment[k]) and self.pre_ticker.setdefault(k,0) == pb.get_tick(k))) or (not k in self.environment) or k == 'Out':
+                if (k in self.environment and not (v == self.environment[k] and self.pre_ticker.setdefault(k,0) == pb.get_tick(k))) or (not k in self.environment) or k == 'Out':
+                    changed = True
+                else:
+                    changed = False
+            except Exception as e:
+                log.debug("Caught numpy array comparison exception")
+                ## Special handling of Numpy silliness
+                if k in self.environment:
+                    if not numpy.asarray(v == self.environment[k]).all():
+                        log.debug("Not the same (value-comparison)")
+                        changed = True
+                    elif self.pre_ticker.setdefault(k,0) == pb.get_tick(k):
+                        log.debug("Not the same (tick-comparison)")
+                        changed = True
+                    else :
+                        changed = False
+                elif not k in self.environment :
+                    log.debug("Newly added variable")
+                    changed = True
+                elif k == 'Out' :
+                    log.debug("Out value")
+                    changed = True
+                else :
+                    log.debug("Not changed")
+                    changed = False
+                
+            
+            if changed:
+                log.debug("{} changed or was added".format(k))
+                
+                
+                
+                # If the object is not a function, we'll use the value as output value.
+                if not callable(v):
+                    # log.debug("{} is not a function, adding to outputs as value".format(k))
+                    if k == 'Out':
+                        if len(v) == 0:
+                            log.debug("Output value is empty: skipping...")
+                            continue
+                            
+                        kname = 'Out [{}]'.format(position)
+                        log.debug("{}: {}".format(kname,v))
+                    else :
+                        kname = k
+                    outputs[kname] = v
+                    
+                    # Increase the tick of the variable with name 'k'
+                    # self.tick(k)
+                    
+                # If it is a PROV wrapped function, we'll retrieve its source and use it as output value.
+                elif callable(v) and hasattr(v,'source') :
+                    # log.debug("{} is a PROV wrapped function, its source is an output value".format(k))
+                    outputs[k] = v.source
+                # Otherwise (this shouldn't be the case, but anyway) we'll use its source directly.
+                elif callable(v) :
+                    # log.debug("{} is callable, but not wrapped... we'll try to retrieve its source and add it as an output".format(k))
+                    try :
+                        outputs[k] = inspect.getsource(v)
+                    except:
+                        # log.debug("could not get source of {}, just taking its value as an output".format(k))
+                        outputs[k] = v
+                # Finally, this is probably not were we'll end up anyway... we'll do nothing 
+                else :
+                    # log.debug("Unexpected!")
+                    pass
+                
+                # log.debug("Just visited {}".format(k))
+                self.environment[k] = v
+            else :
+                log.debug("'{}' skipped because it did not change (ticks: {} and {}).".format(k,self.pre_ticker[k],pb.get_tick(k)))
+                
+        
+        # print dependencies.keys()
+        pb.add_activity(name, description, inputs, outputs, dependencies, input_names=inputs.keys(), output_names=outputs.keys(), expand_output_dict=True, pre_ticker=self.pre_ticker)
+        
+
+
+            
+    def hist_to_string(self, n=1):
+        hist = self.shell.user_ns.get('_ih',[])
+        out = ""
+        if len(hist) > n :
+            start = len(hist) - n
+        else :
+            start = 0
+        for idx,val in enumerate(hist[start:]) :
+            out += "{}: \\n{}\\n".format(idx+start,val)
+            
+        return out
+
+    def register_usage(self, node):
+        \"\"\"This function is called by a CodeVisitor instance whenever a node (i.e. a variable/function name appears in the code)\"\"\"
+        self.used.add(node)
+""" ;
+    skos:note """class NotebookWatcher(object):
+    \"\"\"The NotebookWatcher listens to execution events in the IPytho... whenever a node (i.e. a variable/function name appears in the code)\"\"\"
+        self.used.add(node)
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:47.169395"^^xsd:dateTime .
+
+<http://provomatic.org/resource/add/2/0145108470f5d67671b77eebfc01bb65> a prov:Entity ;
+    rdfs:label "add" ;
+    provomatic:tick 2 ;
+    rdf:value """def add(x,y):
+    return x+y
+""" ;
+    skos:note """def add(x,y):
+    return x+y
+""" ;
+    prov:wasDerivedFrom <http://provomatic.org/resource/add/1/0145108470f5d67671b77eebfc01bb65> ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:47.169395"^^xsd:dateTime .
+
+<http://provomatic.org/resource/add_prov/1/52755181d870ca25cd67b7f1458d0c6a> a prov:Entity ;
+    rdfs:label "add_prov" ;
+    provomatic:tick 1 ;
+    rdf:value """def add_prov(uri, prov=None,url=None):
+    \"\"\"
+        prov should be a Turtle serialization of an RDF PROV-O graph
+        uri is a unique id of the graph
+        
+        \"\"\"
+    PROV = Namespace('http://www.w3.org/ns/prov#')
+    PROVOMATIC = Namespace('http://provomatic.org/resource/')
+    SKOS = Namespace('http://www.w3.org/2004/02/skos/core#')
+    DCT = Namespace('http://purl.org/dc/terms/')
+        
+    ds = get_dataset()
+    
+    graph = ds.graph(URIRef(uri))
+    
+    if prov :
+        graph.parse(data=prov,format='turtle')
+    elif url :
+        try :
+            graph.parse(url,format='turtle')
+        except Exception as e:
+            log.error(e)
+            return
+    else :
+        log.error("Should provide either provenance data or a URL where I can fetch some")
+        return
+    
+    log.debug("Loaded provenance graph with id {}".format(uri))
+    return 
+""" ;
+    skos:note """def add_prov(uri, prov=None,url=None):
+    \"\"\"
+        prov should be a Turtle serialization of an ...e")
+        return
+    
+    log.debug("Loaded provenance graph with id {}".format(uri))
+    return 
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:47.169395"^^xsd:dateTime .
+
+<http://provomatic.org/resource/clear_dataset/1/4c2733db7443060a848b9357b5c05434> a prov:Entity ;
+    rdfs:label "clear_dataset" ;
+    provomatic:tick 1 ;
+    rdf:value """def clear_dataset():
+    _ds = Dataset()
+""" ;
+    skos:note """def clear_dataset():
+    _ds = Dataset()
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:47.169395"^^xsd:dateTime .
+
+<http://provomatic.org/resource/cv/1/9dff082094f541caed08e0da5920e1fd> a prov:Entity ;
+    rdfs:label "cv" ;
+    provomatic:tick 1 ;
+    rdf:value "<provomatic.watcher.CodeVisitor object at 0x1059d34d0>" ;
+    skos:note "<provomatic.watcher.CodeVisitor object at 0x1059d34d0>" ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:47.169395"^^xsd:dateTime .
+
+<http://provomatic.org/resource/get_dataset/1/60f0c24d1fb55f1e1a21a4c1de2e3506> a prov:Entity ;
+    rdfs:label "get_dataset" ;
+    provomatic:tick 1 ;
+    rdf:value """def get_dataset():
+    return _ds
+""" ;
+    skos:note """def get_dataset():
+    return _ds
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:47.169395"^^xsd:dateTime .
+
+provomatic:id-0bb93c3c4173ae0ff19ca5de76d5900f a prov:Plan ;
+    rdfs:label "In [3]" ;
+    dcterms:description """3: 
+z = add(3,4)
+""" ;
+    skos:note """3: 
+z = add(3,4)
+""" .
+
+provomatic:id-11e908b53658a8b4a82f03864715bca2 a prov:Plan ;
+    rdfs:label "In [1]" ;
+    dcterms:description """1: 
+import ipython_instrumented
+""" ;
+    skos:note """1: 
+import ipython_instrumented
+""" .
+
+provomatic:id-24202825d7be223319cc61f3e08da264 a prov:Plan ;
+    rdfs:label "In [5]" ;
+    dcterms:description """5: 
+z = add(3,4)
+""" ;
+    skos:note """5: 
+z = add(3,4)
+""" .
+
+provomatic:id-24f339fcc7443b0e158ef2664ecd858c a prov:Plan ;
+    rdfs:label "In [6]" ;
+    dcterms:description """6: 
+z = add(z,4)
+""" ;
+    skos:note """6: 
+z = add(z,4)
+""" .
+
+provomatic:id-4173cf0052390033a16085fd3907be8d a prov:Plan ;
+    rdfs:label "In [2]" ;
+    dcterms:description """2: 
+def add(x,y):
+    return x+y
+""" ;
+    skos:note """2: 
+def add(x,y):
+    return x+y
+""" .
+
+provomatic:id-683605224bef889a950f072044324409 a prov:Plan ;
+    rdfs:label "In [7]" ;
+    dcterms:description """7: 
+y = add(5,z)
+""" ;
+    skos:note """7: 
+y = add(5,z)
+""" .
+
+provomatic:id-b450684db62505a5c8746931b43e5cf2 a prov:Plan ;
+    rdfs:label "In [4]" ;
+    dcterms:description """4: 
+from ipython_instrumented import *
+""" ;
+    skos:note """4: 
+from ipython_instrumented import *
+""" .
+
+<http://provomatic.org/resource/ip/1/2c988add6c56f6f5e45a6bb8d640d855> a prov:Entity ;
+    rdfs:label "ip" ;
+    provomatic:tick 1 ;
+    rdf:value "<IPython.terminal.interactiveshell.TerminalInteractiveShell object at 0x102c9b7d0>" ;
+    skos:note "<IPython.terminal.interactiveshell.TerminalInteractiveShell object at 0x102c9b7d0>" ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:47.169395"^^xsd:dateTime .
+
+<http://provomatic.org/resource/ipython_instrumented/1/84f1e062fe468ff1442dff86bcfb6629> a prov:Entity ;
+    rdfs:label "ipython_instrumented" ;
+    provomatic:tick 1 ;
+    rdf:value "<module 'ipython_instrumented' from 'ipython_instrumented.py'>" ;
+    skos:note "<module 'ipython_instrumented' from 'ipython_instrumented.py'>" ;
+    prov:wasGeneratedAtTime "2014-09-30T17:11:47.868198"^^xsd:dateTime .
+
+<http://provomatic.org/resource/list_activities/1/a5dcd1130bc88a37990de6e77798df94> a prov:Entity ;
+    rdfs:label "list_activities" ;
+    provomatic:tick 1 ;
+    rdf:value """def list_activities():
+    # This query retrieves all activities
+    
+    q = \"\"\"
+        SELECT DISTINCT ?activity ?label WHERE {
+            GRAPH ?g {
+                ?activity a prov:Activity . 
+                ?activity rdfs:label ?label .
+            }
+        } 
+    \"\"\"
+    ds = get_dataset()
+    results = ds.query(q)
+    
+    activities = {}
+    
+    for result in results:
+        uri = result['activity'].__str__()
+        label = result['label'].value
+
+        activities.setdefault(label,[]).append({'uri': uri, 'name': label})
+        
+    return activities
+""" ;
+    skos:note """def list_activities():
+    # This query retrieves all activities
+    
+    q = \"\"\"
+        SELECT DI... activities.setdefault(label,[]).append({'uri': uri, 'name': label})
+        
+    return activities
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:47.169395"^^xsd:dateTime .
+
+<http://provomatic.org/resource/list_entities/1/540142d2fd23d545254ac0a637aea3f9> a prov:Entity ;
+    rdfs:label "list_entities" ;
+    provomatic:tick 1 ;
+    rdf:value """def list_entities():
+    # This query retrieves all entities
+    
+    q = \"\"\"
+        SELECT DISTINCT ?entity ?label ?time ?tick WHERE {
+            GRAPH ?g {
+                {{ ?entity a prov:Entity . }} UNION {{ ?entity prov:wasGeneratedBy ?a .}} 
+                ?entity rdfs:label ?label .
+                ?entity rdf:value ?v .
+                OPTIONAL {
+                    ?entity provomatic:tick ?tick 
+                }
+                OPTIONAL {
+                    ?entity prov:wasGeneratedAtTime ?time 
+                }
+            }
+        } ORDER BY DESC(?time) DESC(?tick)
+    \"\"\"
+    ds = get_dataset()
+    results = ds.query(q)
+    
+    entities = {}
+    
+    for result in results:
+        uri = result['entity'].__str__()
+        label = result['label'].value
+        
+        tick = None
+        if result['tick']:
+            tick = result['tick'].value
+        
+        time = None
+        if result['time']:
+            time = result['time'].value
+        
+        
+        
+        entities.setdefault(label,[]).append({'uri': uri, 'name': label, 'tick': tick, 'time': time})
+        
+    return entities
+""" ;
+    skos:note """def list_entities():
+    # This query retrieves all entities
+    
+    q = \"\"\"
+        SELECT DISTIN...el,[]).append({'uri': uri, 'name': label, 'tick': tick, 'time': time})
+        
+    return entities
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:47.169395"^^xsd:dateTime .
+
+<http://provomatic.org/resource/nw/1/9d6a4e6fd5aad4aa425f74d3218878de> a prov:Entity ;
+    rdfs:label "nw" ;
+    provomatic:tick 1 ;
+    rdf:value "<provomatic.watcher.NotebookWatcher object at 0x1059d32d0>" ;
+    skos:note "<provomatic.watcher.NotebookWatcher object at 0x1059d32d0>" ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:47.169395"^^xsd:dateTime .
+
+<http://provomatic.org/resource/prov/1/9769014c83e117a8ae90c1d7ecca307b> a prov:Entity ;
+    rdfs:label "prov" ;
+    provomatic:tick 1 ;
+    rdf:value """def prov(f):
+    \"\"\"Decorator that generates a wrapper function\"\"\"
+    def prov_wrapper(*args, **kwargs):
+        \"\"\"Provenance wrapper for arbitrary functions\"\"\"
+        # log.debug('---\\nWRAPPER: function name "{}"\\n---'.format(f.__name__))
+        
+        inputs = inspect.getcallargs(f, *args, **kwargs)
+        
+        outputs = f(*args, **kwargs)
+        
+        pb = ProvBuilder()
+        
+        pb.add_activity(f.__name__, prov_wrapper.source, inputs, outputs)
+        
+        prov_wrapper.prov = pb.get_graph()
+        # prov_wrapper.prov_ttl = pb.get_graph().serialize(format='turtle')
+        
+        return outputs
+
+    prov_wrapper.source = inspect.getsource(f)
+    return prov_wrapper
+""" ;
+    skos:note """def prov(f):
+    \"\"\"Decorator that generates a wrapper function\"\"\"
+    def prov_wrapper(*args, **kw...    
+        return outputs
+
+    prov_wrapper.source = inspect.getsource(f)
+    return prov_wrapper
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:47.169395"^^xsd:dateTime .
+
+<http://provomatic.org/resource/replace/1/332ffc318c61192da33def7e6b210921> a prov:Entity ;
+    rdfs:label "replace" ;
+    provomatic:tick 1 ;
+    rdf:value """def replace(f, input_names, output_names, *args, **kwargs):
+    \"\"\"Provenance-enabled replacement for arbitrary functions\"\"\"
+    
+    # Inputs is a dictionary of argument names and values
+    # Outputs is whatever the wrapped function returns
+    # Source is the source code of the function, or its docstring.
+    
+    
+    ## If we're dealing with a 'ufunc' (i.e. numpy universal function)
+    if isinstance(f,np.ufunc):
+        inputs = {'x{}'.format(n) : args[n-1] for n in range(1,f.nin+1)}
+        source = f.__doc__
+        
+    ## If we're dealing with a 'wrapper_descriptor' (i.e. a wrapper around a C-function) we cannot retrieve the argument names
+    elif isinstance(f,types.TypeType):
+        inputs = {'x{}'.format(n) : args[n-1] for n in range(1,len(args)+1)}
+        source = f.__doc__
+        
+    ## If we're dealing with a 'classobj' (i.e. an expression that instantiates a object of a class, or something... whatever.)
+    elif inspect.isclass(f):
+        inputs = inspect.getcallargs(f.__init__, f, *args, **kwargs)
+        # Only use those inputs that have a value
+        inputs = {k:v for k,v in inputs.items()}
+        source = inspect.getsource(f)
+        
+    ## If we're dealing with a builtin function
+    elif isinstance(f,types.BuiltinFunctionType):
+        inputs = {}
+        source = f.__name__
+        
+    # If we're dealing with the 'get_ipython' function, we need to take some extra care, otherwise we introduce a cycle in the provenance graph.
+    elif hasattr(f,'__name__') and getattr(f,'__name__') == 'get_ipython':
+        inputs = {}
+        source = inspect.getsource(f)
+        
+    ## If we're dealing with any other function, we just get all args and kwargs as inputs as a dictionary.
+    else :
+        try :
+            inputs = inspect.getcallargs(f, *args, **kwargs)
+            # Only use those inputs that have a value
+            inputs = {k:v for k,v in inputs.items()}
+            
+            for input,ivalue in inputs.items():
+                log.debug(type(ivalue))
+                try :
+                    log.debug("{} {}".format(input,ivalue))
+                    if ivalue is None or isinstance(ivalue,types.NoneType):
+                        log.debug("Popping {}".format(input))
+                        inputs.pop(input,ivalue)
+                except Exception as e:
+                    log.warning(e)
+            
+            source = inspect.getsource(f)
+        except :
+            log.warning('Function is not a Python function')
+            inputs = {'x{}'.format(n) : args[n-1] for n in range(1,len(args)+1)}
+            source = f.__doc__
+    
+    pb = ProvBuilder()
+    
+    pre_ticker = deepcopy(pb.get_ticker())
+    
+    outputs = f(*args, **kwargs)
+
+    if hasattr(f,'__name__'):
+        name = f.__name__
+    elif hasattr(f,'__str__'):
+        name = f.__str__
+    elif hasattr(f,'__doc__'):
+        name = f.__doc__
+    else :
+        name = 'unknown_function'
+    
+    pb.add_activity(name , source, inputs, outputs, input_names=input_names, output_names=output_names,pre_ticker=pre_ticker)
+    
+    replace.prov = pb.get_graph()
+    
+    # prov_wrapper.prov_ttl = pb.get_graph().serialize(format='turtle')
+    
+    return outputs    
+""" ;
+    skos:note """def replace(f, input_names, output_names, *args, **kwargs):
+    \"\"\"Provenance-enabled replacement f...    # prov_wrapper.prov_ttl = pb.get_graph().serialize(format='turtle')
+    
+    return outputs    
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:47.169395"^^xsd:dateTime .
+
+<http://provomatic.org/resource/revive/1/9c4756922bb7f461d4b82dde123591e1> a prov:Entity ;
+    rdfs:label "revive" ;
+    provomatic:tick 1 ;
+    rdf:value """def revive(name, uri = None, tick = None):
+    
+    if not uri and not tick :
+        # This query retrieves all entities with a certain name, ordered by date
+        q = \"\"\"
+            SELECT DISTINCT ?entity ?value ?time ?tick WHERE {{ 
+                GRAPH ?g {{
+                    {{ ?entity a prov:Entity . }} UNION {{ ?entity prov:wasGeneratedBy ?a .}}
+                    ?entity rdfs:label ?label .
+                    ?entity rdf:value ?value .
+                    OPTIONAL {{ 
+                        ?entity prov:wasGeneratedAtTime ?time .
+                    }}
+                    OPTIONAL {{
+                        ?entity provomatic:tick ?tick .
+                    }}
+                    FILTER (str(?label) = "{}")
+                }}
+            }} ORDER BY DESC(?time) DESC(?tick)\"\"\".format(name)
+    elif uri :
+        # This query retrieves the entity with the specified uri
+        q = \"\"\"
+            SELECT DISTINCT ?entity ?value ?time ?tick WHERE {{ 
+                GRAPH ?g {{
+                    {{ <{0}> a prov:Entity . }} UNION {{ <{0}> prov:wasGeneratedBy ?a .}}
+                    <{0}> rdf:value ?value .
+                    OPTIONAL {{ 
+                        <{0}> prov:wasGeneratedAtTime ?time .
+                    }}
+                    OPTIONAL {{
+                        <{0}> provomatic:tick ?tick .
+                    }}
+                }}
+                BIND (<{0}> as ?entity )
+            }} ORDER BY DESC(?time) DESC(?tick)\"\"\".format(uri)        
+    elif tick :
+        # This query retrieves all entities with a certain name, that have the specified tick, ordered by date
+        q = \"\"\"
+            SELECT ?entity ?value ?time ?tick WHERE {{ 
+                GRAPH ?g {{
+                    {{ ?entity a prov:Entity . }} UNION {{ ?entity prov:wasGeneratedBy ?a .}} 
+                    ?entity rdfs:label ?label .
+                    ?entity rdf:value ?value .
+                    OPTIONAL {{ 
+                        ?entity prov:wasGeneratedAtTime ?time .
+                    }}
+                    ?entity provomatic:tick ?tick.
+                    FILTER (str(?label) = "{}")
+                    FILTER (str(?tick) = "{}")
+                }}
+            }} ORDER BY DESC(?time) DESC(?tick)\"\"\".format(name, tick)
+
+    log.debug(q)        
+    ds = get_dataset()
+    results = ds.query(q)
+
+
+    
+    entity = None
+    value = None
+    for result in results :
+        log.debug(result)
+        entity = result['entity'].__str__()
+        value = result['value'].value
+        
+        etick = None
+        if result['tick']:
+            etick = result['tick'].value
+            
+        time = None
+        if result['time']:
+            time = result['time'].value
+        
+        if not result['time'] and not result['tick'] and not uri:
+            log.warning('No ordering information in provenance graph... picking arbitrary entity value') 
+        
+        # We only pick the first result (the last generated entity)
+        break
+    
+    if entity :
+        log.info("Entity imported as variable of type '{}'".format(type(value)))
+        log.info("URI:\\t{}".format(entity))
+        if time :
+            log.info("Time:\\t{}".format(time.isoformat()))
+        if tick :
+            log.info("Tick:\\t{}".format(etick))
+        
+        
+        pb = ProvBuilder()
+        g = _ds.graph(identifier=entity)
+        pb.set_graph(g)
+        
+        if etick :
+            new_tick = pb.set_tick(name, etick)
+        else :
+            new_tick = pb.get_tick(name)
+        
+        log.info("Imported value has tick {}".format(new_tick))
+        unicodevalue, vdigest = pb.get_value(value)
+        entity_uri = pb.add_entity(name, vdigest, unicodevalue, value=value, timestamp = pb.now())
+        
+        g.add((entity_uri,PROV['wasDerivedFrom'],URIRef(entity)))
+        
+        
+        
+        return value
+    else :
+        log.warning("No entity with that name found, or entity has no value for 'rdf:value'")
+        return None
+""" ;
+    skos:note """def revive(name, uri = None, tick = None):
+    
+    if not uri and not tick :
+        # This query ...rning("No entity with that name found, or entity has no value for 'rdf:value'")
+        return None
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:47.169395"^^xsd:dateTime .
+
+<http://provomatic.org/resource/save_prov/1/f4f022fa16402a7dd2b95051dddec325> a prov:Entity ;
+    rdfs:label "save_prov" ;
+    provomatic:tick 1 ;
+    rdf:value """def save_prov(trail_filename='provenance-trail.ttl'):
+    graph = get_graph()
+    
+    try :
+        graph.serialize(open(trail_filename,'w'),format='turtle')
+        log.info("File saved to {}".format(trail_filename))
+    except:
+        log.warning("Problem writing to {}".format(trail_filename))
+    
+    return
+""" ;
+    skos:note """def save_prov(trail_filename='provenance-trail.ttl'):
+    graph = get_graph()
+    
+    try :
+      ...e))
+    except:
+        log.warning("Problem writing to {}".format(trail_filename))
+    
+    return
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:47.169395"^^xsd:dateTime .
+
+<http://provomatic.org/resource/x/1/8f14e45fceea167a5a36dedd4bea2543> a prov:Entity ;
+    rdfs:label "x" ;
+    provomatic:tick 1 ;
+    rdf:value 7 ;
+    skos:note "7" .
+
+<http://provomatic.org/resource/x/1/c81e728d9d4c2f636f067f89cc14862c> a prov:Entity ;
+    rdfs:label "x" ;
+    provomatic:tick 1 ;
+    rdf:value 2 ;
+    skos:note "2" ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:47.169395"^^xsd:dateTime .
+
+<http://provomatic.org/resource/x/1/e4da3b7fbbce2345d7772b0674a318d5> a prov:Entity ;
+    rdfs:label "x" ;
+    provomatic:tick 1 ;
+    rdf:value 5 ;
+    skos:note "5" .
+
+<http://provomatic.org/resource/x/1/eccbc87e4b5ce2fe28308fd9f2a7baf3> a prov:Entity ;
+    rdfs:label "x" ;
+    provomatic:tick 1 ;
+    rdf:value 3 ;
+    skos:note "3" .
+
+<http://provomatic.org/resource/y/1/a87ff679a2f3e71d9181a67b7542122c> a prov:Entity ;
+    rdfs:label "y" ;
+    provomatic:tick 1 ;
+    rdf:value 4 ;
+    skos:note "4" .
+
+<http://provomatic.org/resource/y/1/c74d97b01eae257e44aa9d5bade97baf> a prov:Entity ;
+    rdfs:label "y" ;
+    provomatic:tick 1 ;
+    rdf:value 16 ;
+    skos:note "16" .
+
+<http://provomatic.org/resource/y/3/c74d97b01eae257e44aa9d5bade97baf> a prov:Entity ;
+    rdfs:label "y" ;
+    provomatic:tick 3 ;
+    rdf:value 16 ;
+    skos:note "16" ;
+    prov:wasDerivedFrom <http://provomatic.org/resource/y/2/c74d97b01eae257e44aa9d5bade97baf> ;
+    prov:wasGeneratedAtTime "2014-09-30T17:13:04.979118"^^xsd:dateTime .
+
+<http://provomatic.org/resource/z/1/8f14e45fceea167a5a36dedd4bea2543> a prov:Entity ;
+    rdfs:label "z" ;
+    provomatic:tick 1 ;
+    rdf:value 7 ;
+    skos:note "7" .
+
+<http://provomatic.org/resource/z/3/6512bd43d9caa6e02c990b0a82652dca> a prov:Entity ;
+    rdfs:label "z" ;
+    provomatic:tick 3 ;
+    rdf:value 11 ;
+    skos:note "11" .
+
+<http://provomatic.org/resource/z/3/a87ff679a2f3e71d9181a67b7542122c> a prov:Entity ;
+    rdfs:label "z" ;
+    provomatic:tick 3 ;
+    rdf:value 4 ;
+    skos:note "4" .
+
+<http://provomatic.org/resource/add/1/0145108470f5d67671b77eebfc01bb65> a prov:Entity ;
+    rdfs:label "add" ;
+    provomatic:tick 1 ;
+    rdf:value """def add(x,y):
+    return x+y
+""" ;
+    skos:note """def add(x,y):
+    return x+y
+""" ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:03.384513"^^xsd:dateTime .
+
+<http://provomatic.org/resource/y/1/eccbc87e4b5ce2fe28308fd9f2a7baf3> a prov:Entity ;
+    rdfs:label "y" ;
+    provomatic:tick 1 ;
+    rdf:value 3 ;
+    skos:note "3" ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:47.169395"^^xsd:dateTime .
+
+<http://provomatic.org/resource/y/2/c74d97b01eae257e44aa9d5bade97baf> a prov:Entity ;
+    rdfs:label "y" ;
+    provomatic:tick 2 ;
+    rdf:value 16 ;
+    skos:note "16" ;
+    prov:wasDerivedFrom <http://provomatic.org/resource/y/1/c74d97b01eae257e44aa9d5bade97baf> ;
+    prov:wasGeneratedAtTime "2014-09-30T17:13:04.976452"^^xsd:dateTime .
+
+<http://provomatic.org/resource/z/1/d3d9446802a44259755d38e6d163e820> a prov:Entity ;
+    rdfs:label "z" ;
+    provomatic:tick 1 ;
+    rdf:value 10 ;
+    skos:note "10" ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:47.169395"^^xsd:dateTime .
+
+<http://provomatic.org/resource/z/2/8f14e45fceea167a5a36dedd4bea2543> a prov:Entity ;
+    rdfs:label "z" ;
+    provomatic:tick 2 ;
+    rdf:value 7 ;
+    skos:note "7" ;
+    prov:wasDerivedFrom <http://provomatic.org/resource/z/1/8f14e45fceea167a5a36dedd4bea2543> ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:49.091492"^^xsd:dateTime .
+
+<http://provomatic.org/resource/z/3/8f14e45fceea167a5a36dedd4bea2543> a prov:Entity ;
+    rdfs:label "z" ;
+    provomatic:tick 3 ;
+    rdf:value 7 ;
+    skos:note "7" ;
+    prov:wasDerivedFrom <http://provomatic.org/resource/z/2/8f14e45fceea167a5a36dedd4bea2543> ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:49.093980"^^xsd:dateTime .
+
+<http://provomatic.org/resource/z/4/6512bd43d9caa6e02c990b0a82652dca> a prov:Entity ;
+    rdfs:label "z" ;
+    provomatic:tick 4 ;
+    rdf:value 11 ;
+    skos:note "11" ;
+    prov:wasDerivedFrom <http://provomatic.org/resource/z/3/6512bd43d9caa6e02c990b0a82652dca> ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:54.637825"^^xsd:dateTime .
+
+<http://provomatic.org/resource/z/5/6512bd43d9caa6e02c990b0a82652dca> a prov:Entity ;
+    rdfs:label "z" ;
+    provomatic:tick 5 ;
+    rdf:value 11 ;
+    skos:note "11" ;
+    prov:wasDerivedFrom <http://provomatic.org/resource/z/4/6512bd43d9caa6e02c990b0a82652dca> ;
+    prov:wasGeneratedAtTime "2014-09-30T17:12:54.640324"^^xsd:dateTime .
+
+provomatic:id-0145108470f5d67671b77eebfc01bb65 a prov:Plan ;
+    rdfs:label "add" ;
+    dcterms:description """def add(x,y):
+    return x+y
+""" ;
+    skos:note """def add(x,y):
+    return x+y
+""" .
+
