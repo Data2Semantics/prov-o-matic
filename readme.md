@@ -1,14 +1,18 @@
 # PROV-O-Matic
 ### Python Provenance Tracer
-** Author: ** Rinke Hoekstra, VU University Amsterdam, <rinke.hoekstra@vu.nl>
 
-Provenance is key in improving the transparency of scientific data publishing. 
+**Author:** Rinke Hoekstra, VU University Amsterdam, <rinke.hoekstra@vu.nl>
 
-PROV-O-Matic provides three things:
+Provenance is key in improving the transparency of scientific data publishing. But most people use multiple very different systems to manipulate and analyse data. The goal of the [Data2Semantics](http://www.data2semantics) [COMMIT/](http://www.commit-nl.nl) project is to use the [W3C PROV Standard](http://www.w3.org/TR/prov-overview/), that we helped develop, to integrate provenance tracking within and across these systems. 
 
-* a **decorator** for functions and methods that builds an RDF PROV-O representation of the inputs and outputs of the respective function. The provenance trace is persistent within a Python session. And,
+PROV-O-Matic is a library that integrates with the [IPython interpreter](http://ipython.org/), an interpreter that works with all Python programs, and in particular the [IPython Notebook](http://ipython.org/notebook.html) environment. IPython notebook is a popular data science environment, similar to R.
+
+PROV-O-Matic does three things:
+
+* It wraps Python functions and methods using a decorator, that builds an RDF PROV-O representation of the inputs and outputs of the respective function. The provenance trace is persistent within a Python session. And,
 * it integrates provenance tracing in IPython Notebook, a tool frequently used by scientists for analysing data, and reporting on it. All functions defined in the notebook are automatically decorated, and all executions of steps in the notebook are recorded as well (including changing variable values). And
-* it connects to [PROV-O-Viz](http://provoviz.org) for interactive visualization of the provenance graph, and integrates it into IPython notebook.
+* it integrates a [PROV-O-Viz](http://provoviz.org) instance for interactive visualization of the provenance graph, and integrates it into IPython notebook.
+* Existing provenance traces can be loaded into the notebook, and PROV entities can be *revived* as Python variables. Use and manipulation of these new variables, will build a provenance trace that connects to the previous trace.  
 
 ### Requirements
 
