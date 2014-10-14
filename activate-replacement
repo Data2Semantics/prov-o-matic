@@ -1,3 +1,7 @@
+# This is a replacement of the standard virtualenv activation script
+# For prov-o-matic to work properly, you need to change the VIRTUAL_ENV and PYTHONPATH variables as per the instructions below.
+# Replace the `bin/activate` script with this file.
+
 # This file must be used with "source bin/activate" *from bash*
 # you cannot run it directly
 
@@ -46,7 +50,9 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/Users/hoekstra/projects/data2semantics/provomatic"
+## Change the below path to point to the directory to which you cloned prov-o-matic 
+## (i.e. the directory in which this file was originally located)
+VIRTUAL_ENV="/absolute/path/to/your/provomatic/clone/directory"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
@@ -56,7 +62,8 @@ export PATH
 OLD_PYTHONPATH="$PYTHONPATH"
 export OLD_PYTHONPATH
 
-PYTHONPATH="$PYTHONPATH:/Users/hoekstra/projects/data2semantics/provomatic/lib/provoviz/src"
+## Change the below path to point to the 'src' directory of your 
+PYTHONPATH="$PYTHONPATH:/absolute/path/to/your/provomatic/clone/directory/lib/provoviz/src"
 
 export PYTHONPATH
 
