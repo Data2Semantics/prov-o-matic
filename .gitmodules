@@ -1,4 +1,4 @@
 [submodule "lib/provoviz"]
 	path = lib/provoviz
-	url = https://RinkeHoekstra@github.com/Data2Semantics/provoviz.git
+	url = https://github.com/Data2Semantics/provoviz.git
 	branch = provoviz-submodule
